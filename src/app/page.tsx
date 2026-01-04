@@ -8,6 +8,8 @@ import { ContactSection } from "@/components/landing/contact-section";
 import WhatsAppFab from "@/components/whatsapp-fab";
 import { StatsSection } from "@/components/landing/stats-section";
 import { AnimateOnScroll } from "@/components/animate-on-scroll";
+import { GallerySection } from "@/components/landing/gallery-section";
+import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
   return (
@@ -26,6 +28,9 @@ export default function Home() {
         </AnimateOnScroll>
         <AnimateOnScroll>
           <ClientsSection />
+        </AnimateOnScroll>
+        <AnimateOnScroll>
+            <GallerySection />
         </AnimateOnScroll>
         <AnimateOnScroll>
           <ContactSection />
