@@ -21,13 +21,13 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-primary/70" />
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 font-headline drop-shadow-md">
-          Your Premier Partner for Top Talent
+          Specialists in Electromechanical & Fabrication Works
         </h1>
         <p className="text-lg md:text-xl max-w-3xl mx-auto text-primary-foreground/90 mb-8 drop-shadow">
-          Connecting you with the best talent to drive your business forward. Professional, dedicated, and culturally aligned.
+          Delivering high standards and superior engineering skill in the Oil, Marine, and other industrial sectors.
         </p>
         <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-          <Link href="#contact">Explore Our Solutions</Link>
+          <Link href="#contact">Get a Quote</Link>
         </Button>
       </div>
     </section>

@@ -4,8 +4,8 @@ import { cn } from '@/lib/utils';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Euro Star',
-  description: 'Your premier partner for staffing and recruitment.',
+  title: 'Euro Star Electromechanical',
+  description: 'Specialists in electromechanical and fabrication works for the oil field, marine, and other sectors.',
 };
 
 export default function RootLayout({

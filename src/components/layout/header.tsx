@@ -35,7 +35,7 @@ export function Header() {
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
         <Link href="#" className="flex items-center gap-2 font-bold text-lg text-primary">
           <Image src="/logo.png" alt="Euro Star Logo" width={60} height={60} className="h-14 w-auto" />
-          <span className="font-headline">Euro Star</span>
+          <span className="font-headline">Euro Star Electromechanical</span>
         </Link>
         <nav className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
@@ -63,7 +63,7 @@ export function Header() {
               <nav className="flex flex-col gap-6 pt-12">
                 <Link href="#" className="flex items-center gap-2 font-bold text-lg text-primary mb-4">
                   <Image src="/logo.png" alt="Euro Star Logo" width={60} height={60} className="h-14 w-auto" />
-                  <span className="font-headline">Euro Star</span>
+                  <span className="font-headline">Euro Star Electromechanical</span>
                 </Link>
                 {navLinks.map((link) => (
                   <Link

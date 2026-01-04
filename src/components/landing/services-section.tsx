@@ -1,36 +1,36 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Briefcase, Users, TrendingUp, Building, ShieldCheck, Handshake } from "lucide-react";
+import { CheckCircle, Cog, HardHat, Ship, TestTube, Truck } from "lucide-react";
 
 const services = [
   {
-    icon: <Briefcase className="h-10 w-10 text-accent" />,
-    title: "Executive Search",
-    description: "Finding top-tier leadership to steer your company towards success in the competitive UAE market.",
+    icon: <HardHat className="h-10 w-10 text-accent" />,
+    title: "Fabrication Works",
+    description: "Specialized fabrication for various sectors, handling intricate designs with superior engineering.",
   },
   {
-    icon: <Users className="h-10 w-10 text-accent" />,
-    title: "Mass Recruitment",
-    description: "Efficiently sourcing and placing large volumes of qualified Emirati candidates for your projects.",
+    icon: <TestTube className="h-10 w-10 text-accent" />,
+    title: "Oil Field Services",
+    description: "Providing expert fabrication and electromechanical solutions for the demanding oil field sector.",
   },
   {
-    icon: <TrendingUp className="h-10 w-10 text-accent" />,
-    title: "Career Development",
-    description: "Nurturing national talent through tailored training programs and career progression planning.",
+    icon: <Ship className="h-10 w-10 text-accent" />,
+    title: "Marine Sector Services",
+    description: "High-standard fabrication and engineering for marine applications and infrastructure.",
   },
   {
-    icon: <Building className="h-10 w-10 text-accent" />,
-    title: "Emiratisation Consulting",
-    description: "Strategic guidance to help you meet and exceed your Emiratisation targets effectively.",
+    icon: <Cog className="h-10 w-10 text-accent" />,
+    title: "Project Management",
+    description: "Comprehensive project management from implementation to handover with clear objectives.",
   },
   {
-    icon: <ShieldCheck className="h-10 w-10 text-accent" />,
-    title: "Visa & PRO Services",
-    description: "Streamlining the legal and administrative processes for hiring and managing your workforce.",
+    icon: <Truck className="h-10 w-10 text-accent" />,
+    title: "Installation & Servicing",
+    description: "Ensuring compliance to quality in installation and servicing for all our projects.",
   },
   {
-    icon: <Handshake className="h-10 w-10 text-accent" />,
-    title: "HR Outsourcing",
-    description: "Comprehensive HR management solutions, allowing you to focus on your core business.",
+    icon: <CheckCircle className="h-10 w-10 text-accent" />,
+    title: "Quality Compliance",
+    description: "Committed to achieving Quality System certification through rigorous standards and processes.",
   },
 ];
 
@@ -41,7 +41,7 @@ export function ServicesSection() {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-headline text-primary">Our Core Services</h2>
           <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
-            We provide a comprehensive suite of services to meet all your staffing needs.
+            We deliver a complete cycle of services with thorough analysis and well-thought strategies.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
