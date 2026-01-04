@@ -52,7 +52,7 @@ export function Header() {
             <Link href="#contact">Get a Quote</Link>
           </Button>
         </nav>
-        <div className="md:hidden">
+        <div className="md:hidden flex items-center gap-2">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon">

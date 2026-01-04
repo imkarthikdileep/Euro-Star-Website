@@ -10,7 +10,7 @@ const clients = [
   { name: "PETRONASH", logo: "/clients/petronash.png" },
   { name: "Binghatti", logo: "/clients/binghatti.png" },
   { name: "DP World Drydocks", logo: "/clients/drydocks-1.png"},
-  { name: "Inco", logo: "/clients/inco.png" }
+  { name: "Inco", logo: "/clients/INCO(transparent).png" }
 ];
 
 export function ClientsSection() {
