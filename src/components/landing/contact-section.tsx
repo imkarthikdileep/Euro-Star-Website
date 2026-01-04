@@ -40,15 +40,15 @@ export function ContactSection() {
                     <div className="space-y-3 text-muted-foreground">
                         <div className="flex items-center gap-4">
                             <MapPin className="h-6 w-6 text-accent" />
-                            <p>123 Business Bay, Dubai, UAE</p>
+                            <p>P.O Box: 13465, Ajman, U.A.E</p>
                         </div>
                         <div className="flex items-center gap-4">
                             <Phone className="h-6 w-6 text-accent" />
-                            <p>+971 4 123 4567</p>
+                            <p>06-5243252</p>
                         </div>
                         <div className="flex items-center gap-4">
                             <Mail className="h-6 w-6 text-accent" />
-                            <p>contact@eurostar.ae</p>
+                            <p>info@eurostaremc.com</p>
                         </div>
                     </div>
                 </div>

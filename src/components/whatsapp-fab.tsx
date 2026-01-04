@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 const WhatsAppFab = () => {
-    const phoneNumber = "971501234567"; // Placeholder UAE phone number
+    const phoneNumber = "971505779540";
     const message = "Hello! I'm interested in your services.";
   
     return (
