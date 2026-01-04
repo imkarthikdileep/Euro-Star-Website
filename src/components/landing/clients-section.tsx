@@ -1,19 +1,18 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Star } from "lucide-react";
+import Image from "next/image";
 
 const clients = [
-  "Oil Field Supply Centre.",
-  "TEPC (Noor Energy -1 Project) Al Qudra",
-  "Lamperell Energy Ltd, UAE",
-  "McDermott Middle East Inc., UAE",
-  "Interseve Engineering & Construction LTD.",
-  "Fabtech International Ltd.",
-  "Hidayath Heavy Industry LLC",
-  "Mai Dubai, UAE",
-  "Unique System FZC",
-  "INCO International FZC",
-  "Armetal Metal Industries LLC.",
-  "PETRONASH FZC",
+  { name: "Oil Field Supply Centre.", logo: "/clients/oil-field.png" },
+  { name: "TEPC", logo: "/clients/tepc.png" },
+  { name: "Lamprell", logo: "/clients/lamprell.png" },
+  { name: "McDermott", logo: "/clients/mcdermott.png" },
+  { name: "Interserve", logo: "/clients/interserve.png" },
+  { name: "Fabtech", logo: "/clients/fabtech.png" },
+  { name: "Hidayath Heavy Industry", logo: "/clients/hidayath.png" },
+  { name: "Mai Dubai", logo: "/clients/mai-dubai.png" },
+  { name: "Unique System FZC", logo: "/clients/unique-system.png" },
+  { name: "INCO International FZC", logo: "/clients/inco.png" },
+  { name: "Armetal", logo: "/clients/armetal.png" },
+  { name: "PETRONASH", logo: "/clients/petronash.png" },
 ];
 
 export function ClientsSection() {
@@ -26,14 +25,17 @@ export function ClientsSection() {
             We are proud to have worked with a diverse range of leading companies.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {clients.map((client, index) => (
-            <Card key={index} className="bg-card">
-              <CardContent className="flex items-center gap-4 p-4">
-                <Star className="h-6 w-6 text-accent flex-shrink-0" />
-                <p className="text-card-foreground font-medium">{client}</p>
-              </CardContent>
-            </Card>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center justify-items-center">
+          {clients.map((client) => (
+            <div key={client.name} className="flex justify-center items-center h-20 grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+              <Image
+                src={client.logo}
+                alt={`${client.name} Logo`}
+                width={120}
+                height={60}
+                className="object-contain max-h-full max-w-full"
+              />
+            </div>
           ))}
         </div>
       </div>
