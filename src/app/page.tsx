@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/footer";
 import { HeroSection } from "@/components/landing/hero-section";
 import { ServicesSection } from "@/components/landing/services-section";
 import { AboutSection } from "@/components/landing/about-section";
+import { ClientsSection } from "@/components/landing/clients-section";
 import { ContactSection } from "@/components/landing/contact-section";
 import WhatsAppFab from "@/components/whatsapp-fab";
 
@@ -14,6 +15,7 @@ export default function Home() {
         <HeroSection />
         <ServicesSection />
         <AboutSection />
+        <ClientsSection />
         <ContactSection />
       </main>
       <WhatsAppFab />
