@@ -1,3 +1,16 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "Dubai skyline at dusk",
+      "imageUrl": "https://images.unsplash.com/photo-1550779864-6ccb28702fdb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkdWJhaSUyMHNreWxpbmV8ZW58MHx8fHwxNzY3NTEyOTU5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dubai skyline"
+    },
+    {
+      "id": "map-location",
+      "description": "Location map of the office",
+      "imageUrl": "https://images.unsplash.com/photo-1619468129361-605ebea04b44?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtYXAlMjBsb2NhdGlvbnxlbnwwfHx8fDE3Njc0MzE2MDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "map location"
+    }
+  ]
 }
