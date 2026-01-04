@@ -7,6 +7,7 @@ import { ClientsSection } from "@/components/landing/clients-section";
 import { ContactSection } from "@/components/landing/contact-section";
 import WhatsAppFab from "@/components/whatsapp-fab";
 import { StatsSection } from "@/components/landing/stats-section";
+import { AnimateOnScroll } from "@/components/animate-on-scroll";
 
 export default function Home() {
   return (
@@ -14,11 +15,21 @@ export default function Home() {
       <Header />
       <main className="flex-grow">
         <HeroSection />
-        <ServicesSection />
-        <AboutSection />
-        <StatsSection />
-        <ClientsSection />
-        <ContactSection />
+        <AnimateOnScroll>
+          <ServicesSection />
+        </AnimateOnScroll>
+        <AnimateOnScroll>
+          <AboutSection />
+        </AnimateOnScroll>
+        <AnimateOnScroll>
+          <StatsSection />
+        </AnimateOnScroll>
+        <AnimateOnScroll>
+          <ClientsSection />
+        </AnimateOnScroll>
+        <AnimateOnScroll>
+          <ContactSection />
+        </AnimateOnScroll>
       </main>
       <WhatsAppFab />
       <Footer />
