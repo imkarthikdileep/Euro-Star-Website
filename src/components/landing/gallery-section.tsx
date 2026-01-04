@@ -2,12 +2,12 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 
 const galleryImages = [
-  { src: "/gallery/image1.jpg", alt: "Fabrication work" },
-  { src: "/gallery/image2.jpg", alt: "Marine sector project" },
-  { src: "/gallery/image3.jpg", alt: "Oil field equipment" },
-  { src: "/gallery/image4.jpg", alt: "Intricate electromechanical design" },
-  { src: "/gallery/image5.jpg", alt: "Completed project installation" },
-  { src: "/gallery/image6.jpg", alt: "Skilled technicians at work" },
+  { src: "/gallery/image1.png", alt: "Fabrication work" },
+  { src: "/gallery/image2.png", alt: "Marine sector project" },
+  { src: "/gallery/image3.png", alt: "Oil field equipment" },
+  { src: "/gallery/image4.png", alt: "Intricate electromechanical design" },
+  { src: "/gallery/image5.png", alt: "Completed project installation" },
+  { src: "/gallery/image6.png", alt: "Skilled technicians at work" },
 ];
 
 export function GallerySection() {
