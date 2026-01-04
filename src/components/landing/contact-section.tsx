@@ -1,14 +1,10 @@
-import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 export function ContactSection() {
-    const mapImage = PlaceHolderImages.find(p => p.id === 'map-location');
-
     return (
       <section id="contact" className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4 md:px-6">
@@ -53,17 +49,18 @@ export function ContactSection() {
                     </div>
                 </div>
 
-                <div className="rounded-lg overflow-hidden shadow-lg border">
-                    {mapImage && (
-                        <Image
-                            src={mapImage.imageUrl}
-                            alt={mapImage.description}
-                            width={800}
-                            height={600}
-                            className="w-full h-auto aspect-[4/3] object-cover"
-                            data-ai-hint={mapImage.imageHint}
-                        />
-                    )}
+                <div className="rounded-lg overflow-hidden shadow-lg border group">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3604.8394939958!2d55.48000931501316!3d25.37688268381304!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f58595a7019c9%3A0x83f54519196b0521!2sJurf%20Plaza!5e0!3m2!1sen!2sae!4v1678886000000!5m2!1sen!2sae"
+                        width="100%"
+                        height="450"
+                        style={{ border: 0 }}
+                        allowFullScreen={true}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title="Google Map of Jurf Plaza"
+                        className="w-full h-auto aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105"
+                    ></iframe>
                 </div>
             </div>
           </div>
