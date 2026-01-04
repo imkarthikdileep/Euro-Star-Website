@@ -22,6 +22,17 @@ export function AboutSection() {
                 </p>
             </div>
           </div>
+          <div className="mt-16 text-center">
+            <h3 className="text-2xl md:text-3xl font-bold font-headline text-primary mb-6">Our Sister Concerns</h3>
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <div className="p-6 bg-background rounded-lg shadow-md">
+                <h4 className="text-xl font-semibold text-primary">Kenz Hiraa Technical Services LLC</h4>
+              </div>
+              <div className="p-6 bg-background rounded-lg shadow-md">
+                <h4 className="text-xl font-semibold text-primary">Kenz Hiraa General Trading LLC</h4>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     );
