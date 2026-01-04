@@ -10,7 +10,7 @@ export function Footer() {
       <div className="container mx-auto px-4 md:px-6 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center gap-2 font-bold text-lg mb-4 md:mb-0">
-            <Image src="/logo-white.png" alt="Euro Star Logo" width={40} height={40} className="h-10 w-auto" />
+            <Image src="/logo.png" alt="Euro Star Logo" width={40} height={40} className="h-10 w-auto" />
             <span className="font-headline">Euro Star</span>
           </div>
           <div className="flex gap-4">
