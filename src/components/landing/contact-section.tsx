@@ -1,11 +1,57 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
+import { useFormState } from "react-dom";
+import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
+
+async function handleFormSubmit(
+  prevState: any,
+  formData: FormData
+) {
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const message = formData.get("message") as string;
+
+  console.log("--- New Contact Form Submission ---");
+  console.log("Name:", name);
+  console.log("Email:", email);
+  console.log("Message:", message);
+  console.log("------------------------------------");
+
+  // Here you would typically send an email using a service like Nodemailer, Resend, or SendGrid.
+  // For this example, we'll just return a success message.
+
+  if (name && email && message) {
+    return { success: true, message: "Your message has been sent successfully!" };
+  } else {
+    return { success: false, message: "Please fill out all fields." };
+  }
+}
 
 export function ContactSection() {
+    const { toast } = useToast();
+    const [state, formAction] = useFormState(handleFormSubmit, {
+        success: false,
+        message: "",
+    });
+
+    useEffect(() => {
+        if (state.message) {
+            toast({
+                title: state.success ? "Success!" : "Error",
+                description: state.message,
+                variant: state.success ? "default" : "destructive",
+            });
+        }
+    }, [state, toast]);
+
+
     return (
       <section id="contact" className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4 md:px-6">
@@ -22,10 +68,10 @@ export function ContactSection() {
                     <CardTitle className="font-headline text-primary">Send us a Message</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <form className="space-y-4">
-                        <Input placeholder="Your Name" aria-label="Your Name" />
-                        <Input type="email" placeholder="Your Email" aria-label="Your Email" />
-                        <Textarea placeholder="Your Message" rows={5} aria-label="Your Message" />
+                    <form action={formAction} className="space-y-4">
+                        <Input name="name" placeholder="Your Name" aria-label="Your Name" required />
+                        <Input name="email" type="email" placeholder="Your Email" aria-label="Your Email" required />
+                        <Textarea name="message" placeholder="Your Message" rows={5} aria-label="Your Message" required />
                         <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Send Message</Button>
                     </form>
                 </CardContent>
