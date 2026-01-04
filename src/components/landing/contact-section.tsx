@@ -40,7 +40,7 @@ export function ContactSection() {
                     <div className="space-y-3 text-muted-foreground">
                         <div className="flex items-center gap-4">
                             <MapPin className="h-6 w-6 text-accent" />
-                            <p>P.O Box: 13465, Ajman, U.A.E</p>
+                            <p>Jurf Plaza, Room no 602, Rashidiya 1, Ajman</p>
                         </div>
                         <div className="flex items-center gap-4">
                             <Phone className="h-6 w-6 text-accent" />
