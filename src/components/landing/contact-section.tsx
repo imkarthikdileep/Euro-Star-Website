@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin } from "lucide-react";
+import Link from "next/link";
 
 export function ContactSection() {
     return (
@@ -45,9 +46,9 @@ export function ContactSection() {
                         <div className="flex items-start gap-4">
                             <Mail className="h-6 w-6 text-accent mt-1 flex-shrink-0" />
                             <div className="flex flex-col">
-                                <p>info@eurostaremc.com</p>
-                                <p>Info@kenzuae.com</p>
-                                <p>eurostar014@gmail.com</p>
+                                <Link href="mailto:Info@eurostaremc.com" className="hover:text-accent transition-colors">Info@eurostaremc.com</Link>
+                                <Link href="mailto:Info@kenzuae.com" className="hover:text-accent transition-colors">Info@kenzuae.com</Link>
+                                <Link href="mailto:eurostar014@gmail.com" className="hover:text-accent transition-colors">eurostar014@gmail.com</Link>
                             </div>
                         </div>
                     </div>
