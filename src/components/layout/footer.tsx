@@ -5,7 +5,7 @@ import { Mail } from "lucide-react";
 export function Footer() {
   const currentYear = new Date().getFullYear();
   const phoneNumber = "971505779540";
-  const email = "info@eurostaremc.com";
+  const email = "Info@eurostaremc.com";
 
   return (
     <footer className="bg-primary text-primary-foreground">
