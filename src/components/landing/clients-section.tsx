@@ -9,6 +9,7 @@ const clients = [
   { name: "Mai Dubai", logo: "/clients/mai-dubai.png" },
   { name: "INCO International FZC", logo: "/clients/inco.png" },
   { name: "PETRONASH", logo: "/clients/petronash.png" },
+  { name: "Binghatti", logo: "/clients/binghatti.png" },
 ];
 
 export function ClientsSection() {
@@ -21,7 +22,7 @@ export function ClientsSection() {
             We are proud to have worked with a diverse range of leading companies.
           </p>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-8 items-center justify-items-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 items-center justify-items-center">
           {clients.map((client) => (
             <div key={client.name} className="flex justify-center items-center h-20 grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
               <Image
