@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const clients = [
   { name: "Oil Field Supply Centre.", logo: "/clients/Oilfields.png" },
@@ -9,32 +12,72 @@ const clients = [
   { name: "Mai Dubai", logo: "/clients/maidubai.png" },
   { name: "PETRONASH", logo: "/clients/petronash.png" },
   { name: "Binghatti", logo: "/clients/binghatti.png" },
-  { name: "DP World Drydocks", logo: "/clients/drydocks-1.png"},
+  { name: "DP World Drydocks", logo: "/clients/drydocks-1.png" },
   { name: "Inco", logo: "/clients/INCO(transparent).png" }
 ];
 
 export function ClientsSection() {
   return (
-    <section id="clients" className="py-16 md:py-24 bg-background">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold font-headline text-primary">Our Valued Clients</h2>
-          <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
-            We are proud to have worked with a diverse range of leading companies.
-          </p>
+    <section id="clients" className="py-20 md:py-32 bg-transparent overflow-hidden section-glow">
+      <div className="container mx-auto px-4 md:px-6 mb-16 text-center">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 3 }}
+          className="text-6xl md:text-7xl font-extrabold font-lexend mb-6"
+        >
+          <span className="text-transparent" style={{ WebkitTextStroke: "2px #1e293b" }}>OUR</span> <span className="text-slate-900">VALUED CLIENTS</span>
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="text-lg text-muted-foreground mt-4 max-w-2xl mx-auto"
+        >
+          Proud to partner with industry leaders across the region.
+        </motion.p>
+      </div>
+
+
+
+      {/* Correct Marquee Implementation */}
+      <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)] group">
+        <div
+          className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none animate-infinite-scroll group-hover:[animation-play-state:paused]"
+        >
+          <ul className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none text-white">
+            {[...clients, ...clients].map((client, idx) => (
+              <li key={idx} className="glass-card w-[200px] h-[120px] flex items-center justify-center rounded-2xl p-4 bg-white/10 hover:bg-white/15 transition-colors">
+                <Image
+                  src={client.logo}
+                  alt={client.name}
+                  width={160}
+                  height={80}
+                  className="object-contain w-auto h-auto max-h-[80px]"
+                />
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 items-center justify-items-center">
-          {clients.map((client) => (
-            <div key={client.name} className="flex justify-center items-center h-20 grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-              <Image
-                src={client.logo}
-                alt={`${client.name} Logo`}
-                width={client.name === "DP World Drydocks" ? 150 : 120}
-                height={client.name === "DP World Drydocks" ? 75 : 60}
-                className="object-contain max-h-full max-w-full"
-              />
-            </div>
-          ))}
+        <div
+          className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none animate-infinite-scroll group-hover:[animation-play-state:paused]"
+          aria-hidden="true"
+        >
+          <ul className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none">
+            {[...clients, ...clients].map((client, idx) => (
+              <li key={idx} className="glass-card w-[200px] h-[120px] flex items-center justify-center rounded-2xl p-4 bg-white/10 hover:bg-white/15 transition-colors">
+                <Image
+                  src={client.logo}
+                  alt={client.name}
+                  width={160}
+                  height={80}
+                  className="object-contain w-auto h-auto max-h-[80px]"
+                />
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
