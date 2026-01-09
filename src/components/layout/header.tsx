@@ -8,6 +8,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import GlassSurface from "@/components/GlassSurface";
 import ShinyText from "@/components/ShinyText";
+
+import GradientText from "@/components/GradientText";
 import StaggeredMenu from "@/components/StaggeredMenu";
 
 const navLinks = [
@@ -34,12 +36,12 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full">
-      <div className="absolute inset-0 w-full h-full pointer-events-none">
+    <header className="fixed top-0 z-50 w-full transition-all duration-300">
+      <div className={`absolute inset-0 w-full h-full pointer-events-none rounded-b-3xl overflow-hidden transition-opacity duration-300 ${isScrolled ? "opacity-100" : "opacity-0"}`}>
         <GlassSurface
           width="100%"
           height="100%"
-          borderRadius={0}
+          borderRadius={24}
           borderWidth={0}
           blur={12}
           opacity={0.1}
@@ -48,20 +50,20 @@ export function Header() {
         />
       </div>
 
-      <div className={`relative transition-all duration-300 border-b border-white/5 ${isScrolled ? "shadow-md" : ""}`}>
+      <div className={`relative transition-all duration-300 border-b ${isScrolled ? "border-white/5 shadow-md" : "border-transparent"}`}>
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-          <Link href="#" onClick={scrollToTop} className="flex items-center gap-2 font-bold text-lg text-primary">
+          <Link href="#" onClick={scrollToTop} className="flex items-center gap-2 font-bold text-lg text-primary z-50 relative">
             <Image src="/logo.png" alt="Euro Star Logo" width={60} height={60} className="h-14 w-auto" />
-            <div className={`overflow-hidden transition-all duration-700 ease-in-out flex flex-col justify-center gap-0.5 group ${isScrolled ? "max-w-0 opacity-0" : "max-w-[500px] opacity-100"}`}>
-              {/* Primary "Liquid Titanium" Text */}
-              <span className="relative font-inter font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-200 to-slate-400 drop-shadow-sm text-2xl leading-none group-hover:from-white transition-all duration-500 cursor-default">
+            <div className={`flex flex-col justify-center gap-0.5 group transition-opacity duration-300 ${isScrolled ? "opacity-0" : "opacity-100"}`}>
+              <GradientText
+                colors={["#22c55e", "#a855f7", "#22c55e"]}
+                animationSpeed={5}
+                showBorder={false}
+                className="font-bold text-3xl md:text-4xl font-futura"
+              >
                 Euro Star
-                {/* Adaptive Texture Layer */}
-                <span className="absolute inset-0 bg-transparent mix-blend-overlay opacity-50 pointer-events-none" aria-hidden="true">Euro Star</span>
-              </span>
-
-              {/* Secondary Hierarchy Text */}
-              <span className="text-slate-600 font-medium text-[10px] md:text-xs tracking-wide uppercase">
+              </GradientText>
+              <span className="text-slate-400 font-medium text-[10px] md:text-xs tracking-wide uppercase px-1">
                 Electromechanical
               </span>
             </div>

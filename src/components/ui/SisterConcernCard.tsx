@@ -17,7 +17,9 @@ const ANIMATION_CONFIG = {
     DEFAULT_TAU: 0.14,
     INITIAL_TAU: 0.6,
     ENTER_TRANSITION_MS: 180,
+    DEVICE_BETA_OFFSET: 20,
 };
+
 
 const clamp = (v: number, min = 0, max = 100) => Math.min(Math.max(v, min), max);
 const round = (v: number, precision = 3) => parseFloat(v.toFixed(precision));
@@ -130,6 +132,29 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
         setTarget(shell.clientWidth / 2, shell.clientHeight / 2);
     }, [setTarget]);
 
+    const handleDeviceOrientation = useCallback(
+        (event: DeviceOrientationEvent) => {
+            const shell = shellRef.current;
+            if (!shell) return;
+
+            const { beta, gamma } = event;
+            if (beta == null || gamma == null) return;
+
+            const mobileTiltSensitivity = 5;
+            const centerX = shell.clientWidth / 2;
+            const centerY = shell.clientHeight / 2;
+            const x = clamp(centerX + gamma * mobileTiltSensitivity, 0, shell.clientWidth);
+            const y = clamp(
+                centerY + (beta - ANIMATION_CONFIG.DEVICE_BETA_OFFSET) * mobileTiltSensitivity,
+                0,
+                shell.clientHeight
+            );
+
+            setTarget(x, y);
+        },
+        [setTarget]
+    );
+
     const [isFlipped, setIsFlipped] = React.useState(false);
 
     // -- Event Handlers --
@@ -161,7 +186,7 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
         toCenter();
     }, [toCenter]);
 
-    // Initial setup
+    // Initial setup and Mobile Tilt
     useEffect(() => {
         const shell = shellRef.current;
         if (!shell) return;
@@ -172,11 +197,37 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
         engineRef.current.targetY = shell.clientHeight / 2;
         updateStyles(engineRef.current.currentX, engineRef.current.currentY);
 
+        const deviceOrientationHandler = handleDeviceOrientation;
+
+        const handleClick = () => {
+            // Allow on localhost or https
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') return;
+
+            const anyMotion = (window as any).DeviceMotionEvent;
+            if (anyMotion && typeof anyMotion.requestPermission === 'function') {
+                anyMotion
+                    .requestPermission()
+                    .then((state: string) => {
+                        if (state === 'granted') {
+                            window.addEventListener('deviceorientation', deviceOrientationHandler);
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                window.addEventListener('deviceorientation', deviceOrientationHandler);
+            }
+        };
+        shell.addEventListener('click', handleClick);
+        // Also try adding immediately if no permission needed?
+        // ProfileCard adds click listener. I will do same.
+
         return () => {
             if (engineRef.current.rafId) cancelAnimationFrame(engineRef.current.rafId);
             if (enterTimerRef.current) window.clearTimeout(enterTimerRef.current);
+            shell.removeEventListener('click', handleClick);
+            window.removeEventListener('deviceorientation', deviceOrientationHandler);
         }
-    }, [updateStyles]);
+    }, [updateStyles, handleDeviceOrientation]);
 
     // Dynamic style for glow color
     const cssVars = {
@@ -185,7 +236,7 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
 
     const ContentFace = ({ children, isBack = false }: { children: React.ReactNode, isBack?: boolean }) => (
         <div className={cn(
-            "relative overflow-hidden rounded-[30px] bg-slate-50/90 shadow-2xl backdrop-blur-sm transform-gpu border border-white/40 col-start-1 row-start-1 h-full w-full",
+            "relative overflow-hidden rounded-[30px] bg-white/60 shadow-2xl backdrop-blur-xl transform-gpu border border-white/40 col-start-1 row-start-1 h-full w-full",
             // Backface visibility is handled by the parent flipper usually, 
             // but for two separate elements we need to hide the backface of each or manage z-index/rotation.
             // Standard flip: Front is 0deg, Back is 180deg. both backface-hidden.
@@ -239,11 +290,12 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
             {/* 3D Shell (Tilt) */}
             <div
                 ref={shellRef}
-                className="transform-gpu relative z-10 w-full transition-transform will-change-transform"
+                className="transform-gpu relative z-10 w-full transition-transform will-change-transform cursor-pointer"
                 style={{
                     transform: 'translateZ(0) rotateX(var(--rotate-y, 0deg)) rotateY(var(--rotate-x, 0deg))',
                     transformStyle: 'preserve-3d',
                 }}
+                onClick={() => setIsFlipped(prev => !prev)}
             >
                 {/* Flipper (Rotate Y) */}
                 <div
@@ -275,13 +327,13 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
                                 <p className="text-slate-600 text-sm leading-relaxed mt-2 line-clamp-3">{description}</p>
 
                                 {/* Trigger Button */}
-                                <div className="mt-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
+                                <div className="mt-4 hidden md:block md:opacity-0 md:group-hover:opacity-100 transition-all duration-500 transform translate-y-0 md:translate-y-2 md:group-hover:translate-y-0 relative z-50">
                                     <button
-                                        onClick={(e) => {
+                                        onPointerUp={(e) => {
                                             e.stopPropagation();
                                             setIsFlipped(true);
                                         }}
-                                        className="text-xs font-bold px-4 py-2 rounded-full border border-slate-300 text-slate-600 bg-white/50 hover:bg-white hover:text-slate-800 transition-colors"
+                                        className="text-xs font-bold px-4 py-2 rounded-full border border-slate-300 text-slate-600 bg-white/50 hover:bg-white hover:text-slate-800 transition-colors cursor-pointer"
                                     >
                                         View Details
                                     </button>
@@ -308,11 +360,11 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
                             </div>
 
                             <button
-                                onClick={(e) => {
+                                onPointerUp={(e) => {
                                     e.stopPropagation();
                                     setIsFlipped(false);
                                 }}
-                                className="mt-8 relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 hover:text-slate-900 transition-colors"
+                                className="mt-8 relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 hover:text-slate-900 transition-colors cursor-pointer"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M18 6 6 18" /><path d="m6 6 12 12" />

@@ -169,7 +169,7 @@ export function HeroSection() {
         <div className="relative z-20 container mx-auto px-4 md:px-6 h-full flex items-center pointer-events-none">
           <div className="w-full h-full relative">
             <div className="absolute top-[35%] left-0 right-0 z-20 flex flex-col items-center justify-center pointer-events-auto w-full text-center">
-              {/* PRECISION - Outline + Gradient */}
+              {/* CRAFTING - Solid Black */}
               <ScrollReveal
                 baseOpacity={0}
                 enableBlur={true}
@@ -177,12 +177,12 @@ export function HeroSection() {
                 baseRotation={5}
                 rotationEnd="top center"
                 wordAnimationEnd="bottom center"
-                textClassName="text-gradient-cyan stroke-text-glow font-sans font-black text-[clamp(2.5rem,6vw,6rem)] leading-[0.9] tracking-tighter"
+                textClassName="text-black font-sans font-black text-[clamp(2.5rem,6vw,6rem)] leading-[0.9] tracking-tighter"
               >
                 CRAFTING
               </ScrollReveal>
 
-              {/* IN FABRICATION - Solid Navy */}
+              {/* EXCELLENCE. - Solid Black */}
               <ScrollReveal
                 baseOpacity={0}
                 enableBlur={true}
@@ -190,9 +190,9 @@ export function HeroSection() {
                 baseRotation={5}
                 rotationEnd="top center"
                 wordAnimationEnd="bottom center"
-                textClassName="text-[#0a192f] font-sans font-black text-[clamp(2.5rem,6vw,6rem)] leading-[0.9] tracking-tighter mt-0"
+                textClassName="text-black font-sans font-black text-[clamp(2.5rem,6vw,6rem)] leading-[0.9] tracking-tighter -mt-2 md:-mt-4"
               >
-                QUALITY.
+                EXCELLENCE.
               </ScrollReveal>
             </div>
           </div>

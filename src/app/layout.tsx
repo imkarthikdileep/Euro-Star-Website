@@ -1,4 +1,4 @@
-import { Montserrat, Lexend, Inter, Outfit, Michroma } from "next/font/google";
+import { Montserrat, Lexend, Inter, Outfit, Michroma, Jost } from "next/font/google";
 import type { Metadata } from "next";
 import './globals.css';
 import { cn } from '@/lib/utils';
@@ -13,6 +13,7 @@ const lexend = Lexend({ subsets: ["latin"], weight: ["400", "500", "600", "700",
 const inter = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-outfit" });
 const michroma = Michroma({ subsets: ["latin"], weight: ["400"], variable: "--font-michroma" });
+const jost = Jost({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-jost" });
 
 export const metadata: Metadata = {
   title: 'Euro Star Electromechanical',
@@ -34,7 +35,8 @@ export default function RootLayout({
         lexend.variable,
         inter.variable,
         outfit.variable,
-        michroma.variable
+        michroma.variable,
+        jost.variable
       )}>
         <AuroraBackground />
         {children}

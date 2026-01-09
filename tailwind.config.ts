@@ -13,6 +13,7 @@ export default {
         headline: ['var(--font-lexend)', 'sans-serif'],
         body: ['var(--font-inter)', 'sans-serif'],
         brand: ['var(--font-outfit)', 'sans-serif'],
+        futura: ['var(--font-jost)', 'sans-serif'],
         sans: ['var(--font-inter)', 'sans-serif'], // Default sans to Inter
       },
       colors: {

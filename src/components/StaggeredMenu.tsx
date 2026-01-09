@@ -1,6 +1,8 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+
 import ShinyText from '@/components/ShinyText';
+import GradientText from '@/components/GradientText';
 
 export interface StaggeredMenuItem {
   label: string;
@@ -492,15 +494,16 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                       href={it.link}
                       aria-label={it.ariaLabel}
                       data-index={idx + 1}
+                      onClick={closeMenu}
                     >
                       <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
                         <ShinyText
                           text={it.label}
                           disabled={false}
                           speed={3}
-                          className="font-semibold"
+                          className="font-semibold mx-0"
                           color="#e2e8f0"
-                          shineColor="#ffffff"
+                          shineColor="#a855f7"
                         />
                       </span>
                     </a>
@@ -574,15 +577,15 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 .sm-scope .sm-socials-list .sm-socials-link:hover,
 .sm-scope .sm-socials-list .sm-socials-link:focus-visible { opacity: 1; }
 .sm-scope .sm-socials-link:focus-visible { outline: 2px solid var(--sm-accent, #ff0000); outline-offset: 3px; }
-.sm-scope .sm-socials-link { font-size: 1.2rem; font-weight: 500; color: #e9e9ef; text-decoration: none; position: relative; padding: 2px 0; display: inline-block; transition: color 0.3s ease, opacity 0.3s ease; }
+.sm-scope .sm-socials-link { font-size: 1.2rem; font-weight: 600; color: #000000; text-decoration: none; position: relative; padding: 2px 0; display: inline-block; transition: color 0.3s ease, opacity 0.3s ease; }
 .sm-scope .sm-socials-link:hover { color: var(--sm-accent, #ff0000); }
-.sm-scope .sm-panel-title { margin: 0; font-size: 1rem; font-weight: 600; color: #fff; text-transform: uppercase; }
+.sm-scope .sm-panel-title { margin: 0; font-size: 1rem; font-weight: 600; color: #000; text-transform: uppercase; }
 .sm-scope .sm-panel-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-.sm-scope .sm-panel-item { position: relative; color: #ffffff; font-weight: 600; font-size: 3rem; cursor: pointer; line-height: 1.1; letter-spacing: -1px; text-transform: uppercase; transition: background 0.25s, color 0.25s; display: inline-block; text-decoration: none; padding-left: 1.25em; }
+.sm-scope .sm-panel-item { position: relative; color: #000000; font-weight: 700; font-size: 2.5rem; cursor: pointer; line-height: 1.2; letter-spacing: -1px; text-transform: uppercase; transition: background 0.25s, color 0.25s; display: flex; align-items: center; text-decoration: none; padding-left: 2em; }
 .sm-scope .sm-panel-itemLabel { display: inline-block; will-change: transform; transform-origin: 50% 100%; }
 .sm-scope .sm-panel-item:hover { color: var(--sm-accent, #ff0000); }
 .sm-scope .sm-panel-list[data-numbering] { counter-reset: smItem; }
-.sm-scope .sm-panel-list[data-numbering] .sm-panel-item::after { counter-increment: smItem; content: counter(smItem, decimal-leading-zero); position: absolute; top: 0rem; left: 0; font-size: 20px; font-weight: 400; color: var(--sm-accent, #ff0000); letter-spacing: 0; pointer-events: none; user-select: none; opacity: var(--sm-num-opacity, 0); font-family: 'Courier New', monospace; }
+.sm-scope .sm-panel-list[data-numbering] .sm-panel-item::after { counter-increment: smItem; content: counter(smItem, decimal-leading-zero); position: absolute; top: 50%; transform: translateY(-50%); left: 0; font-size: 1.25rem; font-weight: 800; color: #000000; letter-spacing: 0; pointer-events: none; user-select: none; opacity: var(--sm-num-opacity, 0); font-family: var(--font-inter), sans-serif; }
 @media (max-width: 1024px) { .sm-scope .staggered-menu-panel { width: 100%; left: 0; right: 0; } .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img { filter: invert(100%); } }
 @media (max-width: 640px) { .sm-scope .staggered-menu-panel { width: 100%; left: 0; right: 0; } .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img { filter: invert(100%); } }
       `}</style>

@@ -16,25 +16,24 @@ const clients = [
   { name: "Inco", logo: "/clients/INCO(transparent).png" }
 ];
 
+import { SectionTitle } from "@/components/ui/section-title";
+// ... imports
+
 export function ClientsSection() {
   return (
     <section id="clients" className="py-20 md:py-32 bg-transparent overflow-hidden section-glow">
       <div className="container mx-auto px-4 md:px-6 mb-16 text-center">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 3 }}
-          className="text-6xl md:text-7xl font-extrabold font-lexend mb-6"
-        >
-          <span className="text-transparent" style={{ WebkitTextStroke: "2px #1e293b" }}>OUR</span> <span className="text-slate-900">VALUED CLIENTS</span>
-        </motion.h2>
+        <SectionTitle
+          text="OUR"
+          secondaryText="VALUED CLIENTS"
+          align="center"
+          className="mb-6"
+        />
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="text-lg text-muted-foreground mt-4 max-w-2xl mx-auto"
+          transition={{ duration: 2.0, delay: 2.0 }}
+          className="text-lg text-slate-400 mt-2 max-w-2xl mx-auto font-body mb-12 text-center"
         >
           Proud to partner with industry leaders across the region.
         </motion.p>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Mail } from "lucide-react";
 import { Card } from "@/components/ui/glass/card";
+import GradientText from "@/components/GradientText";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -34,11 +35,14 @@ export function Footer() {
         <div className="flex items-center gap-2 font-bold text-lg">
           <Image src="/logo.png" alt="Euro Star Logo" width={60} height={60} className="h-14 w-auto" />
           <div className="flex flex-col justify-center gap-0.5 group">
-            <span className="relative font-inter font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-200 to-slate-400 drop-shadow-sm text-2xl leading-none group-hover:from-white transition-all duration-500 cursor-default">
+            <GradientText
+              colors={["#22c55e", "#a855f7", "#22c55e"]}
+              animationSpeed={5}
+              showBorder={false}
+              className="font-bold text-3xl md:text-4xl font-futura"
+            >
               Euro Star
-              {/* Adaptive Texture Layer */}
-              <span className="absolute inset-0 bg-transparent mix-blend-overlay opacity-50 pointer-events-none" aria-hidden="true">Euro Star</span>
-            </span>
+            </GradientText>
             <span className="text-slate-600 font-medium text-[10px] md:text-xs tracking-wide uppercase">
               Electromechanical
             </span>

@@ -8,7 +8,7 @@ export function SisterConcernsSection() {
     return (
         <section className="relative py-24 px-4 md:px-6 w-full max-w-7xl mx-auto z-10">
             <div className="mb-16 text-center">
-                <SectionTitle text="SISTER" secondaryText="CONCERNS" />
+                <SectionTitle text="ALLIED" secondaryText="CONCERNS" />
                 <p className="text-slate-600 max-w-2xl mx-auto text-lg mt-6">
                     Expanding our horizon through specialized entities delivering excellence across trading and technical services.
                 </p>

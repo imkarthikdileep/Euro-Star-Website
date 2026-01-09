@@ -24,18 +24,19 @@ export function AuroraBackground() {
                 }}
             >
                 {/* White Blob */}
+                {/* White Blob - Purple on Mobile */}
                 <div
-                    className="absolute top-[20%] left-[20%] w-[40vw] h-[40vh] bg-[#FFFFFF] blur-[120px] rounded-full opacity-80"
+                    className="absolute top-[20%] left-[20%] w-[40vw] h-[40vh] bg-purple-300/40 md:bg-[#FFFFFF] blur-[120px] rounded-full opacity-100 md:opacity-80"
                 />
 
-                {/* Light Green Blob */}
+                {/* Light Green Blob - Stronger Green on Mobile */}
                 <div
-                    className="absolute top-[30%] right-[30%] w-[35vw] h-[35vh] bg-[#DCFCE7] blur-[100px] rounded-full opacity-80"
+                    className="absolute top-[30%] right-[30%] w-[35vw] h-[35vh] bg-green-300/40 md:bg-[#DCFCE7] blur-[100px] rounded-full opacity-100 md:opacity-80"
                 />
 
-                {/* Very Light Green/White Blob */}
+                {/* Very Light Green/White Blob - Purple/Blue on Mobile */}
                 <div
-                    className="absolute bottom-[20%] left-[40%] w-[50vw] h-[40vh] bg-[#F0FDF4] blur-[130px] rounded-full opacity-90"
+                    className="absolute bottom-[20%] left-[40%] w-[50vw] h-[40vh] bg-purple-200/40 md:bg-[#F0FDF4] blur-[130px] rounded-full opacity-100 md:opacity-90"
                 />
             </motion.div>
         </div>

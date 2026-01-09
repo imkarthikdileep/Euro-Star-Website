@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import ScrollFloat from "@/components/ScrollFloat";
 
 interface SectionTitleProps {
     text: string;
@@ -16,37 +16,56 @@ export function SectionTitle({
     secondaryText,
     className,
     align = "center",
-    textSize = "text-6xl md:text-7xl"
+    textSize = "text-7xl md:text-8xl"
 }: SectionTitleProps) {
     return (
-        <div className={cn("relative flex flex-col mb-12",
-            align === "center" && "items-center",
-            align === "right" && "items-end",
-            align === "left" && "items-start",
+        <div className={cn("relative flex flex-col mb-12 w-full",
+            // Mobile: Always left align. Desktop: Respect align prop.
+            "items-start text-left",
+            align === "center" && "md:items-center md:text-center",
+            align === "right" && "md:items-end md:text-right",
+            align === "left" && "md:items-start md:text-left",
             className
         )}>
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.5 }}
-                className="relative z-10 flex flex-wrap gap-x-4 items-baseline leading-tight select-none"
-            >
+            <div className={cn(
+                "relative z-10 flex flex-col md:flex-row gap-0 md:gap-x-4 items-start md:items-baseline leading-[0.8] select-none",
+                // Mobile: No center justify. Desktop: Center if desired.
+                align === "center" ? "md:justify-center" : ""
+            )}>
                 {/* Layer 1: Outline Text (First Word) */}
-                <span
-                    className={cn("font-extrabold font-lexend text-transparent uppercase tracking-tight", textSize)}
-                    style={{ WebkitTextStroke: "2px #1e293b" }}
+                <ScrollFloat
+                    animationDuration={2.5}
+                    ease="back.inOut(2)"
+                    scrollStart="center bottom+=50%"
+                    scrollEnd="bottom bottom-=40%"
+                    stagger={0.03}
+                    containerClassName="my-0 inline-block text-left"
+                    textClassName={cn(
+                        "font-extrabold font-lexend text-transparent uppercase tracking-tight [-webkit-text-stroke:2px_#1e293b] leading-[0.8]",
+                        textSize
+                    )}
                 >
                     {text}
-                </span>
+                </ScrollFloat>
 
                 {/* Layer 2: Solid Text (Second Word) */}
                 {secondaryText && (
-                    <span className={cn("font-extrabold font-lexend text-slate-900 uppercase tracking-tight", textSize)}>
+                    <ScrollFloat
+                        animationDuration={2.5}
+                        ease="back.inOut(2)"
+                        scrollStart="center bottom+=50%"
+                        scrollEnd="bottom bottom-=40%"
+                        stagger={0.03}
+                        containerClassName="my-0 inline-block text-left"
+                        textClassName={cn(
+                            "font-extrabold font-lexend text-slate-900 uppercase tracking-tight leading-[0.8]",
+                            textSize
+                        )}
+                    >
                         {secondaryText}
-                    </span>
+                    </ScrollFloat>
                 )}
-            </motion.div>
+            </div>
         </div>
     );
 }

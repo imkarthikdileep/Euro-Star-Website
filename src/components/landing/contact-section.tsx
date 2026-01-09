@@ -88,7 +88,7 @@ export function ContactSection() {
                         </Card>
                     </motion.div>
 
-                    <div className="space-y-8">
+                    <div className="space-y-8 relative z-50">
                         <div className="space-y-4">
                             <h3 className="text-2xl font-bold font-headline text-primary">Contact Information</h3>
                             <div className="space-y-3 text-muted-foreground">
@@ -98,11 +98,11 @@ export function ContactSection() {
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <Phone className="h-6 w-6 text-teal-700" />
-                                    <div className="flex flex-col">
-                                        <a href="tel:+971503860061" className="hover:text-accent transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.5)]">
+                                    <div className="flex flex-col w-full relative z-50">
+                                        <a href="tel:+971503860061" className="block py-3 relative z-50 cursor-pointer hover:text-accent transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.5)]">
                                             +971-50-386-0061
                                         </a>
-                                        <a href="tel:+971509142430" className="hover:text-accent transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.5)]">
+                                        <a href="tel:+971509142430" className="block py-3 relative z-50 cursor-pointer hover:text-accent transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.5)]">
                                             +971-50-914-2430
                                         </a>
                                     </div>

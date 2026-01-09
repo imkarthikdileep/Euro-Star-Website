@@ -12,7 +12,8 @@ export function AboutSection() {
     <section className="py-24 overflow-hidden relative z-10" ref={containerRef} id="about">
       <div className="mb-10 max-w-6xl mx-auto">
         {/* Light Glass Wrapper for About Content */}
-        <div className="bg-white/20 backdrop-filter backdrop-blur-[20px] rounded-[3rem] p-8 md:p-16 relative overflow-hidden border border-white/40 shadow-xl group">
+        {/* Light Glass Wrapper for About Content */}
+        <div className="bg-white/20 backdrop-filter backdrop-blur-[20px] rounded-[3rem] p-8 md:p-16 relative overflow-hidden border border-white/40 shadow-xl group hover:scale-[1.02] transition-transform duration-500">
 
           <div className="relative z-10">
             <div className="space-y-8 max-w-4xl mx-auto">
@@ -22,7 +23,7 @@ export function AboutSection() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                transition={{ duration: 2.0, delay: 2.0 }}
                 className="h-full"
               >
                 <div className="h-full relative">
