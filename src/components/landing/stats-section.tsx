@@ -64,8 +64,8 @@ export function StatsSection() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 2.0, delay: 2.0 }}
-            className="max-w-4xl mx-auto flex flex-col items-center mb-12 text-center"
+            transition={{ duration: 1.0, delay: 0.5 }}
+            className="w-full mx-auto flex flex-col items-center mb-12 text-center"
           >
             <SectionTitle
               text="OUR"

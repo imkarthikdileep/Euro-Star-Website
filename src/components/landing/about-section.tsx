@@ -23,7 +23,7 @@ export function AboutSection() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 2.0, delay: 2.0 }}
+                transition={{ duration: 2.0, delay: 1.0 }}
                 className="h-full"
               >
                 <div className="h-full relative">

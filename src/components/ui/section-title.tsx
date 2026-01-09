@@ -39,7 +39,7 @@ export function SectionTitle({
                     scrollStart="center bottom+=50%"
                     scrollEnd="bottom bottom-=40%"
                     stagger={0.03}
-                    containerClassName="my-0 inline-block text-left"
+                    containerClassName="my-0 inline-block text-left whitespace-nowrap"
                     textClassName={cn(
                         "font-extrabold font-lexend text-transparent uppercase tracking-tight [-webkit-text-stroke:2px_#1e293b] leading-[0.8]",
                         textSize
@@ -56,7 +56,7 @@ export function SectionTitle({
                         scrollStart="center bottom+=50%"
                         scrollEnd="bottom bottom-=40%"
                         stagger={0.03}
-                        containerClassName="my-0 inline-block text-left"
+                        containerClassName="my-0 inline-block text-left whitespace-nowrap"
                         textClassName={cn(
                             "font-extrabold font-lexend text-slate-900 uppercase tracking-tight leading-[0.8]",
                             textSize

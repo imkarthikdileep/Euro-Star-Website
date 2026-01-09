@@ -73,7 +73,7 @@ function ServiceCard({ service, index }: { service: any, index: number }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 2.0, delay: 2.0 }}
+      transition={{ duration: 1.0, delay: 0.2 + (index * 0.1) }}
       className="h-full relative group/card"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

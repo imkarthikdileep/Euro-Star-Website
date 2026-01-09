@@ -24,7 +24,9 @@ export function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      // Hero section is approx 400vh. We want to switch after scrolling most of it.
+      // 3 * innerHeight is a safe bet (300vh point).
+      setIsScrolled(window.scrollY > window.innerHeight * 3);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);

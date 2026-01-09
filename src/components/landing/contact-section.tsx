@@ -99,10 +99,10 @@ export function ContactSection() {
                                 <div className="flex items-center gap-4">
                                     <Phone className="h-6 w-6 text-teal-700" />
                                     <div className="flex flex-col w-full relative z-50">
-                                        <a href="tel:+971503860061" className="block py-3 relative z-50 cursor-pointer hover:text-accent transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.5)]">
+                                        <a href="tel:+971503860061" className="block py-1 relative z-50 cursor-pointer hover:text-accent transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.5)]">
                                             +971-50-386-0061
                                         </a>
-                                        <a href="tel:+971509142430" className="block py-3 relative z-50 cursor-pointer hover:text-accent transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.5)]">
+                                        <a href="tel:+971509142430" className="block py-1 relative z-50 cursor-pointer hover:text-accent transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.5)]">
                                             +971-50-914-2430
                                         </a>
                                     </div>
