@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Mail } from "lucide-react";
-import GlassSurface from "@/components/GlassSurface";
+import { Card } from "@/components/ui/glass/card";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -11,31 +11,19 @@ export function Footer() {
   const email = "Info@eurostaremc.com";
 
   return (
-    <footer className="relative z-10 border-t border-white/10 overflow-hidden">
-      {/* Artificial content background for the glass to refract */}
-      <div
-        className="absolute inset-0 w-full h-full pointer-events-none -z-20"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(10, 25, 47, 0.15) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(10, 25, 47, 0.15) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px',
-          backdropFilter: 'contrast(120%)'
-        }}
-      />
+    <footer className="relative z-10 border-t border-white/5">
 
-      <div className="absolute inset-0 w-full h-full pointer-events-none -z-10">
-        <GlassSurface
-          width="100%"
-          height="100%"
-          borderRadius={0}
-          borderWidth={0}
-          opacity={0.6}
-          backgroundOpacity={0.1}
-          blur={12}
-          distortionScale={30}
-          mixBlendMode="normal"
+      {/* Footer Glass - Mirroring Header Style */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none">
+        <Card
+          variant="glass"
+          className="w-full h-full rounded-none border-0"
+          glass={{
+            blur: 12,
+            transparency: 0.1,
+            color: "rgba(255, 255, 255, 0.1)"
+          }}
+          style={{ mixBlendMode: "difference" }}
         />
       </div>
 
@@ -44,14 +32,14 @@ export function Footer() {
 
         {/* Left: Logo & Name */}
         <div className="flex items-center gap-2 font-bold text-lg">
-          <Image src="/logo.png" alt="Euro Star Logo" width={40} height={40} className="h-10 w-auto" />
+          <Image src="/logo.png" alt="Euro Star Logo" width={60} height={60} className="h-14 w-auto" />
           <div className="flex flex-col justify-center gap-0.5 group">
-            <span className="relative font-inter font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-slate-600 via-slate-900 to-black drop-shadow-sm text-lg leading-none group-hover:from-slate-500 transition-all duration-500 cursor-default">
+            <span className="relative font-inter font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-200 to-slate-400 drop-shadow-sm text-2xl leading-none group-hover:from-white transition-all duration-500 cursor-default">
               Euro Star
               {/* Adaptive Texture Layer */}
               <span className="absolute inset-0 bg-transparent mix-blend-overlay opacity-50 pointer-events-none" aria-hidden="true">Euro Star</span>
             </span>
-            <span className="text-slate-600 font-medium text-[10px] tracking-wide uppercase">
+            <span className="text-slate-600 font-medium text-[10px] md:text-xs tracking-wide uppercase">
               Electromechanical
             </span>
           </div>

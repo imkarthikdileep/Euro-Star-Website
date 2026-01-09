@@ -32,7 +32,14 @@ export default function TermsConditions() {
                 </section>
 
                 <section className="space-y-4">
-                    <h2 className="text-2xl font-bold font-michroma text-slate-900">4. Applicable Law</h2>
+                    <h2 className="text-2xl font-bold font-michroma text-slate-900">4. Cookies & User Data</h2>
+                    <p className="text-muted-foreground leading-relaxed">
+                        By using our website, you acknowledge and agree to the use of cookies as outlined in our Privacy Policy. These cookies are essential for the optimal functionality and performance of the website, including the caching of visual assets.
+                    </p>
+                </section>
+
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-bold font-michroma text-slate-900">5. Applicable Law</h2>
                     <p className="text-muted-foreground leading-relaxed">
                         These terms and conditions are governed by the laws of the United Arab Emirates.
                     </p>

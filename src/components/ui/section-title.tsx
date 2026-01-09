@@ -8,9 +8,16 @@ interface SectionTitleProps {
     secondaryText?: string;
     className?: string;
     align?: "left" | "center" | "right";
+    textSize?: string;
 }
 
-export function SectionTitle({ text, secondaryText, className, align = "center" }: SectionTitleProps) {
+export function SectionTitle({
+    text,
+    secondaryText,
+    className,
+    align = "center",
+    textSize = "text-6xl md:text-7xl"
+}: SectionTitleProps) {
     return (
         <div className={cn("relative flex flex-col mb-12",
             align === "center" && "items-center",
@@ -27,7 +34,7 @@ export function SectionTitle({ text, secondaryText, className, align = "center" 
             >
                 {/* Layer 1: Outline Text (First Word) */}
                 <span
-                    className="text-6xl md:text-7xl font-extrabold font-lexend text-transparent uppercase tracking-tight"
+                    className={cn("font-extrabold font-lexend text-transparent uppercase tracking-tight", textSize)}
                     style={{ WebkitTextStroke: "2px #1e293b" }}
                 >
                     {text}
@@ -35,7 +42,7 @@ export function SectionTitle({ text, secondaryText, className, align = "center" 
 
                 {/* Layer 2: Solid Text (Second Word) */}
                 {secondaryText && (
-                    <span className="text-6xl md:text-7xl font-extrabold font-lexend text-slate-900 uppercase tracking-tight">
+                    <span className={cn("font-extrabold font-lexend text-slate-900 uppercase tracking-tight", textSize)}>
                         {secondaryText}
                     </span>
                 )}

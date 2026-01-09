@@ -27,7 +27,18 @@ export default function PrivacyPolicy() {
                 <section className="space-y-4">
                     <h2 className="text-2xl font-bold font-michroma text-slate-900">3. Cookies</h2>
                     <p className="text-muted-foreground leading-relaxed">
-                        We may use cookies to enhance your browsing experience. You can choose to disable cookies through your browser settings.
+                        We use cookies to enhance your browsing experience and optimize website performance. Specifically:
+                    </p>
+                    <ul className="list-disc pl-5 space-y-2 text-muted-foreground leading-relaxed">
+                        <li>
+                            <strong>Functionality Cookies:</strong> We use a cookie (<code className="bg-slate-100 px-1 rounded text-xs text-slate-700">cookie_consent</code>) to remember your preference regarding our cookie policy, so you don&apos;t see the consent banner repeatedly.
+                        </li>
+                        <li>
+                            <strong>Performance Cookies:</strong> We use a cookie (<code className="bg-slate-100 px-1 rounded text-xs text-slate-700">hero_assets_cached</code>) to track if your browser has already loaded our heavy visual assets (Hero Section). This allows us to serve you a faster, seamless experience on return visits by skipping unnecessary loading sequences.
+                        </li>
+                    </ul>
+                    <p className="text-muted-foreground leading-relaxed">
+                        You can choose to disable cookies through your browser settings, but this may affect the seamlessness of your experience on our site.
                     </p>
                 </section>
 

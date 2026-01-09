@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import GlassSurface from "@/components/GlassSurface";
+import ShinyText from "@/components/ShinyText";
 
 const navLinks = [
   { href: "#services", label: "Services" },
@@ -26,6 +27,11 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const scrollToTop = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full">
       <div className="absolute inset-0 w-full h-full pointer-events-none">
@@ -34,20 +40,20 @@ export function Header() {
           height="100%"
           borderRadius={0}
           borderWidth={0}
-          opacity={0.6}
-          backgroundOpacity={0.1}
           blur={12}
+          opacity={0.1}
           mixBlendMode="difference"
+          className="w-full h-full"
         />
       </div>
 
       <div className={`relative transition-all duration-300 border-b border-white/5 ${isScrolled ? "shadow-md" : ""}`}>
         <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-          <Link href="#" className="flex items-center gap-2 font-bold text-lg text-primary">
+          <Link href="#" onClick={scrollToTop} className="flex items-center gap-2 font-bold text-lg text-primary">
             <Image src="/logo.png" alt="Euro Star Logo" width={60} height={60} className="h-14 w-auto" />
             <div className={`overflow-hidden transition-all duration-700 ease-in-out flex flex-col justify-center gap-0.5 group ${isScrolled ? "max-w-0 opacity-0" : "max-w-[500px] opacity-100"}`}>
               {/* Primary "Liquid Titanium" Text */}
-              <span className="relative font-inter font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-slate-600 via-slate-900 to-black drop-shadow-sm text-2xl leading-none group-hover:from-slate-500 transition-all duration-500 cursor-default">
+              <span className="relative font-inter font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-200 to-slate-400 drop-shadow-sm text-2xl leading-none group-hover:from-white transition-all duration-500 cursor-default">
                 Euro Star
                 {/* Adaptive Texture Layer */}
                 <span className="absolute inset-0 bg-transparent mix-blend-overlay opacity-50 pointer-events-none" aria-hidden="true">Euro Star</span>
@@ -66,9 +72,14 @@ export function Header() {
                 href={link.href}
                 className="text-foreground/80 hover:text-foreground transition-colors font-medium relative group"
               >
-                <span className="font-inter font-extrabold tracking-tight" style={{ letterSpacing: '-0.05em' }}>
-                  {link.label}
-                </span>
+                <ShinyText
+                  text={link.label}
+                  disabled={false}
+                  speed={3}
+                  className="font-inter font-bold tracking-tight text-lg"
+                  color="#475569"
+                  shineColor="#ffffff"
+                />
               </Link>
             ))}
             <Button asChild>
@@ -85,10 +96,10 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="right">
                 <nav className="flex flex-col gap-6 pt-12">
-                  <Link href="#" className="flex items-center gap-2 font-bold text-lg text-primary mb-4">
+                  <Link href="#" onClick={scrollToTop} className="flex items-center gap-2 font-bold text-lg text-primary mb-4">
                     <Image src="/logo.png" alt="Euro Star Logo" width={60} height={60} className="h-14 w-auto" />
                     <div className="flex flex-col justify-center gap-0.5 group">
-                      <span className="relative font-inter font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-slate-600 via-slate-900 to-black drop-shadow-sm text-xl leading-none group-hover:from-slate-500 transition-all duration-500">
+                      <span className="relative font-inter font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-200 to-slate-400 drop-shadow-sm text-xl leading-none group-hover:from-white transition-all duration-500">
                         Euro Star
                         <span className="absolute inset-0 bg-transparent mix-blend-overlay opacity-50 pointer-events-none" aria-hidden="true">Euro Star</span>
                       </span>
@@ -103,7 +114,14 @@ export function Header() {
                       href={link.href}
                       className="text-lg text-foreground/80 hover:text-foreground transition-colors font-medium"
                     >
-                      {link.label}
+                      <ShinyText
+                        text={link.label}
+                        disabled={false}
+                        speed={3}
+                        className="font-inter font-bold tracking-tight"
+                        color="#475569"
+                        shineColor="#ffffff"
+                      />
                     </Link>
                   ))}
                   <Button asChild className="mt-4">

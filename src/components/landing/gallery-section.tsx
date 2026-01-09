@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { SectionTitle } from "@/components/ui/section-title";
 
 const galleryImages = [
   { src: "/gallery/image1.png", title: "Piping Systems", id: "01", client: "McDermott" },
@@ -19,15 +20,9 @@ export function GallerySection() {
 
         {/* Header */}
         <div className="mb-16 md:mb-24 text-left">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 3 }}
-            className="text-6xl md:text-7xl font-extrabold font-lexend mb-6"
-          >
-            <span className="text-transparent" style={{ WebkitTextStroke: "2px #1e293b" }}>OUR</span> <span className="text-slate-900">WORKS</span>
-          </motion.h2>
+          <div className="flex justify-center">
+            <SectionTitle text="OUR" secondaryText="WORKS" textSize="text-7xl md:text-8xl" />
+          </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-body">
 
           </p>

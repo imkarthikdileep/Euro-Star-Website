@@ -33,6 +33,9 @@ export function HeroSection() {
   // Preload Images
   useEffect(() => {
     const loadImages = async () => {
+      // Check for return visitor cookie
+      const isReturnVisitor = document.cookie.includes('hero_assets_cached=true');
+
       const loadedImages: HTMLImageElement[] = [];
       const promises: Promise<void>[] = [];
 
@@ -42,12 +45,12 @@ export function HeroSection() {
           const frameIndex = i.toString().padStart(3, '0');
           img.src = `/Hero-section-frames/frame_${frameIndex}.png`;
 
+          // If return visitor, we expect cache hit, so we might not need heavy decoding checks blocking UI
           img.onload = async () => {
             try {
-              // Ensure image is decoded and ready for GPU
               await img.decode();
             } catch (e) {
-              // Ignore decode errors, just proceed
+              // Ignore decode errors
             }
             loadedImages[i] = img;
             resolve();
@@ -64,6 +67,9 @@ export function HeroSection() {
       await Promise.all(promises);
       setImages(loadedImages);
       setIsLoaded(true);
+
+      // Set cookie to remember assets are cached (7 days)
+      document.cookie = "hero_assets_cached=true; path=/; max-age=" + (60 * 60 * 24 * 7);
     };
 
     loadImages();
@@ -173,7 +179,7 @@ export function HeroSection() {
                 wordAnimationEnd="bottom center"
                 textClassName="text-gradient-cyan stroke-text-glow font-sans font-black text-[clamp(2.5rem,6vw,6rem)] leading-[0.9] tracking-tighter"
               >
-                PRECISION
+                CRAFTING
               </ScrollReveal>
 
               {/* IN FABRICATION - Solid Navy */}
@@ -184,9 +190,9 @@ export function HeroSection() {
                 baseRotation={5}
                 rotationEnd="top center"
                 wordAnimationEnd="bottom center"
-                textClassName="text-[#0a192f] font-sans font-black text-[clamp(2.5rem,6vw,6rem)] leading-[0.9] tracking-tighter mt-2"
+                textClassName="text-[#0a192f] font-sans font-black text-[clamp(2.5rem,6vw,6rem)] leading-[0.9] tracking-tighter mt-0"
               >
-                WORKS.
+                QUALITY.
               </ScrollReveal>
             </div>
           </div>

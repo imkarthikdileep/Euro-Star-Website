@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useRef, useState, useId } from 'react';
 
 export interface GlassSurfaceProps {
@@ -21,25 +19,24 @@ export interface GlassSurfaceProps {
   xChannel?: 'R' | 'G' | 'B';
   yChannel?: 'R' | 'G' | 'B';
   mixBlendMode?:
-  | 'normal'
-  | 'multiply'
-  | 'screen'
-  | 'overlay'
-  | 'darken'
-  | 'lighten'
-  | 'color-dodge'
-  | 'color-burn'
-  | 'hard-light'
-  | 'soft-light'
-  | 'difference'
-  | 'exclusion'
-  | 'hue'
-  | 'saturation'
-  | 'color'
-  | 'luminosity'
-  | 'plus-darker'
-  | 'plus-lighter';
-  enableMagnify?: boolean;
+    | 'normal'
+    | 'multiply'
+    | 'screen'
+    | 'overlay'
+    | 'darken'
+    | 'lighten'
+    | 'color-dodge'
+    | 'color-burn'
+    | 'hard-light'
+    | 'soft-light'
+    | 'difference'
+    | 'exclusion'
+    | 'hue'
+    | 'saturation'
+    | 'color'
+    | 'luminosity'
+    | 'plus-darker'
+    | 'plus-lighter';
   className?: string;
   style?: React.CSSProperties;
 }
@@ -80,7 +77,6 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   xChannel = 'R',
   yChannel = 'G',
   mixBlendMode = 'difference',
-  enableMagnify = false,
   className = '',
   style = {}
 }) => {
@@ -97,7 +93,6 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   const greenChannelRef = useRef<SVGFEDisplacementMapElement>(null);
   const blueChannelRef = useRef<SVGFEDisplacementMapElement>(null);
   const gaussianBlurRef = useRef<SVGFEGaussianBlurElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
 
   const isDarkMode = useDarkMode();
 
@@ -166,64 +161,8 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     mixBlendMode
   ]);
 
-  // Liquid Magnification Animation Loop
   useEffect(() => {
-    if (!enableMagnify || !svgSupported) return;
-
-    let animationFrameId: number;
-    const startTime = Date.now();
-
-    console.log('[GlassSurface] Starting Animation Loop', { enableMagnify, svgSupported });
-
-    const animate = () => {
-      const currentTime = Date.now();
-      const elapsed = currentTime - startTime;
-
-      // Slow Sine Wave (Frequency 0.001) for viscous liquid feel
-      const sine = Math.sin(elapsed * 0.001);
-      const normalizedSine = (sine + 1) / 2; // 0 to 1
-
-      // Oscillate Distortion: 20 (Flat) to 100 (Magnified)
-      const currentDistortion = 20 + (normalizedSine * 80);
-
-      // Oscillate Chromatic Aberration: Boost offsets at peaks for "Rainbow Edge"
-      // We add up to 15px extra offset when magnified
-      const aberrationBoost = normalizedSine * 15;
-
-      // Direct DOM manipulation to prevent React render loop & high CPU usage
-      if (redChannelRef.current && blueChannelRef.current && greenChannelRef.current) {
-        redChannelRef.current.setAttribute('scale', (currentDistortion + redOffset + aberrationBoost).toString());
-        // Green usually acts as the anchor/sharp channel, but we can scale it with distortion or keep it cleaner. 
-        // Let's scale it with base distortion to keep image somewhat coherent but warped.
-        greenChannelRef.current.setAttribute('scale', (currentDistortion + greenOffset).toString());
-        blueChannelRef.current.setAttribute('scale', (currentDistortion + blueOffset + aberrationBoost).toString());
-      }
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [enableMagnify, svgSupported, redOffset, greenOffset, blueOffset]);
-
-  useEffect(() => {
-    // Check for mobile device (width < 768px) to disable heavy SVG filters
-    const checkMobile = () => {
-      if (window.innerWidth < 768) {
-        return true;
-      }
-      return false;
-    };
-
-    const isMobile = checkMobile();
-    const supported = supportsSVGFilters();
-    console.log('[GlassSurface] Device Check:', { isMobile, width: window.innerWidth, svgFilters: supported });
-
-    // Also disable on mobile to improve performance
-    setSvgSupported(supported && !isMobile);
+    setSvgSupported(supportsSVGFilters());
   }, []);
 
   useEffect(() => {

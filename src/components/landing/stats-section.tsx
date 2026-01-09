@@ -43,77 +43,61 @@ const Counter = ({ value, suffix }: { value: number, suffix?: string }) => {
     });
   }, [springValue]);
 
-  return <span ref={ref} className="text-4xl md:text-5xl font-extrabold text-white">{displayValue}{suffix}</span>;
+  return <span ref={ref} className="text-4xl md:text-5xl font-extrabold text-black">{displayValue}{suffix}</span>;
 
 };
 
-import GlassSurface from "@/components/GlassSurface";
+import { Card } from "@/components/ui/glass/card";
 
 // ... (stats array and Counter component)
+
+import { SectionTitle } from "@/components/ui/section-title";
+
+// ... (existing code)
 
 export function StatsSection() {
   return (
     <section id="achievements" className="py-24 overflow-hidden">
       <div className="mb-20 max-w-6xl mx-auto px-4 md:px-6">
-        {/* Dark Island Wrapper */}
-        <div className="bg-[#0A192F] rounded-[3rem] p-8 md:p-16 relative overflow-hidden ring-1 ring-white/10 group">
-          {/* Internal Grid Pattern */}
-          <div
-            className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.05] transition-transform duration-1000 md:group-hover:scale-110"
-            style={{
-              backgroundImage: `
-                  linear-gradient(to right, #ffffff 1px, transparent 1px),
-                  linear-gradient(to bottom, #ffffff 1px, transparent 1px)
-                `,
-              backgroundSize: '24px 24px'
-            }}
-          />
-
-          <div className="relative z-10">
-            <div className="flex flex-col items-center mb-12 text-center">
-              <motion.h2
-                className="text-4xl md:text-5xl font-bold tracking-tight text-center mb-6"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 3 }}
-              >
-                <span className="text-white" style={{ textShadow: "0 0 20px rgba(255,255,255,0.2)" }}>OUR</span> <span className="text-teal-400">ACHIEVEMENTS</span>
-              </motion.h2>
-              <p className="text-lg text-slate-300 mt-2 max-w-2xl mx-auto font-body">
-                Decades of experience and a track record of success.
-              </p>
-            </div>
-
-            <GlassSurface
-              width="100%"
-              height="100%"
-              borderRadius={40}
-              backgroundOpacity={0.1}
-              opacity={0.7}
-              brightness={100}
-              blur={12}
-              distortionScale={25}
-              mixBlendMode="difference"
-              enableMagnify={true}
-              className="rounded-[40px]"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-white/10 p-8 md:p-12 relative z-20">
-                {stats.map((stat, index) => (
-                  <div key={index} className="flex flex-col items-center justify-center p-4">
-                    <div className="text-teal-400 mb-4 scale-110">
-                      {stat.icon}
-                    </div>
-                    <div>
-                      <Counter value={stat.value} suffix={stat.suffix} />
-                    </div>
-                    <p className="mt-2 text-lg font-medium text-slate-300 uppercase tracking-wide font-headline">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-            </GlassSurface>
+        <div className="relative z-10 w-full max-w-5xl mx-auto">
+          <div className="flex flex-col items-center mb-12 text-center">
+            <SectionTitle text="OUR" secondaryText="ACHIEVEMENTS" className="mb-6" />
+            <p className="text-lg text-slate-300 mt-2 max-w-2xl mx-auto font-body">
+              Decades of experience and a track record of success.
+            </p>
           </div>
+          <p className="text-lg text-slate-300 mt-2 max-w-2xl mx-auto font-body">
+            Decades of experience and a track record of success.
+          </p>
         </div>
+
+        <Card
+          variant="glass"
+          animated={true}
+          className="rounded-[40px] overflow-hidden"
+          glass={{
+            blur: 12,
+            transparency: 0.1,
+            color: "rgba(255,255,255,0)",
+            outline: "rgba(255, 255, 255, 0.2)",
+            outlineWidth: 0.5
+          }}
+          style={{ mixBlendMode: "normal" }} // Changed from difference since dark island is gone
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-white/10 p-8 md:p-12 relative z-20">
+            {stats.map((stat, index) => (
+              <div key={index} className="flex flex-col items-center justify-center p-4">
+                <div className="text-teal-400 mb-4 scale-110">
+                  {stat.icon}
+                </div>
+                <div>
+                  <Counter value={stat.value} suffix={stat.suffix} />
+                </div>
+                <p className="mt-2 text-lg font-medium text-slate-800 uppercase tracking-wide font-headline">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
       </div>
     </section>
   );

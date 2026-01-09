@@ -41,7 +41,7 @@ const services = [
 
 export function ServicesSection() {
   return (
-    <section id="services" className="py-16 md:py-24 bg-transparent relative z-10">
+    <section id="services" className="py-16 md:py-24 relative z-10">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center mb-16 text-center">
           <SectionTitle text="OUR" secondaryText="SERVICES" />
@@ -50,19 +50,8 @@ export function ServicesSection() {
           </p>
         </div>
 
-        {/* Dark Island Container */}
-        <div className="bg-[#0A192F] rounded-[3rem] p-8 md:p-12 relative overflow-hidden ring-1 ring-white/10 group">
-          {/* Internal Grid Pattern */}
-          <div
-            className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.05] transition-transform duration-1000 md:group-hover:scale-110"
-            style={{
-              backgroundImage: `
-                 linear-gradient(to right, #ffffff 1px, transparent 1px),
-                 linear-gradient(to bottom, #ffffff 1px, transparent 1px)
-               `,
-              backgroundSize: '24px 24px'
-            }}
-          />
+        {/* Light Glass Container */}
+        <div className="bg-white/20 backdrop-filter backdrop-blur-[20px] rounded-[3rem] p-8 md:p-12 relative overflow-hidden border border-white/40 shadow-xl group">
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
             {services.map((service, index) => (
@@ -75,6 +64,8 @@ export function ServicesSection() {
   );
 }
 
+import SpotlightCard from "@/components/SpotlightCard";
+
 function ServiceCard({ service, index }: { service: any, index: number }) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -82,47 +73,35 @@ function ServiceCard({ service, index }: { service: any, index: number }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 3, delay: index * 0.1 }}
-      className="h-full relative"
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="h-full relative group/card"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      animate={{ y: isHovered ? -10 : 0 }}
+      animate={{ y: isHovered ? -5 : 0 }}
+      viewport={{ margin: "-50px" }}
     >
-      <GlassSurface
-        width="100%"
-        height="100%"
-        borderRadius={24}
-        backgroundOpacity={0.1}
-        opacity={1}
-        blur={12}
-        distortionScale={20}
-        brightness={100}
-        borderWidth={0}
-        mixBlendMode="difference"
-        enableMagnify={true}
-        className={`transition-all duration-500 ${isHovered ? 'shadow-2xl shadow-teal-500/20' : ''}`}
+      <SpotlightCard
+        spotlightColor="rgba(13, 148, 136, 0.3)" // Teal-600 with opacity
+        className={`
+          flex flex-col items-start h-full p-8 transition-all duration-300
+          ${isHovered ? 'bg-white/40 shadow-lg border-white/50' : '!bg-white/10 border-white/20 hover:bg-white/20'}
+          border backdrop-blur-sm !rounded-3xl
+        `}
       >
-        <div className="flex flex-col items-start p-8 h-full w-full relative z-10">
-          <div className={`mb-6 rounded-2xl p-4 shadow-sm transition-all duration-500 ${isHovered ? 'bg-[#0d9488] text-white scale-110' : 'bg-white/10 text-[#0d9488]'}`}>
-            <div className="h-8 w-8 [&>svg]:h-full [&>svg]:w-full">
-              {service.icon}
-            </div>
+        <div className={`mb-6 rounded-2xl p-4 shadow-sm transition-all duration-500 ${isHovered ? 'bg-teal-600 text-white scale-110' : 'bg-white/60 text-teal-700'}`}>
+          <div className="h-8 w-8 [&>svg]:h-full [&>svg]:w-full">
+            {service.icon}
           </div>
-
-          {/* Text colors adjusted for Dark Mode context (Difference mode inverts, so white becomes dark on dark? No, difference on dark bg:
-              Dark (0) - White (255) = 255 (White). 
-              Difference usually makes everything white on dark if the content is white.
-              Let's keep text white/slate-200 to pop.
-           */}
-          <h3 className="mb-3 text-2xl font-extrabold text-white tracking-tight font-inter group-hover:text-[#0d9488] transition-colors">
-            {service.title}
-          </h3>
-
-          <p className="text-slate-300 font-inter font-bold tracking-tight text-sm leading-relaxed" style={{ letterSpacing: '-0.02em', fontWeight: 500 }}>
-            {service.description}
-          </p>
         </div>
-      </GlassSurface>
+
+        <h3 className="mb-3 text-2xl font-extrabold text-slate-800 tracking-tight font-inter group-hover/card:text-teal-700 transition-colors">
+          {service.title}
+        </h3>
+
+        <p className="text-slate-600 font-inter font-medium tracking-tight text-sm leading-relaxed">
+          {service.description}
+        </p>
+      </SpotlightCard>
     </motion.div>
   );
 }

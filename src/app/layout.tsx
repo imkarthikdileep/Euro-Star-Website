@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from "@/components/ui/toaster";
-import { GridBackground } from "../components/layout/grid-background";
+import { AuroraBackground } from "../components/layout/aurora-background";
+import { CookieConsent } from "@/components/CookieConsent";
 
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], variable: "--font-montserrat" });
 const lexend = Lexend({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], variable: "--font-lexend" });
@@ -33,8 +34,9 @@ export default function RootLayout({
         outfit.variable,
         michroma.variable
       )}>
-        <GridBackground />
+        <AuroraBackground />
         {children}
+        <CookieConsent />
         <Toaster />
       </body>
     </html>
