@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import GlassSurface from "@/components/GlassSurface";
 import ShinyText from "@/components/ShinyText";
+import StaggeredMenu from "@/components/StaggeredMenu";
 
 const navLinks = [
   { href: "#services", label: "Services" },
@@ -86,50 +87,25 @@ export function Header() {
               <Link href="#contact" className="font-inter font-bold">Get a Quote</Link>
             </Button>
           </nav>
-          <div className="md:hidden flex items-center gap-2">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu className="h-6 w-6" />
-                  <span className="sr-only">Open navigation menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right">
-                <nav className="flex flex-col gap-6 pt-12">
-                  <Link href="#" onClick={scrollToTop} className="flex items-center gap-2 font-bold text-lg text-primary mb-4">
-                    <Image src="/logo.png" alt="Euro Star Logo" width={60} height={60} className="h-14 w-auto" />
-                    <div className="flex flex-col justify-center gap-0.5 group">
-                      <span className="relative font-inter font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-200 to-slate-400 drop-shadow-sm text-xl leading-none group-hover:from-white transition-all duration-500">
-                        Euro Star
-                        <span className="absolute inset-0 bg-transparent mix-blend-overlay opacity-50 pointer-events-none" aria-hidden="true">Euro Star</span>
-                      </span>
-                      <span className="text-slate-600 font-medium text-[10px] tracking-wide uppercase">
-                        Electromechanical
-                      </span>
-                    </div>
-                  </Link>
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="text-lg text-foreground/80 hover:text-foreground transition-colors font-medium"
-                    >
-                      <ShinyText
-                        text={link.label}
-                        disabled={false}
-                        speed={3}
-                        className="font-inter font-bold tracking-tight"
-                        color="#475569"
-                        shineColor="#ffffff"
-                      />
-                    </Link>
-                  ))}
-                  <Button asChild className="mt-4">
-                    <Link href="#contact">Get a Quote</Link>
-                  </Button>
-                </nav>
-              </SheetContent>
-            </Sheet>
+          <div className="md:hidden">
+            <StaggeredMenu
+              items={[
+                ...navLinks.map(l => ({ label: l.label, link: l.href, ariaLabel: l.label })),
+                { label: "Get a Quote", link: "#contact", ariaLabel: "Get a Quote" }
+              ]}
+              position="right"
+              isFixed={true}
+              menuButtonColor="#ffffff"
+              openMenuButtonColor="#ffffff"
+              accentColor="#14b8a6" // Teal-500 matching brand
+              logoUrl="" // Hide logo in menu to avoid overlap with header logo
+              displaySocials={true}
+              socialItems={[
+                { label: 'Privacy Policy', link: '/privacy-policy' },
+                { label: 'Terms & Conditions', link: '/terms-conditions' }
+              ]}
+              colors={['#0f172a', '#1e293b', '#334155', '#475569']} // Slate colors for prelayers
+            />
           </div>
         </div>
       </div>

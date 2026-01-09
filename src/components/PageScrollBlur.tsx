@@ -5,7 +5,7 @@ import GradualBlur from "@/components/GradualBlur";
 import { useEffect, useState } from "react";
 
 export function PageScrollBlur() {
-    const { scrollY } = useScroll();
+    const { scrollY, scrollYProgress } = useScroll();
     const [viewportHeight, setViewportHeight] = useState(0);
 
     useEffect(() => {
@@ -20,23 +20,33 @@ export function PageScrollBlur() {
     // 0 at < 40% of viewport height (still in hero)
     // 0 at 80% of viewport height
     // 1 at 120% of viewport height (fully past hero)
-    // This ensures it stays invisible while user is enjoying the hero section
-    const opacity = useTransform(
+    const heroOpacity = useTransform(
         scrollY,
         [0, viewportHeight * 0.8, viewportHeight * 1.2],
         [0, 0, 1]
     );
 
+    // Footer Fade Out:
+    // 1 up to 90% of page scroll
+    // 0 at 100% of page scroll (bottom)
+    const footerOpacity = useTransform(
+        scrollYProgress,
+        [0.9, 1],
+        [1, 0]
+    );
+
     return (
         <motion.div
-            style={{ opacity }}
+            style={{ opacity: heroOpacity }}
             className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none"
         >
-            <GradualBlur
-                preset="page-footer"
-                zIndex={40}
-                style={{ position: 'relative' }} // Override fixed from preset to let motion.div handle opacity/position
-            />
+            <motion.div style={{ opacity: footerOpacity }}>
+                <GradualBlur
+                    preset="page-footer"
+                    zIndex={40}
+                    style={{ position: 'relative' }} // Override fixed from preset to let motion.div handle opacity/position
+                />
+            </motion.div>
         </motion.div>
     );
 }

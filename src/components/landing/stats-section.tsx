@@ -61,7 +61,12 @@ export function StatsSection() {
       <div className="mb-20 max-w-6xl mx-auto px-4 md:px-6">
         <div className="relative z-10 w-full max-w-5xl mx-auto">
           <div className="flex flex-col items-center mb-12 text-center">
-            <SectionTitle text="OUR" secondaryText="ACHIEVEMENTS" className="mb-6" />
+            <SectionTitle
+              text="OUR"
+              secondaryText="ACHIEVEMENTS"
+              className="mb-6"
+              textSize="text-3xl md:text-6xl lg:text-7xl"
+            />
             <p className="text-lg text-slate-300 mt-2 max-w-2xl mx-auto font-body">
               Decades of experience and a track record of success.
             </p>
