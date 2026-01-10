@@ -25,7 +25,8 @@ export function ClientsSection() {
       <div className="container mx-auto px-4 md:px-6 mb-16 text-center">
         <SectionTitle
           text="OUR"
-          secondaryText="VALUED CLIENTS"
+          secondaryText="VALUED"
+          tertiaryText="CLIENTS"
           align="center"
           className="mb-6"
         />

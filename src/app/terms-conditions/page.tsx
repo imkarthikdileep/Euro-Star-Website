@@ -1,15 +1,30 @@
 "use client";
 
+import Prism from "@/components/Prism";
 import { SectionTitle } from "@/components/ui/section-title";
 
 export default function TermsConditions() {
     return (
-        <main className="min-h-screen pt-32 pb-20 px-4 md:px-6 container mx-auto">
-            <div className="flex flex-col items-center mb-12 text-center">
+        <main className="min-h-screen pt-32 pb-20 px-4 md:px-6 container mx-auto relative">
+            <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: -1, overflow: 'hidden', pointerEvents: 'none' }}>
+                <Prism
+                    animationType="rotate"
+                    timeScale={0.5}
+                    height={3.5}
+                    baseWidth={5.5}
+                    scale={3.6}
+                    hueShift={0}
+                    colorFrequency={1}
+                    noise={0.5}
+                    glow={1}
+                />
+            </div>
+
+            <div className="flex flex-col items-center mb-12 text-center relative z-10">
                 <SectionTitle text="TERMS" secondaryText="& CONDITIONS" />
             </div>
 
-            <div className="relative overflow-hidden rounded-3xl bg-white/95 border border-slate-100 shadow-sm p-8 md:p-12 max-w-4xl mx-auto space-y-8">
+            <div className="relative overflow-hidden rounded-3xl bg-white/95 border border-slate-100 shadow-sm p-8 md:p-12 max-w-4xl mx-auto space-y-8 z-10">
                 <section className="space-y-4">
                     <h2 className="text-2xl font-bold font-michroma text-slate-900">1. Acceptance of Terms</h2>
                     <p className="text-muted-foreground leading-relaxed">

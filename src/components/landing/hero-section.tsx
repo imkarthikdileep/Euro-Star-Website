@@ -146,10 +146,9 @@ export function HeroSection() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative h-[400vh] w-full bg-background">
+    <div ref={containerRef} className="relative h-[200vh] md:h-[400vh] w-full bg-black">
       {/* Sticky Content Container */}
       <motion.div
-        style={{ opacity }}
         className="sticky top-0 h-[100dvh] w-full overflow-hidden flex items-center justify-center"
       >
         {/* Canvas Background */}

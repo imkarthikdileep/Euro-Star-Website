@@ -4,6 +4,7 @@ import { SectionTitle } from "@/components/ui/section-title";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
 import { useRef } from "react";
+import ShinyText from "@/components/ShinyText";
 
 export function AboutSection() {
   const containerRef = useRef(null);
@@ -29,16 +30,16 @@ export function AboutSection() {
                 <div className="h-full relative">
 
                   {/* Top Layer: Content */}
-                  <div className="space-y-6 text-lg font-medium leading-relaxed tracking-tight relative z-10 text-justify hyphens-auto text-slate-700">
-                    <p>
-                      Euro Star Electromechanical Cont. stands at the forefront of the industrial sector, driven by a team of dedicated, qualified, and highly professional skilled and semi-skilled workers. We specialize in executing complex Fabrication works across diverse sectors including Oil & Gas, Marine, and Heavy Industries.
-                    </p>
-                    <p>
-                      Our expertise lies in handling intricate designs that demand not only high standards of precision but also superior engineering skills. We pride ourselves on our ability to translate complex engineering challenges into robust, high-performance reality.
-                    </p>
-                    <p>
-                      Over the years, our commitment to quality and timely delivery has assisted the company to successfully evolve as a leading Sub-Contractor in a remarkably short span of time. We don't just complete projects, we build lasting partnerships founded on trust, technical excellence, and an unwavering drive for perfection.
-                    </p>
+                  <div className="text-lg font-medium leading-relaxed tracking-tight relative z-10 text-left md:text-justify hyphens-auto text-slate-700">
+                    Since{" "}
+                    <ShinyText text="2014" disabled={false} speed={3.5} className="font-bold inline-block" color="#000000" shineColor="#434343" />
+                    , Euro Star Electromechanical Cont. has established itself as a premier industrial sub-contracting and specialized labour supply partner within the{" "}
+                    <span className="inline-flex flex-wrap items-baseline gap-1">
+                      <ShinyText text="United" disabled={false} speed={3.5} className="font-bold inline-block" color="#d32f2f" shineColor="#ff8a80" />
+                      <ShinyText text="Arab" disabled={false} speed={3.5} className="font-bold inline-block" color="#2e7d32" shineColor="#a5d6a7" />
+                      <ShinyText text="Emirates" disabled={false} speed={3.5} className="font-bold inline-block" color="#000000" shineColor="#434343" />
+                    </span>
+                    , driven by a mission to provide the nation’s infrastructure with an elite, highly professional, and technically proficient workforce. While we specialize in executing high-complexity fabrication projects across the Marine, Oil & Gas, and Heavy Industrial sectors—handling intricate designs that demand superior engineering and unyielding precision—our core identity and primary expertise lie in our role as a dedicated workforce power. We secure major contracts from leading companies to provide the essential human engine for large-scale projects, delivering skilled personnel who ensure operational excellence and unyielding reliability on every site. Built on a foundation of trust and a relentless drive for perfection, we have evolved rapidly to become a leading partner for major contractors, proving that we don’t just supply labour; we build lasting project partnerships through technical brilliance and a commitment to quality.
                   </div>
                 </div>
               </motion.div>

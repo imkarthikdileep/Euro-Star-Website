@@ -126,7 +126,7 @@ export function ContactSection() {
                                     height="450"
                                     style={{ border: 0 }}
                                     allowFullScreen={true}
-                                    loading="lazy"
+                                    loading="eager"
                                     referrerPolicy="no-referrer-when-downgrade"
                                     title="Google Map of Office Location"
                                     className="w-full h-auto aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105 pointer-events-none"

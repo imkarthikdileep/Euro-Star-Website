@@ -6,6 +6,7 @@ import ScrollFloat from "@/components/ScrollFloat";
 interface SectionTitleProps {
     text: string;
     secondaryText?: string;
+    tertiaryText?: string;
     className?: string;
     align?: "left" | "center" | "right";
     textSize?: string;
@@ -14,9 +15,10 @@ interface SectionTitleProps {
 export function SectionTitle({
     text,
     secondaryText,
+    tertiaryText,
     className,
     align = "center",
-    textSize = "text-7xl md:text-8xl"
+    textSize = "text-5xl md:text-7xl lg:text-8xl"
 }: SectionTitleProps) {
     return (
         <div className={cn("relative flex flex-col mb-12 w-full",
@@ -63,6 +65,24 @@ export function SectionTitle({
                         )}
                     >
                         {secondaryText}
+                    </ScrollFloat>
+                )}
+
+                {/* Layer 3: Solid Text (Third Word) */}
+                {tertiaryText && (
+                    <ScrollFloat
+                        animationDuration={2.5}
+                        ease="back.inOut(2)"
+                        scrollStart="center bottom+=50%"
+                        scrollEnd="bottom bottom-=40%"
+                        stagger={0.03}
+                        containerClassName="my-0 inline-block text-left whitespace-nowrap"
+                        textClassName={cn(
+                            "font-extrabold font-lexend text-slate-900 uppercase tracking-tight leading-[0.8]",
+                            textSize
+                        )}
+                    >
+                        {tertiaryText}
                     </ScrollFloat>
                 )}
             </div>
