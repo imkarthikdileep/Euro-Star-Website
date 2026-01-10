@@ -18,7 +18,7 @@ const jost = Jost({ subsets: ["latin"], weight: ["400", "500", "700"], variable:
 
 export const metadata: Metadata = {
   title: 'Euro Star Electromechanical',
-  description: "UAE's trusted partner for industrial manpower and fabrication since 2014.",
+  description: "UAE's trusted partner for industrial manpower and fabrication since 2010.",
   icons: {
     icon: '/logo.png',
   },
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: 'Euro Star Electromechanical',
-    description: "UAE's trusted partner for industrial manpower and fabrication since 2014.",
+    description: "UAE's trusted partner for industrial manpower and fabrication since 2010.",
     images: ['/logo.png'],
   },
 };
