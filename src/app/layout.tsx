@@ -18,9 +18,25 @@ const jost = Jost({ subsets: ["latin"], weight: ["400", "500", "700"], variable:
 
 export const metadata: Metadata = {
   title: 'Euro Star Electromechanical',
-  description: 'Specialists in electromechanical and fabrication works for the oil field, marine, and other sectors.',
+  description: "UAE's trusted partner for industrial manpower and fabrication since 2014.",
   icons: {
-    icon: '/logo.png', // User requested using the logo as favicon
+    icon: '/logo.png',
+  },
+  openGraph: {
+    type: 'website',
+    url: 'https://www.eurostaremc.com/',
+    title: 'Euro Star Electromechanical',
+    description: 'Providing elite technical workforces for Marine, Oil & Gas, and Heavy Industries.',
+    siteName: 'Euro Star Electromechanical',
+    images: [{
+      url: '/logo.png',
+    }],
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Euro Star Electromechanical',
+    description: "UAE's trusted partner for industrial manpower and fabrication since 2014.",
+    images: ['/logo.png'],
   },
 };
 
