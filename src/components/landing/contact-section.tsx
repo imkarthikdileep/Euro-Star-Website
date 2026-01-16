@@ -1,19 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/glass/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, MapPin } from "lucide-react";
-import Link from "next/link";
+import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import { useActionState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { handleFormSubmit } from "@/app/actions/contact";
-
 import { SectionTitle } from "@/components/ui/section-title";
-
-// ... (imports)
+import { Card } from "@/components/ui/glass/card";
 
 export function ContactSection() {
     const { toast } = useToast();
@@ -32,108 +26,190 @@ export function ContactSection() {
         }
     }, [state, toast]);
 
+    const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=25.3936623,55.4629654";
+
     return (
-        <section id="contact" className="py-16 md:py-24 bg-transparent section-glow">
-            <div className="container mx-auto px-4 md:px-6">
-                <div className="flex flex-col items-center mb-12 text-center">
-                    <SectionTitle text="GET" secondaryText="IN TOUCH" />
-                    <p className="text-lg text-slate-700 mt-6 max-w-2xl mx-auto font-body">
-                        We're here to help. Contact us for a consultation or any inquiries.
+        <section id="contact" className="py-24 relative z-10 overflow-hidden bg-[#1A3C34] lg:bg-transparent">
+            <div className="container mx-auto px-4 md:px-6 relative z-10">
+                {/* Desktop Header */}
+                <div className="hidden lg:flex flex-col items-center mb-16 text-center">
+                    <SectionTitle text="Get" secondaryText="In Touch" />
+                    <p className="text-lg text-white mt-6 max-w-2xl mx-auto font-headline font-medium tracking-tight opacity-80">
+                        We&apos;re here to help. Contact us for a consultation or any inquiries.
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-12 items-stretch">
+                {/* Mobile Message Section (Seamless Flat Design) */}
+                <div className="lg:hidden py-4 px-2 relative z-20">
+                    <div className="mb-10">
+                        <span className="text-gold text-xs uppercase tracking-widest font-medium mb-3 block">CONTACT</span>
+                        <h3 className="text-4xl font-serif text-white mb-2">Work With Us.</h3>
+                    </div>
+
+                    <form action={formAction} className="space-y-8">
+                        <div>
+                            <input
+                                name="name"
+                                required
+                                type="text"
+                                placeholder="Name"
+                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light text-lg"
+                            />
+                        </div>
+                        <div>
+                            <input
+                                name="phone"
+                                type="tel"
+                                placeholder="Phone"
+                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light text-lg"
+                            />
+                        </div>
+                        <div>
+                            <input
+                                name="email"
+                                required
+                                type="email"
+                                placeholder="Email"
+                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light text-lg"
+                            />
+                        </div>
+                        <div>
+                            <textarea
+                                name="message"
+                                required
+                                placeholder="Message"
+                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light resize-none min-h-[100px] text-lg"
+                            ></textarea>
+                        </div>
+
+                        <Button
+                            type="submit"
+                            className="w-full bg-transparent border border-white/20 text-white font-medium text-sm uppercase tracking-widest h-14 rounded-full mt-8 hover:bg-gold hover:text-charcoal hover:border-gold transition-all duration-300"
+                        >
+                            Send Message
+                        </Button>
+                    </form>
+                </div>
+
+                {/* Desktop Grid Layout */}
+                <div className="hidden lg:grid gap-12 lg:grid-cols-2 items-start max-w-6xl mx-auto">
+                    {/* Left Column: Contact Info & Visit Us */}
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 1 }}
-                        className="h-full"
+                        className="space-y-8"
                     >
-                        <Card
-                            variant="frosted"
-                            className="h-full rounded-[3rem] p-0 border-white/20"
-                        >
-                            <div className="p-8 md:p-10 flex flex-col h-full w-full relative z-10">
-                                <div className="mb-6">
-                                    <h3 className="font-headline text-2xl font-bold text-black mb-1">Send us a Message</h3>
-                                    <p className="text-slate-700 text-sm">We'll get back to you within 24 hours.</p>
+                        <Card variant="glass" className="p-8 md:p-12 rounded-[2.5rem] bg-[#1a1a1a]/80 border-white/10 backdrop-blur-md">
+                            <h3 className="text-3xl font-serif text-white mb-8">Contact Information</h3>
+
+                            <div className="space-y-8">
+                                <div className="flex items-start gap-5 group">
+                                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-gold/20 transition-colors duration-300 shrink-0">
+                                        <MapPin className="h-5 w-5 text-gold" />
+                                    </div>
+                                    <div>
+                                        <p className="text-white/60 text-sm uppercase tracking-wider mb-1">Address</p>
+                                        <p className="text-white text-lg font-light">Jurf Plaza, Room no 602,<br />Rashidiya 1, Ajman, UAE</p>
+                                        <a
+                                            href={googleMapsUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 text-gold mt-4 text-sm font-medium hover:underline underline-offset-4 tracking-wide"
+                                        >
+                                            Visit Us on Maps <ArrowUpRight className="w-4 h-4" />
+                                        </a>
+                                    </div>
                                 </div>
 
-                                <form action={formAction} className="space-y-4 flex-grow flex flex-col">
-                                    <Input
-                                        name="name"
-                                        placeholder="Your Name"
-                                        aria-label="Your Name"
-                                        required
-                                        className="bg-white/10 border-white/20 text-black placeholder:text-slate-600 focus-visible:ring-accent focus-visible:border-accent h-12"
-                                    />
-                                    <Input
-                                        name="email"
-                                        type="email"
-                                        placeholder="Your Email"
-                                        aria-label="Your Email"
-                                        required
-                                        className="bg-white/10 border-white/20 text-black placeholder:text-slate-600 focus-visible:ring-accent focus-visible:border-accent h-12"
-                                    />
-                                    <Textarea
-                                        name="message"
-                                        placeholder="Your Message..."
-                                        aria-label="Your Message"
-                                        required
-                                        className="bg-white/10 border-white/20 text-black placeholder:text-slate-600 focus-visible:ring-accent focus-visible:border-accent flex-grow resize-none min-h-[150px]"
-                                    />
-                                    <Button type="submit" className="w-full bg-teal-500 hover:bg-teal-400 text-white font-bold h-12 text-lg">Send Message</Button>
-                                </form>
+                                <div className="flex items-start gap-5 group">
+                                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-gold/20 transition-colors duration-300 shrink-0">
+                                        <Phone className="h-5 w-5 text-gold" />
+                                    </div>
+                                    <div>
+                                        <p className="text-white/60 text-sm uppercase tracking-wider mb-1">Phone</p>
+                                        <div className="flex flex-col gap-1">
+                                            <a href="tel:+971503860061" className="text-white text-lg font-light hover:text-gold transition-colors">+971 50 386 0061</a>
+                                            <a href="tel:+971509142430" className="text-white text-lg font-light hover:text-gold transition-colors">+971 50 914 2430</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-5 group">
+                                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-gold/20 transition-colors duration-300 shrink-0">
+                                        <Mail className="h-5 w-5 text-gold" />
+                                    </div>
+                                    <div>
+                                        <p className="text-white/60 text-sm uppercase tracking-wider mb-1">Email</p>
+                                        <div className="flex flex-col gap-1">
+                                            <a href="mailto:eurostar014@gmail.com" className="text-white text-lg font-light hover:text-gold transition-colors">eurostar014@gmail.com</a>
+                                            <a href="mailto:Info@kenzuae.com" className="text-white text-lg font-light hover:text-gold transition-colors">Info@kenzuae.com</a>
+                                            <a href="mailto:info@eurostar-emc.com" className="text-white text-lg font-light hover:text-gold transition-colors">info@eurostar-emc.com</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </Card>
                     </motion.div>
 
-                    <div className="space-y-8 relative z-50">
-                        <div className="space-y-4">
-                            <h3 className="text-2xl font-bold font-headline text-primary">Contact Information</h3>
-                            <div className="space-y-3 text-muted-foreground">
-                                <div className="flex items-center gap-4">
-                                    <MapPin className="h-6 w-6 text-teal-700" />
-                                    <p>Jurf Plaza, Room no 602, Rashidiya 1, Ajman</p>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <Phone className="h-6 w-6 text-teal-700" />
-                                    <div className="flex flex-col w-full relative z-50">
-                                        <a href="tel:+971503860061" className="block py-1 relative z-50 cursor-pointer hover:text-accent transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.5)]">
-                                            +971-50-386-0061
-                                        </a>
-                                        <a href="tel:+971509142430" className="block py-1 relative z-50 cursor-pointer hover:text-accent transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.5)]">
-                                            +971-50-914-2430
-                                        </a>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-4">
-                                    <Mail className="h-6 w-6 text-teal-700 mt-1 flex-shrink-0" />
-                                    <div className="flex flex-col">
-                                        <span className="hover:text-accent transition-colors cursor-default">eurostar014@gmail.com</span>
-                                        <span className="hover:text-accent transition-colors cursor-default">Info@kenzuae.com</span>
-                                        <span className="hover:text-accent transition-colors cursor-default">eurostar014@gmail.com</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    {/* Right Column: Message Form (Hidden on Mobile - wait, currently handled by parent hidden) */}
+                    {/* Actually, right column was only hidden md:block in ORIGINAL. 
+                        Now I'm wrapping BOTH columns in `hidden md:grid`. 
+                        So I need to remove the `hidden md:block` from the inner right column component to avoid double hiding if desktop needs it.
+                        Wait, original line 106 was `hidden md:block`. 
+                        If I wrap the whole grid in `hidden md:grid`, I don't need `hidden md:block` on the right column child anymore, 
+                        BUT the left column WAS visible on mobile before. 
+                        The request is to "remove contact section in 1st image [left column info] and use 2nd image [form] for mobile".
+                        So yes, the entire Desktop Grid (Left + Right columns) should be HIDDEN on mobile now.
+                        And the NEW Mobile Form takes its place.
+                    */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 1, delay: 0.2 }}
+                        className="h-full"
+                    >
+                        <Card variant="glass" className="h-full p-8 md:p-12 rounded-[2.5rem] bg-[#1a1a1a]/90 border-white/10 backdrop-blur-md shadow-2xl">
+                            <h3 className="text-3xl font-serif text-white mb-2">Send us a Message</h3>
+                            <p className="text-white/60 mb-8 font-light">We&apos;ll get back to you within 24 hours.</p>
 
-                        <div className="rounded-lg overflow-hidden shadow-lg border group">
-                            <a href="https://www.google.com/maps/search/?api=1&query=25.393635729180755,55.46285057068588" target="_blank" rel="noopener noreferrer" className="block relative">
-                                <iframe
-                                    src="https://maps.google.com/maps?q=25.393635729180755,55.46285057068588&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                                    width="100%"
-                                    height="450"
-                                    style={{ border: 0 }}
-                                    allowFullScreen={true}
-                                    loading="eager"
-                                    referrerPolicy="no-referrer-when-downgrade"
-                                    title="Google Map of Office Location"
-                                    className="w-full h-auto aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105 pointer-events-none"
-                                ></iframe>
-                            </a>
-                        </div>
-                    </div>
+                            <form action={formAction} className="space-y-6">
+                                <div>
+                                    <input
+                                        name="name"
+                                        required
+                                        type="text"
+                                        placeholder="Your Name"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-gold/50 focus:bg-white/10 transition-all duration-300 font-light"
+                                    />
+                                </div>
+                                <div>
+                                    <input
+                                        name="email"
+                                        required
+                                        type="email"
+                                        placeholder="Your Email"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-gold/50 focus:bg-white/10 transition-all duration-300 font-light"
+                                    />
+                                </div>
+                                <div>
+                                    <textarea
+                                        name="message"
+                                        required
+                                        placeholder="Your Message..."
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-gold/50 focus:bg-white/10 transition-all duration-300 font-light resize-none min-h-[160px]"
+                                    ></textarea>
+                                </div>
+
+                                <Button
+                                    type="submit"
+                                    className="w-full bg-gold hover:bg-gold/90 text-charcoal font-medium text-lg h-14 rounded-xl mt-4 tracking-wide shadow-lg hover:shadow-gold/20 transition-all duration-300"
+                                >
+                                    Send Message
+                                </Button>
+                            </form>
+                        </Card>
+                    </motion.div>
                 </div>
             </div>
         </section>

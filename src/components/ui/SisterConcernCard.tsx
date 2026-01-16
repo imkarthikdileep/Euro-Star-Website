@@ -236,40 +236,51 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
 
     const ContentFace = ({ children, isBack = false }: { children: React.ReactNode, isBack?: boolean }) => (
         <div className={cn(
-            "relative overflow-hidden rounded-[30px] bg-white/60 shadow-2xl backdrop-blur-xl transform-gpu border border-white/40 col-start-1 row-start-1 h-full w-full",
-            // Backface visibility is handled by the parent flipper usually, 
-            // but for two separate elements we need to hide the backface of each or manage z-index/rotation.
-            // Standard flip: Front is 0deg, Back is 180deg. both backface-hidden.
+            "relative overflow-hidden rounded-[30px] shadow-2xl backdrop-blur-xl transform-gpu border border-white/10 col-start-1 row-start-1 h-full w-full",
+            // Backface visibility
             "[backface-visibility:hidden]",
             isBack && "[transform:rotateY(180deg)]"
-        )}>
-            {/* -- Shine Effect -- */}
+        )}
+            style={{
+                background: 'linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 100%)', // Darker base
+            }}
+        >
+            {/* -- Grain Texture Overlay -- */}
             <div
-                className="absolute inset-0 pointer-events-none z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-700 mix-blend-color-dodge"
+                className="absolute inset-0 pointer-events-none z-0 opacity-20 mix-blend-overlay"
+                style={{
+                    backgroundImage: 'url("/noise.png")', // Assumed asset or placeholder, user can replace
+                    backgroundSize: '100px 100px',
+                }}
+            />
+
+            {/* -- Shine Effect (Spotlight) -- */}
+            <div
+                className="absolute inset-0 pointer-events-none z-30 opacity-0 group-hover:opacity-40 transition-opacity duration-700 mix-blend-screen"
                 style={{
                     background: `
                   radial-gradient(
                     circle at var(--pointer-x, 50%) var(--pointer-y, 50%), 
-                    white 0%, 
+                    ${accentColor} 0%, 
                     transparent 60%
                   )
                 `,
-                    filter: 'blur(20px)',
+                    filter: 'blur(40px)', // Softer blur
                 }}
             />
 
             {/* -- Glare Effect -- */}
             <div
-                className="absolute inset-0 pointer-events-none z-40 opacity-0 group-hover:opacity-60 transition-opacity duration-500 mix-blend-overlay"
+                className="absolute inset-0 pointer-events-none z-40 opacity-0 group-hover:opacity-30 transition-opacity duration-500 mix-blend-overlay"
                 style={{
                     background: `
-                     linear-gradient(
-                        125deg, 
-                        transparent 40%, 
-                        rgba(255,255,255,0.8) 45%, 
-                        rgba(255,255,255,0) 50%
-                     )
-                  `,
+                         linear-gradient(
+                            125deg, 
+                            transparent 40%, 
+                            rgba(255,255,255,0.4) 45%, 
+                            rgba(255,255,255,0) 50%
+                         )
+                      `,
                     backgroundPosition: 'var(--background-x) var(--background-y)',
                     backgroundSize: '200% 200%',
                 }}
@@ -321,10 +332,10 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
                             </div>
 
                             {/* Details Section */}
-                            <div className="p-6 pt-2 pb-8 flex flex-col gap-2 text-center bg-white/40 border-t border-white/20 h-full justify-start flex-grow">
-                                <h3 className="text-2xl font-bold text-slate-800 tracking-tight">{name}</h3>
-                                <p className="text-sm font-semibold uppercase tracking-wider text-slate-500">{role}</p>
-                                <p className="text-slate-600 text-sm leading-relaxed mt-2 line-clamp-3">{description}</p>
+                            <div className="p-6 pt-2 pb-8 flex flex-col gap-2 text-center bg-neutral-900/40 border-t border-white/10 h-full justify-start flex-grow">
+                                <h3 className="text-2xl font-bold text-white tracking-tight">{name}</h3>
+                                <p className="text-sm font-semibold uppercase tracking-wider text-neutral-400">{role}</p>
+                                <p className="text-neutral-300 text-sm leading-relaxed mt-2 line-clamp-3">{description}</p>
 
                                 {/* Trigger Button */}
                                 <div className="mt-4 hidden md:block md:opacity-0 md:group-hover:opacity-100 transition-all duration-500 transform translate-y-0 md:translate-y-2 md:group-hover:translate-y-0 relative z-50">
@@ -344,7 +355,7 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
 
                     {/* --- BACK FACE --- */}
                     <ContentFace isBack>
-                        <div className="flex flex-col h-full relative z-20 p-8 text-center justify-center items-center bg-white/60 min-h-[400px]">
+                        <div className="flex flex-col h-full relative z-20 p-8 text-center justify-center items-center bg-neutral-900 min-h-[400px]">
                             {/* Decorative Background */}
                             <div className="absolute inset-0 z-0 opacity-10"
                                 style={{
@@ -352,10 +363,10 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
                                 }}
                             />
 
-                            <h3 className="text-2xl font-bold text-slate-800 tracking-tight mb-2 relative z-10">{name}</h3>
-                            <p className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-6 relative z-10">{role}</p>
+                            <h3 className="text-2xl font-bold text-white tracking-tight mb-2 relative z-10">{name}</h3>
+                            <p className="text-sm font-semibold uppercase tracking-wider text-neutral-400 mb-6 relative z-10">{role}</p>
 
-                            <div className="prose prose-sm text-slate-700 leading-relaxed max-w-none relative z-10">
+                            <div className="prose prose-sm text-neutral-300 leading-relaxed max-w-none relative z-10">
                                 {props.detailedDescription || description}
                             </div>
 
@@ -364,7 +375,7 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
                                     e.stopPropagation();
                                     setIsFlipped(false);
                                 }}
-                                className="mt-8 relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 hover:text-slate-900 transition-colors cursor-pointer"
+                                className="mt-8 relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-white transition-colors cursor-pointer border border-neutral-700"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M18 6 6 18" /><path d="m6 6 12 12" />

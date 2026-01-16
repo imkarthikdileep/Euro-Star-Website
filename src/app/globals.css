@@ -2,42 +2,108 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Stardom';
+  src: url('/fonts/Stardom-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Amsterdam';
+  src: url('/fonts/amsterdam-handwriting.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.signature-accent {
+  font-family: 'Amsterdam', cursive;
+  font-size: 4rem;
+  display: inline-block;
+  transform: rotate(-8deg);
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(to right,
+      #bf953f,
+      #fcf6ba,
+      #b38728,
+      #fbf5b7,
+      #aa771c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
 
 :root {
+  --font-stardom: 'Stardom', sans-serif;
+  --font-switzer: 'Switzer', sans-serif;
+  --font-amsterdam: 'Amsterdam', cursive;
+
   --radius: 0.625rem;
   /* Base colors - Light mode with dark text */
-  --background: transparent;
-  --foreground: oklch(0.15 0 0);
+  --background: #FFFFFF;
+  --foreground: #1D1D1F;
+  /* Shark */
   /* Near black - dark text for light mode */
   --card: transparent;
-  --card-foreground: oklch(0.15 0 0);
+  --card-foreground: #1D1D1F;
   /* Near black - dark text */
   --popover: transparent;
-  --popover-foreground: oklch(0.15 0 0);
+  --popover-foreground: #1D1D1F;
   /* Near black - dark text */
 
   /* Primary colors - Light mode */
-  --primary: oklch(0.5 0.2 250);
+  --primary: #0066CC;
+  /* Science Blue */
   /* Blue */
-  --primary-foreground: oklch(0.98 0 0);
+  --primary-foreground: #FFFFFF;
   /* White text on primary */
 
   /* Secondary colors - Light mode */
-  --secondary: oklch(0.96 0 0);
+  --secondary: #F5F5F7;
   /* Very light gray */
-  --secondary-foreground: oklch(0.15 0 0);
+  --secondary-foreground: #1D1D1F;
   /* Dark text */
 
   /* Muted colors - Light mode */
-  --muted: oklch(0.85 0 0);
+  --muted: #F5F5F7;
   /* Dark gray - darker shade to avoid glass effect override */
-  --muted-foreground: oklch(0.1 0 0);
+  --muted-foreground: #86868b;
+  /* Apple Secondary Text */
   /* Medium gray text */
 
   /* Accent colors - Light mode */
-  --accent: oklch(0.96 0 0);
+  --accent: #F5F5F7;
   /* Very light gray */
-  --accent-foreground: oklch(0.15 0 0);
+  --accent-foreground: #1D1D1F;
   /* Dark text */
 
   /* Destructive colors - WCAG AA compliant (4.5:1 contrast) */
@@ -154,12 +220,11 @@
 .dark {
   /* Apple-standard glassmorphism for dark mode - Very subtle and refined */
   /* Very low opacity for Apple's standard glass effect in dark mode */
+  /* Apple-standard glassmorphism for dark mode - Dark Material */
+  /* High quality dark glass - "Thick Material" look */
   --glass-bg: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0.06) 25%,
-      rgba(240, 248, 255, 0.07) 50%,
-      rgba(255, 255, 255, 0.05) 75%,
-      rgba(230, 240, 255, 0.06) 100%);
+      rgba(22, 22, 24, 0.70) 0%,
+      rgba(22, 22, 24, 0.60) 100%);
   /* Very subtle white border - Apple standard */
   --glass-border: rgba(255, 255, 255, 0.15);
   /* Minimal shadows with subtle inner glow - Apple standard for dark mode */
@@ -180,12 +245,10 @@
     0 0 8px rgba(255, 255, 255, 0.12) inset;
 
   /* Frosted glass variant - Enhanced opacity and stronger blur for dark mode */
+  /* Frosted glass variant - Enhanced opacity and stronger blur for dark mode */
   --glass-frosted-bg: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.15) 0%,
-      rgba(255, 255, 255, 0.12) 25%,
-      rgba(240, 248, 255, 0.13) 50%,
-      rgba(255, 255, 255, 0.11) 75%,
-      rgba(230, 240, 255, 0.12) 100%);
+      rgba(30, 30, 35, 0.80) 0%,
+      rgba(30, 30, 35, 0.70) 100%);
   --glass-frosted-border: rgba(255, 255, 255, 0.25);
   --glass-frosted-shadow:
     0 8px 32px rgba(0, 0, 0, 0.5),
@@ -212,38 +275,44 @@
     0 0 35px rgba(255, 255, 255, 0.2);
 
   /* Base colors - Apple-style white text */
-  --background: transparent;
-  --foreground: oklch(1 0 0);
+  --background: #000000;
+  /* True Black */
+  /* True black for potential OLED benefits or deep contrast */
+  --foreground: #F5F5F7;
+  /* Apple White */
+  /* Bright white */
   /* White - Apple-style */
   --card: transparent;
-  --card-foreground: oklch(1 0 0);
+  --card-foreground: #F5F5F7;
   /* White - Apple-style */
   --popover: transparent;
-  --popover-foreground: oklch(1 0 0);
+  --popover-foreground: #F5F5F7;
   /* White - Apple-style */
 
   /* Primary colors - Apple-style white text */
-  --primary: oklch(0.7 0.15 250);
+  --primary: #2997FF;
+  /* Light Blue for Dark Mode */
   /* Light blue */
-  --primary-foreground: oklch(1 0 0);
+  --primary-foreground: #FFFFFF;
   /* White - Apple-style */
 
   /* Secondary colors - Apple-style white text */
-  --secondary: oklch(0.25 0 0);
+  --secondary: #1D1D1F;
   /* Dark gray */
-  --secondary-foreground: oklch(1 0 0);
+  --secondary-foreground: #F5F5F7;
   /* White - Apple-style */
 
   /* Muted colors - Apple-style white text */
-  --muted: oklch(0.18 0 0);
+  --muted: #1D1D1F;
   /* Darker gray - darker shade to avoid glass effect override */
-  --muted-foreground: oklch(1 0 0);
+  --muted-foreground: #A1A1A6;
+  /* Apple Secondary Text Dark Mode */
   /* White - Apple-style */
 
   /* Accent colors - Apple-style white text */
-  --accent: oklch(0.25 0 0);
+  --accent: #1D1D1F;
   /* Dark gray */
-  --accent-foreground: oklch(1 0 0);
+  --accent-foreground: #F5F5F7;
   /* White - Apple-style */
 
   /* Destructive colors - WCAG AA compliant (4.5:1 contrast) */
@@ -297,8 +366,21 @@
   }
 
   body {
-    @apply text-foreground;
+    @apply text-foreground font-body;
     background-color: transparent;
+    font-size: 17px;
+    /* Apple standard body size */
+    line-height: 1.47059;
+    /* Apple standard line height */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .maplibregl-popup-content {
+    @apply !bg-transparent !shadow-none !p-0 !rounded-none;
+  }
+
+  .maplibregl-popup-tip {
+    @apply !hidden;
   }
 }
 

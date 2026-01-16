@@ -38,7 +38,7 @@ export function PageScrollBlur() {
     return (
         <motion.div
             style={{ opacity: heroOpacity }}
-            className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none"
+            className="fixed top-0 md:top-auto md:bottom-0 left-0 right-0 z-40 pointer-events-none"
         >
             <motion.div style={{ opacity: footerOpacity }}>
                 <GradualBlur

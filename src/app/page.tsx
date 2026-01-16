@@ -10,20 +10,13 @@ import { StatsSection } from "@/components/landing/stats-section";
 import { AnimateOnScroll } from "@/components/animate-on-scroll";
 import { GallerySection } from "@/components/landing/gallery-section";
 import { SisterConcernsSection } from "@/components/landing/sister-concerns-section";
-import Aurora from "@/components/Aurora";
 import { PageScrollBlur } from "@/components/PageScrollBlur";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Aurora Background - Fixed & Global */}
-      <div className="fixed inset-0 z-[-1] opacity-70 pointer-events-none">
-        <Aurora
-          colorStops={["#0061ff", "#60efff", "#0061ff"]}
-          speed={0.5}
-          amplitude={1.2}
-        />
-      </div>
+      {/* Global Background */}
+      <div className="fixed inset-0 z-[-1] bg-[#101010] pointer-events-none" />
 
       <Header />
 
@@ -31,11 +24,11 @@ export default function Home() {
         <HeroSection />
 
         <AnimateOnScroll>
-          <ServicesSection />
+          <AboutSection />
         </AnimateOnScroll>
 
         <AnimateOnScroll>
-          <AboutSection />
+          <ServicesSection />
         </AnimateOnScroll>
 
         <AnimateOnScroll>

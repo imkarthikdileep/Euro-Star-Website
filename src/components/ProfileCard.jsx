@@ -293,8 +293,8 @@ const ProfileCardComponent = ({
     () => ({
       '--icon': iconUrl ? `url(${iconUrl})` : 'none',
       '--grain': grainUrl ? `url(${grainUrl})` : 'none',
-      '--inner-gradient': innerGradient ?? DEFAULT_INNER_GRADIENT,
-      '--behind-glow-color': behindGlowColor ?? 'rgba(125, 190, 255, 0.67)',
+      '--inner-gradient': innerGradient ?? 'linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(40,40,40,0.8) 100%)',
+      '--behind-glow-color': behindGlowColor ?? 'rgba(125, 190, 255, 0.15)', // Reduced opacity for dark background
       '--behind-glow-size': behindGlowSize ?? '50%'
     }),
     [iconUrl, grainUrl, innerGradient, behindGlowColor, behindGlowSize]

@@ -30,11 +30,11 @@ export function SectionTitle({
             className
         )}>
             <div className={cn(
-                "relative z-10 flex flex-col md:flex-row gap-0 md:gap-x-4 items-start md:items-baseline leading-[0.8] select-none",
+                "relative z-10 flex flex-col md:flex-row gap-0 md:gap-x-3 items-start md:items-baseline select-none",
                 // Mobile: No center justify. Desktop: Center if desired.
                 align === "center" ? "md:justify-center" : ""
             )}>
-                {/* Layer 1: Outline Text (First Word) */}
+                {/* Layer 1: Solid Text (First Word) */}
                 <ScrollFloat
                     animationDuration={2.5}
                     ease="back.inOut(2)"
@@ -43,7 +43,7 @@ export function SectionTitle({
                     stagger={0.03}
                     containerClassName="my-0 inline-block text-left whitespace-nowrap"
                     textClassName={cn(
-                        "font-extrabold font-lexend text-transparent uppercase tracking-tight [-webkit-text-stroke:2px_#1e293b] leading-[0.8]",
+                        "font-medium font-headline text-white tracking-tight leading-none",
                         textSize
                     )}
                 >
@@ -60,7 +60,7 @@ export function SectionTitle({
                         stagger={0.03}
                         containerClassName="my-0 inline-block text-left whitespace-nowrap"
                         textClassName={cn(
-                            "font-extrabold font-lexend text-slate-900 uppercase tracking-tight leading-[0.8]",
+                            "font-medium font-headline text-gold tracking-tight leading-none",
                             textSize
                         )}
                     >
@@ -78,7 +78,7 @@ export function SectionTitle({
                         stagger={0.03}
                         containerClassName="my-0 inline-block text-left whitespace-nowrap"
                         textClassName={cn(
-                            "font-extrabold font-lexend text-slate-900 uppercase tracking-tight leading-[0.8]",
+                            "font-medium font-headline text-gold tracking-tight leading-none",
                             textSize
                         )}
                     >
