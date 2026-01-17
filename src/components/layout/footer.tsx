@@ -31,10 +31,10 @@ export function Footer() {
   }, [state, toast]);
 
   return (
-    <footer className="relative z-10 w-full">
+    <footer className="relative z-40 w-full">
       {/* Desktop Layout (Preserved) */}
       {/* Desktop Layout (Preserved) */}
-      <div className="hidden md:block relative h-20 bg-[#1A3C34]">
+      <div className="hidden lg:block relative h-24 bg-[#1A3C34] mt-0 overflow-hidden">
         {/* Flat Green Background - No Glass */}
 
         {/* Use h-20 to match Header height */}
@@ -82,7 +82,7 @@ export function Footer() {
       </div>
 
       {/* Mobile Layout (Luxury Industrial) */}
-      <footer className="md:hidden bg-forest text-cream py-16 px-6 relative overflow-hidden">
+      <footer className="lg:hidden bg-forest text-cream py-16 px-6 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
 
         <div className="relative z-10 mb-16">

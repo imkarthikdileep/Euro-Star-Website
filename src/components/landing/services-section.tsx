@@ -3,7 +3,7 @@
 import { CheckCircle, Users, HardHat, Ship, TestTube, Flame, Hammer, Settings, ArrowLeft, ArrowRight } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { SectionTitle } from "@/components/ui/section-title";
-import SpotlightCard from "@/components/SpotlightCard";
+import ChromaGrid from "@/components/ChromaGrid";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -87,40 +87,51 @@ export function ServicesSection() {
   }, { scope: containerRef });
 
   return (
-    <section id="services" className="relative z-10" ref={containerRef}>
+    <section id="services" className="relative z-40" ref={containerRef}>
       {/* Desktop Layout */}
-      <div className="hidden md:block py-16 md:py-24">
+      <div className="hidden lg:block py-16 md:py-24 bg-[#F9F8F4]">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col items-center mb-16 text-center">
-            <SectionTitle text="Our" secondaryText="Services" />
-            <p className="text-lg text-white mt-6 max-w-2xl mx-auto font-headline font-medium tracking-tight opacity-80">
+            {/* Manual Title matching the requested style "Our" (Black) "Services" (Gold) */}
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif md:font-headline mb-4">
+              <span className="text-[#000000]">Our</span> <span className="text-[#D4AF37] gold-noise">Services</span>
+            </h2>
+            <p className="text-lg text-[#000000]/80 mt-6 max-w-2xl mx-auto font-headline font-medium tracking-tight">
               We deliver a complete cycle of services with thorough analysis and well-thought strategies.
             </p>
           </div>
 
-          {/* Services Grid */}
-          <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
-            {services.map((service, index) => (
-              <ServiceCard key={index} service={service} />
-            ))}
-          </div >
+          {/* Services Grid with Chroma Effect */}
+          <div className="h-[auto] min-h-[800px] w-full relative z-10">
+            <ChromaGrid
+              items={services.map(s => ({
+                icon: s.icon,
+                title: s.title,
+                description: s.description,
+                image: "", // Not used
+                subtitle: "", // Not used
+                borderColor: "#D4AF37",
+                gradient: "transparent"
+              }))}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Mobile Layout (Carousel) */}
-      <div className="md:hidden py-24 px-6 bg-cream relative z-20">
+      {/* Mobile Layout (Carousel) - Optimized for Tablet */}
+      <div className="lg:hidden py-24 px-6 bg-[#F9F8F4] relative z-20">
         <div className="flex flex-col justify-between items-end mb-8 border-b border-black/10 pb-6">
-          <h2 className="font-serif text-4xl text-charcoal tracking-tight w-full text-left">Our Services</h2>
+          <h2 className="font-serif text-4xl text-[#000000] tracking-tight w-full text-left">Our <span className="text-[#D4AF37]">Services</span></h2>
         </div>
 
         {/* Carousel Container */}
         <Carousel setApi={setApi} className="w-full" opts={{ align: "start", loop: true }}>
           <CarouselContent className="-ml-4">
             {services.map((service, index) => (
-              <CarouselItem key={index} className="pl-4 basis-[85%]">
-                <div className="group relative p-8 h-[400px] border border-black/5 bg-white rounded-[2rem] hover:border-black/10 transition-all duration-500 flex flex-col justify-between overflow-hidden shadow-lg">
+              <CarouselItem key={index} className="pl-4 basis-[85%] md:basis-[45%]">
+                <div className="group relative p-8 h-[400px] border border-black/10 bg-white rounded-[2rem] hover:border-black/20 transition-all duration-500 flex flex-col justify-between overflow-hidden shadow-lg">
                   {/* Icons - Dark variant for Light Theme */}
-                  <div className="w-14 h-14 rounded-full bg-gold/5 flex items-center justify-center mb-6">
+                  <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mb-6">
                     <div className="text-gold w-7 h-7 stroke-[1.5] [&>svg]:w-full [&>svg]:h-full">
                       {service.icon}
                     </div>
@@ -128,7 +139,7 @@ export function ServicesSection() {
 
                   <div className="relative z-10 mt-auto">
                     <h3 className="font-serif text-3xl mb-3 text-gold tracking-wide">{service.title}</h3>
-                    <p className="text-base text-charcoal/80 leading-relaxed font-inter font-light">{service.description}</p>
+                    <p className="text-base text-[#000000] leading-relaxed font-inter font-light">{service.description}</p>
                   </div>
                 </div>
               </CarouselItem>
@@ -144,7 +155,7 @@ export function ServicesSection() {
               onClick={() => scrollTo(index)}
               className={cn(
                 "w-2 h-2 rounded-full transition-all duration-300",
-                index === current ? "bg-charcoal w-6" : "bg-charcoal/20 hover:bg-charcoal/40"
+                index === current ? "bg-black w-6" : "bg-black/20 hover:bg-black/40"
               )}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -152,42 +163,5 @@ export function ServicesSection() {
         </div>
       </div>
     </section>
-  );
-}
-
-function ServiceCard({ service }: { service: any }) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <div
-      className="service-card h-full relative group/card transition-transform duration-300 ease-out hover:-translate-y-2"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className={`
-          flex flex-col items-start h-full p-10 transition-all duration-500
-          bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem]
-          hover:bg-white/10 hover:border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.36)]
-          relative overflow-hidden
-        `}
-      >
-        {/* Subtle gradient glow on hover */}
-        <div className={`absolute inset-0 bg-gradient-to-tr from-blue-500/10 to-purple-500/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-700 pointer-events-none`} />
-
-        <div className="relative z-10 w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-8 backdrop-blur-md group-hover/card:scale-110 transition-transform duration-500">
-          <div className="text-gold h-8 w-8 stroke-[1.5] [&>svg]:h-full [&>svg]:w-full">
-            {service.icon}
-          </div>
-        </div>
-
-        <h3 className="relative z-10 mb-4 text-3xl font-headline text-gold tracking-wide group-hover/card:text-blue-200 transition-colors">
-          {service.title}
-        </h3>
-
-        <p className="relative z-10 text-gray-400 font-body font-normal text-base leading-relaxed group-hover/card:text-gray-300 transition-colors">
-          {service.description}
-        </p>
-      </div>
-    </div>
   );
 }

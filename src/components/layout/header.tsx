@@ -6,7 +6,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import GlassSurface from "@/components/GlassSurface";
 // import ShinyText from "@/components/ShinyText"; // Removed
-import GrainyText from "@/components/GrainyText";
 import MaiMenu from "@/components/MaiMenu";
 
 const navLinks = [
@@ -74,16 +73,14 @@ export function Header() {
                     href={link.href}
                     className="text-white/80 hover:text-white transition-colors font-medium relative group"
                   >
-                    <GrainyText
-                      text={link.label}
-                      className="font-body font-medium tracking-tight text-sm text-[length:inherit]"
-                      color="#C5A368"
-                    />
+                    <span className="font-body font-medium tracking-tight text-sm text-[length:inherit] text-[#C5A368]">
+                      {link.label}
+                    </span>
                   </Link>
                 ))}
                 <Button asChild className="rounded-full bg-gold hover:bg-gold/90 text-charcoal font-body font-medium px-6 shadow-lg hover:shadow-gold/20 transition-all duration-300">
                   <Link href="#contact">
-                    <GrainyText text="Contact Us" className="text-charcoal font-bold" />
+                    <span className="text-charcoal font-bold">Contact Us</span>
                   </Link>
                 </Button>
               </nav>

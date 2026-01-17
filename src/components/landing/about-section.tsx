@@ -3,7 +3,7 @@
 import { SectionTitle } from "@/components/ui/section-title";
 import { useRef, useState } from "react";
 import ShinyText from "@/components/ShinyText";
-import { ArrowUpRight } from "lucide-react";
+
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -25,11 +25,11 @@ export function AboutSection() {
       {
         opacity: 1,
         y: 0,
-        duration: 1.5,
+        duration: 0.8,
         ease: "power3.out",
         scrollTrigger: {
           trigger: el,
-          start: "top 80%", // Starts when top of element hits 80% viewport height
+          start: "top 95%", // Starts when top of element hits 95% viewport height
           toggleActions: "play none none none"
         }
       }
@@ -37,23 +37,28 @@ export function AboutSection() {
   }, { scope: containerRef });
 
   return (
-    <section className="relative z-10" ref={containerRef} id="about">
+    <section className="relative z-40 bg-[#F9F8F4]" ref={containerRef} id="about">
       {/* Desktop Layout (Preserved) */}
-      <div className="hidden md:block py-24 overflow-hidden">
+      <div className="hidden lg:block pb-24 pt-0 overflow-hidden">
         <div className="mb-10 max-w-6xl mx-auto">
-          {/* Glass Card Wrapper for About Content */}
-          <div className="bg-white/5 backdrop-blur-3xl rounded-[3rem] p-8 md:p-16 relative overflow-hidden border border-white/10 shadow-2xl group hover:scale-[1.02] transition-all duration-500">
+          {/* Glass Card Wrapper for About Content - Now Transparent for Liquid BG */}
+          <div className="bg-transparent rounded-[3rem] p-8 md:p-16 relative overflow-visible"> {/* Removed border/shadow/glass */}
 
             <div className="relative z-10">
               <div className="space-y-8 max-w-4xl mx-auto">
-                <SectionTitle text="About" secondaryText="Us" className="mb-12" />
+                {/* Updated Typography: About (Black), Us (Gold) */}
+                <div className="flex flex-col gap-2">
+                  <h2 className="font-headline text-6xl md:text-8xl !text-[#000000]">
+                    About <span className="text-[#C5A368]">Us</span>
+                  </h2>
+                </div>
 
                 <div ref={contentRef} className="h-full">
                   <div className="h-full relative">
 
-                    {/* Top Layer: Content */}
-                    <div className="text-lg font-body font-medium leading-relaxed tracking-tight relative z-10 text-left md:text-justify hyphens-auto text-slate-200 transition-colors duration-300">
-                      Since <span className="font-bold text-white">2010</span>, Euro Star Electromechanical Cont. has established itself as a premier industrial force and technical solutions provider within the <span className="font-bold text-white">United Arab Emirates</span>, driven by a mission to support the nation’s infrastructure with an elite team of qualified professionals and highly skilled technical specialists. While we specialize in executing high-complexity projects across the Marine, Oil & Gas, and Heavy Industrial sectors—handling intricate designs that demand superior engineering and unyielding precision—our core expertise lies in our role as a strategic technical partner and sub-contractor. We manage major contracts for critical industrial developments, providing the operational discipline and technical brilliance required to power large-scale infrastructure and ensure high-performance results on every site. Built on a foundation of trust and a relentless drive for perfection, we have evolved rapidly to become a leading industry partner, proving that we don’t just complete projects; we build lasting strategic partnerships founded on technical excellence and an unwavering commitment to quality.
+                    {/* Top Layer: Content - Dark Text for Cream Background */}
+                    <div className="text-lg font-body font-medium leading-relaxed tracking-tight relative z-10 text-left md:text-justify hyphens-auto text-[#222222] transition-colors duration-300">
+                      Since <span className="font-bold text-black">2010</span>, Euro Star Electromechanical Cont. has established itself as a premier industrial force and technical solutions provider within the <span className="font-bold text-black">United Arab Emirates</span>, driven by a mission to support the nation’s infrastructure with an elite team of qualified professionals and highly skilled technical specialists. While we specialize in executing high-complexity projects across the Marine, Oil & Gas, and Heavy Industrial sectors—handling intricate designs that demand superior engineering and unyielding precision—our core expertise lies in our role as a strategic technical partner and sub-contractor. We manage major contracts for critical industrial developments, providing the operational discipline and technical brilliance required to power large-scale infrastructure and ensure high-performance results on every site. Built on a foundation of trust and a relentless drive for perfection, we have evolved rapidly to become a leading industry partner, proving that we don’t just complete projects; we build lasting strategic partnerships founded on technical excellence and an unwavering commitment to quality.
                     </div>
                   </div>
                 </div>
@@ -63,9 +68,9 @@ export function AboutSection() {
         </div>
       </div>
 
-      {/* Mobile Layout (Luxury Industrial) */}
-      <div className="md:hidden py-24 px-6 md:px-12 lg:px-48 bg-white border-y border-charcoal/5">
-        <div className="grid grid-cols-1 gap-12 items-center">
+      {/* Mobile Layout (Luxury Industrial) - Optimized for Tablet */}
+      <div className="lg:hidden py-24 px-6 md:px-12 lg:px-48 bg-white border-y border-charcoal/5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="relative" onClick={() => setIsColored(!isColored)}>
             <div className="aspect-[4/5] overflow-hidden">
               <img

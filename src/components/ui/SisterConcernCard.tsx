@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 interface SisterConcernCardProps {
     name: string;
-    role: string;
+
     description: string;
     detailedDescription?: string;
     logo: React.ReactNode;
@@ -29,7 +29,7 @@ const adjust = (v: number, fMin: number, fMax: number, tMin: number, tMax: numbe
 export function SisterConcernCard(props: SisterConcernCardProps) {
     const {
         name,
-        role,
+
         description,
         logo,
         accentColor,
@@ -236,13 +236,13 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
 
     const ContentFace = ({ children, isBack = false }: { children: React.ReactNode, isBack?: boolean }) => (
         <div className={cn(
-            "relative overflow-hidden rounded-[30px] shadow-2xl backdrop-blur-xl transform-gpu border border-white/10 col-start-1 row-start-1 h-full w-full",
+            "relative overflow-hidden rounded-[30px] shadow-2xl backdrop-blur-xl transform-gpu border border-black/5 col-start-1 row-start-1 h-full w-full",
             // Backface visibility
             "[backface-visibility:hidden]",
             isBack && "[transform:rotateY(180deg)]"
         )}
             style={{
-                background: 'linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 100%)', // Darker base
+                background: 'white', // Explicit White
             }}
         >
             {/* -- Grain Texture Overlay -- */}
@@ -317,14 +317,14 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
                     <ContentFace>
                         <div className="flex flex-col h-full relative z-20">
                             {/* Logo Section */}
-                            <div className="h-56 w-full p-8 flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-white/50 to-transparent">
+                            <div className="h-56 w-full p-8 flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-gray-100 to-transparent">
                                 {/* Mesh Background for Logo */}
-                                <div className="absolute inset-0 z-0 opacity-30"
+                                <div className="absolute inset-0 z-0 opacity-20"
                                     style={{
                                         backgroundImage: `radial-gradient(circle at var(--pointer-x) var(--pointer-y), ${accentColor}, transparent 70%)`
                                     }}
                                 />
-                                <div className="relative z-10 w-full h-full flex items-center justify-center filter drop-shadow-md transform transition-transform duration-300 group-hover:scale-105">
+                                <div className="relative z-10 w-full h-full flex items-center justify-center filter drop-shadow-sm transform transition-transform duration-300 group-hover:scale-105">
                                     <div className="w-full h-full [&>img]:object-contain [&>img]:w-full [&>img]:h-full flex items-center justify-center">
                                         {logo}
                                     </div>
@@ -332,10 +332,10 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
                             </div>
 
                             {/* Details Section */}
-                            <div className="p-6 pt-2 pb-8 flex flex-col gap-2 text-center bg-neutral-900/40 border-t border-white/10 h-full justify-start flex-grow">
-                                <h3 className="text-2xl font-bold text-white tracking-tight">{name}</h3>
-                                <p className="text-sm font-semibold uppercase tracking-wider text-neutral-400">{role}</p>
-                                <p className="text-neutral-300 text-sm leading-relaxed mt-2 line-clamp-3">{description}</p>
+                            <div className="p-6 pt-2 pb-8 flex flex-col gap-2 text-center bg-white h-full justify-start flex-grow">
+                                <h3 className="text-2xl font-bold text-[#000000] tracking-tight">{name}</h3>
+
+                                <p className="text-[#000000] text-sm leading-relaxed mt-2 line-clamp-3">{description}</p>
 
                                 {/* Trigger Button */}
                                 <div className="mt-4 hidden md:block md:opacity-0 md:group-hover:opacity-100 transition-all duration-500 transform translate-y-0 md:translate-y-2 md:group-hover:translate-y-0 relative z-50">
@@ -344,7 +344,7 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
                                             e.stopPropagation();
                                             setIsFlipped(true);
                                         }}
-                                        className="text-xs font-bold px-4 py-2 rounded-full border border-slate-300 text-slate-600 bg-white/50 hover:bg-white hover:text-slate-800 transition-colors cursor-pointer"
+                                        className="text-xs font-bold px-6 py-2 rounded-full border border-black/10 text-[#000000] bg-black/5 hover:bg-black hover:text-white transition-colors cursor-pointer"
                                     >
                                         View Details
                                     </button>
@@ -355,7 +355,7 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
 
                     {/* --- BACK FACE --- */}
                     <ContentFace isBack>
-                        <div className="flex flex-col h-full relative z-20 p-8 text-center justify-center items-center bg-neutral-900 min-h-[400px]">
+                        <div className="flex flex-col h-full relative z-20 p-8 text-center justify-center items-center bg-white min-h-[400px]">
                             {/* Decorative Background */}
                             <div className="absolute inset-0 z-0 opacity-10"
                                 style={{
@@ -363,10 +363,10 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
                                 }}
                             />
 
-                            <h3 className="text-2xl font-bold text-white tracking-tight mb-2 relative z-10">{name}</h3>
-                            <p className="text-sm font-semibold uppercase tracking-wider text-neutral-400 mb-6 relative z-10">{role}</p>
+                            <h3 className="text-2xl font-bold text-black tracking-tight mb-2 relative z-10">{name}</h3>
 
-                            <div className="prose prose-sm text-neutral-300 leading-relaxed max-w-none relative z-10">
+
+                            <div className="prose prose-sm text-[#000000] leading-relaxed max-w-none relative z-10">
                                 {props.detailedDescription || description}
                             </div>
 
@@ -375,7 +375,7 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
                                     e.stopPropagation();
                                     setIsFlipped(false);
                                 }}
-                                className="mt-8 relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-white transition-colors cursor-pointer border border-neutral-700"
+                                className="mt-8 relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-black/5 text-black/60 hover:bg-black hover:text-white transition-colors cursor-pointer border border-black/10"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M18 6 6 18" /><path d="m6 6 12 12" />

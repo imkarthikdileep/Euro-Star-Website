@@ -50,7 +50,7 @@ export function GallerySection() {
   }, []);
 
   return (
-    <section className="py-24 bg-neutral-900 overflow-hidden relative" id="gallery">
+    <section className="py-24 bg-[#F9F8F4] overflow-hidden relative z-40 w-full" id="gallery">
       {/* Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-gold/5 blur-[100px]" />
@@ -58,21 +58,21 @@ export function GallerySection() {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="mb-16 md:mb-24 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div className="max-w-2xl">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 font-serif md:font-headline"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif md:font-headline mb-6"
             >
-              Featured <span className="text-gold italic md:not-italic">Projects</span>
+              <span className="text-[#000000]">Featured</span> <span className="text-[#D4AF37] italic md:not-italic gold-noise">Projects</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-white/60 text-base md:text-lg font-sans md:font-body font-light"
+              className="text-[#000000] text-base md:text-lg font-sans md:font-body font-light"
             >
               Explore our portfolio of precision engineering.
             </motion.p>
@@ -82,7 +82,7 @@ export function GallerySection() {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="hidden md:flex gap-4"
+            className="hidden lg:flex gap-4"
           >
             {/* Custom Navigation Buttons will be hooked up via Carousel context or just visual cues if using built-in nav */}
           </motion.div>
@@ -107,57 +107,59 @@ export function GallerySection() {
             ))}
           </CarouselContent>
           <div className="flex justify-end gap-2 mt-8 md:mt-12 pr-4">
-            <CarouselPrevious className="static translate-y-0 translate-x-0 h-12 w-12 border-white/10 bg-white/5 hover:bg-gold hover:text-black hover:border-gold transition-colors text-white" />
-            <CarouselNext className="static translate-y-0 translate-x-0 h-12 w-12 border-white/10 bg-white/5 hover:bg-gold hover:text-black hover:border-gold transition-colors text-white" />
+            <CarouselPrevious className="static translate-y-0 translate-x-0 h-12 w-12 border-black/10 bg-black/5 hover:bg-gold hover:text-black hover:border-gold transition-colors text-black" />
+            <CarouselNext className="static translate-y-0 translate-x-0 h-12 w-12 border-black/10 bg-black/5 hover:bg-gold hover:text-black hover:border-gold transition-colors text-black" />
           </div>
         </Carousel>
       </div>
 
-      {mounted && createPortal(
-        <AnimatePresence>
-          {selectedImage && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-md flex items-center justify-center p-4 md:p-8"
-              onClick={() => setSelectedImage(null)}
-            >
+      {
+        mounted && createPortal(
+          <AnimatePresence>
+            {selectedImage && (
               <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                className="relative w-full max-w-6xl h-[85vh] rounded-xl overflow-hidden shadow-2xl bg-neutral-900 border border-white/10"
-                onClick={(e) => e.stopPropagation()}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-md flex items-center justify-center p-4 md:p-8"
+                onClick={() => setSelectedImage(null)}
               >
-                <div className="absolute inset-0">
-                  <Image
-                    src={selectedImage.src}
-                    alt="Project Preview"
-                    fill
-                    className="object-contain"
-                    sizes="100vw"
-                    priority
-                  />
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10 bg-gradient-to-t from-black via-black/80 to-transparent">
-                </div>
-
-                <button
-                  onClick={() => setSelectedImage(null)}
-                  className="absolute top-6 right-6 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-gold hover:text-black transition-colors z-20"
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.95, opacity: 0 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                  className="relative w-full max-w-6xl h-[85vh] rounded-xl overflow-hidden shadow-2xl bg-neutral-900 border border-white/10"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <X size={20} />
-                </button>
+                  <div className="absolute inset-0">
+                    <Image
+                      src={selectedImage.src}
+                      alt="Project Preview"
+                      fill
+                      className="object-contain"
+                      sizes="100vw"
+                      priority
+                    />
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10 bg-gradient-to-t from-black via-black/80 to-transparent">
+                  </div>
+
+                  <button
+                    onClick={() => setSelectedImage(null)}
+                    className="absolute top-6 right-6 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-gold hover:text-black transition-colors z-20"
+                  >
+                    <X size={20} />
+                  </button>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
-    </section>
+            )}
+          </AnimatePresence>,
+          document.body
+        )
+      }
+    </section >
   );
 }
 

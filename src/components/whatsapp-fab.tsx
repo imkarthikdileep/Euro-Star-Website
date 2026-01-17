@@ -35,7 +35,7 @@ const WhatsAppFab = () => {
     <Button
       onClick={scrollToTop}
       size="icon"
-      className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white shadow-lg transition-all duration-300 group"
+      className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-white hover:bg-neutral-100 border border-black/10 !text-black shadow-lg transition-all duration-300 group"
       aria-label="Scroll to top"
     >
       <ArrowUp className="h-6 w-6 group-hover:-translate-y-1 transition-transform duration-300" />

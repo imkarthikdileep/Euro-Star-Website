@@ -5,7 +5,6 @@ import Script from "next/script";
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from "@/components/ui/toaster";
-import { AuroraBackground } from "../components/layout/aurora-background";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CookieConsent } from "@/components/CookieConsent";
 
@@ -13,6 +12,7 @@ import { Analytics } from "@vercel/analytics/next";
 
 import JsonLd from "@/components/json-ld";
 import SmoothScroll from "@/components/SmoothScroll";
+import { GoldNoiseSVG } from "@/components/GoldNoiseSVG";
 
 // Local Fonts
 const stardom = localFont({
@@ -64,26 +64,34 @@ const italianno = Italianno({ subsets: ["latin"], weight: ["400"], variable: "--
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.eurostaremc.com'),
-  title: 'Euro Star Electromechanical',
-  description: "UAE's trusted partner for industrial manpower and fabrication since 2010.",
+  title: 'Euro Star Electromechanical – Premier Fabrication & Manpower Solutions',
+  description: "Established in 2010, Euro Star Electromechanical is the UAE's premier partner for specialized technical manpower and fabrication works in oil field and marine sectors.",
   icons: {
-    icon: '/logo.png',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    // Keep existing fallback if desired, or remove if icon.svg covers it
+    // apple: '/apple-icon.png', 
   },
   openGraph: {
     type: 'website',
     url: 'https://www.eurostaremc.com/',
-    title: 'Euro Star Electromechanical',
-    description: 'Providing elite technical workforces for Marine, Oil & Gas, and Heavy Industries.',
+    title: 'Euro Star Electromechanical – Premier Fabrication & Manpower Solutions',
+    description: "Established in 2010, Euro Star Electromechanical is the UAE's premier partner for specialized technical manpower and fabrication works in oil field and marine sectors.",
     siteName: 'Euro Star Electromechanical',
     images: [{
-      url: '/preview_logo.jpg',
+      url: '/hero-screenshot.jpg', // Placeholder for the high-quality hero section screenshot
+      width: 1200,
+      height: 630,
+      alt: 'Euro Star Electromechanical Hero Section',
     }],
   },
   twitter: {
-    card: 'summary',
-    title: 'Euro Star Electromechanical',
-    description: "UAE's trusted partner for industrial manpower and fabrication since 2010.",
-    images: ['/preview_logo.jpg'],
+    card: 'summary_large_image',
+    title: 'Euro Star Electromechanical – Premier Fabrication & Manpower Solutions',
+    description: "Established in 2010, Euro Star Electromechanical is the UAE's premier partner for specialized technical manpower and fabrication works in oil field and marine sectors.",
+    images: ['/hero-screenshot.jpg'],
   },
 };
 
@@ -93,7 +101,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="!scroll-smooth" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background font-sans antialiased text-foreground",
         stardom.variable,
         switzer.variable,
@@ -110,9 +118,6 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <div className="hidden md:block">
-            <AuroraBackground />
-          </div>
           <SmoothScroll />
           {children}
           <CookieConsent />
@@ -133,6 +138,7 @@ export default function RootLayout({
           `}
         </Script>
         <JsonLd />
+        <GoldNoiseSVG />
       </body>
     </html>
   );

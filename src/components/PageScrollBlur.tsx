@@ -23,7 +23,7 @@ export function PageScrollBlur() {
     const heroOpacity = useTransform(
         scrollY,
         [0, viewportHeight * 0.8, viewportHeight * 1.2],
-        [0, 0, 1]
+        [0, 0, 0.1]
     );
 
     // Footer Fade Out:
@@ -32,7 +32,7 @@ export function PageScrollBlur() {
     const footerOpacity = useTransform(
         scrollYProgress,
         [0.9, 1],
-        [1, 0]
+        [0.1, 0]
     );
 
     return (

@@ -13,20 +13,12 @@ export function SisterConcernsSection() {
     };
 
     return (
-        <section id="sister-concerns" className="relative z-10 w-full max-w-7xl mx-auto">
+        <section id="sister-concerns" className="relative z-40 w-full">
             {/* Desktop Layout (Preserved) */}
-            <div className="hidden md:block py-24 px-4 md:px-6">
-                <div className="mb-16 text-center">
-                    <SectionTitle text="Allied" secondaryText="Concerns" />
-                    <p className="text-white max-w-2xl mx-auto text-lg mt-6 font-headline opacity-80">
-                        Expanding our horizon through specialized entities delivering excellence across trading and technical services.
-                    </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto align-start">
+            <div className="hidden lg:block w-full bg-[#F9F8F4] py-16 md:py-24">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto align-start px-8">
                     <SisterConcernCard
                         name="Kenz Hiraa General Trading LLC"
-                        role="General Trading"
                         description="A premier trading house specializing in the import and trading ofgeneral consumer goods across the region."
                         detailedDescription="A leading supplier of high-quality industrial food ingredients. We specialize in the commercial supply of mixed fruit jams, tutti frutti, and essential commodities like mayonnaise and milk powder to major bakeries and food industries across the region."
                         logo={
@@ -44,7 +36,6 @@ export function SisterConcernsSection() {
 
                     <SisterConcernCard
                         name="Kenz Technical Services LLC"
-                        role="Technical Services"
                         description="Dedicated to providing top-tier technical solutions, maintenance services, and specialized engineering support for large-scale industrial and commercial projects."
                         detailedDescription="Mirroring the engineering excellence of Euro Star, we provide comprehensive technical maintenance and on-site support. Our expertise covers electromechanical systems, marine fabrication, manpower supply and specialized oil field services for large-scale infrastructure."
                         logo={
@@ -62,67 +53,15 @@ export function SisterConcernsSection() {
                 </div>
             </div>
 
-            {/* Mobile Layout (Luxury Industrial Flip Cards) */}
-            <div className="md:hidden py-24 px-6 bg-cream">
+            {/* Mobile Layout (Luxury Industrial Flip Cards) - Optimized for Tablet */}
+            <div className="lg:hidden py-24 px-6 bg-[#F9F8F4]">
                 <div className="text-center mb-16">
-                    <h2 className="font-serif text-3xl text-charcoal tracking-tight">Allied Concerns</h2>
-                    <div className="w-px h-12 bg-gold mx-auto mt-6"></div>
+                    <h2 className="font-serif text-3xl tracking-tight"><span className="text-[#000000]">Allied</span> <span className="text-[#D4AF37]">Concerns</span></h2>
+                    <div className="w-px h-12 bg-[#D4AF37] mx-auto mt-6"></div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-8 perspective-1000">
-                    {/* Card 1: Kenz Hiraa General Trading */}
-                    <div
-                        className="group relative h-[600px] cursor-pointer"
-                        onClick={() => handleCardClick(1)}
-                        style={{ perspective: '1000px' }}
-                    >
-                        <div
-                            className={`relative text-center w-full h-full transition-transform duration-700 ease-in-out`}
-                            style={{
-                                transformStyle: 'preserve-3d',
-                                transform: flippedCard === 1 ? 'rotateY(180deg)' : 'rotateY(0deg)'
-                            }}
-                        >
-                            {/* Front Side */}
-                            <div
-                                className="absolute inset-0 w-full h-full backface-hidden"
-                                style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
-                            >
-                                <img src="/Kenz_trading.jpeg" alt="Kenz Trading" className="w-full h-full object-cover rounded-3xl brightness-75" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent rounded-3xl"></div>
-                                <div className="absolute inset-0 p-12 flex flex-col justify-end items-start text-left">
-                                    <span className="text-gold text-xs uppercase tracking-widest mb-2 font-inter font-medium">Division 01</span>
-                                    <h3 className="text-white font-serif text-4xl leading-none mb-4">Kenz Hiraa<br />General Trading</h3>
-                                    <p className="text-white/60 text-sm font-inter animate-pulse">Tap for details</p>
-                                </div>
-                            </div>
-
-                            {/* Back Side */}
-                            <div
-                                className="absolute inset-0 w-full h-full rounded-3xl bg-[#1c1c1e] text-white p-10 flex flex-col items-center justify-center backface-hidden"
-                                style={{
-                                    backfaceVisibility: 'hidden',
-                                    WebkitBackfaceVisibility: 'hidden',
-                                    transform: 'rotateY(180deg)'
-                                }}
-                            >
-                                <div className="relative w-48 h-32 mb-8 bg-white/10 rounded-2xl p-4 backdrop-blur-sm">
-                                    <Image
-                                        src="/Kenz-logo-mobile.jpeg"
-                                        alt="Kenz Hiraa Logo"
-                                        fill
-                                        className="object-contain"
-                                    />
-                                </div>
-                                <h3 className="text-2xl font-serif mb-4 text-center">Kenz Hiraa General Trading</h3>
-                                <p className="text-center text-gray-400 font-inter leading-relaxed text-sm">
-                                    A leading supplier of high-quality industrial food ingredients. We specialize in the commercial supply of mixed fruit jams, tutti frutti, and essential commodities like mayonnaise and milk powder to major bakeries and food industries across the region.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Card 2: Kenz Technical Services */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 perspective-1000">
+                    {/* Card 1: Kenz Technical Services */}
                     <div
                         className="group relative h-[600px] cursor-pointer"
                         onClick={() => handleCardClick(2)}
@@ -144,7 +83,7 @@ export function SisterConcernsSection() {
                                 <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&auto=format&fit=crop" alt="Kenz Technical" className="w-full h-full object-cover rounded-3xl" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent rounded-3xl"></div>
                                 <div className="absolute inset-0 p-12 flex flex-col justify-end items-start text-left">
-                                    <span className="text-teal-400 text-xs uppercase tracking-widest mb-2 font-inter font-medium">Division 02</span>
+                                    <span className="text-teal-400 text-xs uppercase tracking-widest mb-2 font-inter font-medium">Division 01</span>
                                     <h3 className="text-white font-serif text-4xl leading-none mb-4">Kenz<br />Technical</h3>
                                     <p className="text-white/60 text-sm font-inter animate-pulse">Tap for details</p>
                                 </div>
@@ -152,14 +91,14 @@ export function SisterConcernsSection() {
 
                             {/* Back Side */}
                             <div
-                                className="absolute inset-0 w-full h-full rounded-3xl bg-[#1c1c1e] text-white p-10 flex flex-col items-center justify-center backface-hidden"
+                                className="absolute inset-0 w-full h-full rounded-3xl bg-white text-black p-10 flex flex-col items-center justify-center backface-hidden shadow-xl border border-black/5"
                                 style={{
                                     backfaceVisibility: 'hidden',
                                     WebkitBackfaceVisibility: 'hidden',
                                     transform: 'rotateY(180deg)'
                                 }}
                             >
-                                <div className="relative w-56 h-32 mb-8 bg-white/10 rounded-2xl p-2 backdrop-blur-sm">
+                                <div className="relative w-56 h-32 mb-8 bg-black/5 rounded-2xl p-2 backdrop-blur-sm">
                                     <Image
                                         src="/Kenz-technical-logo-mobile.jpeg"
                                         alt="Kenz Technical Logo"
@@ -167,15 +106,67 @@ export function SisterConcernsSection() {
                                         className="object-contain"
                                     />
                                 </div>
-                                <h3 className="text-2xl font-serif mb-4 text-center">Kenz Technical Services</h3>
-                                <p className="text-center text-gray-400 font-inter leading-relaxed text-sm">
+                                <h3 className="text-2xl font-serif mb-4 text-center !text-[#000000]">Kenz Technical Services LLC</h3>
+                                <p className="text-center text-[#000000] font-inter leading-relaxed text-sm">
                                     Mirroring the engineering excellence of Euro Star, we provide comprehensive technical maintenance and on-site support. Our expertise covers electromechanical systems, marine fabrication, manpower supply specialized oil field services.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Card 2: Kenz Hiraa General Trading */}
+                    <div
+                        className="group relative h-[600px] cursor-pointer"
+                        onClick={() => handleCardClick(1)}
+                        style={{ perspective: '1000px' }}
+                    >
+                        <div
+                            className={`relative text-center w-full h-full transition-transform duration-700 ease-in-out`}
+                            style={{
+                                transformStyle: 'preserve-3d',
+                                transform: flippedCard === 1 ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                            }}
+                        >
+                            {/* Front Side */}
+                            <div
+                                className="absolute inset-0 w-full h-full backface-hidden"
+                                style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+                            >
+                                <img src="/Kenz_trading.jpeg" alt="Kenz Trading" className="w-full h-full object-cover rounded-3xl brightness-75" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent rounded-3xl"></div>
+                                <div className="absolute inset-0 p-12 flex flex-col justify-end items-start text-left">
+                                    <span className="text-gold text-xs uppercase tracking-widest mb-2 font-inter font-medium">Division 02</span>
+                                    <h3 className="text-[#ffffff] font-serif text-4xl leading-none mb-4">Kenz Hiraa<br />General Trading</h3>
+                                    <p className="text-white/60 text-sm font-inter animate-pulse">Tap for details</p>
+                                </div>
+                            </div>
+
+                            {/* Back Side */}
+                            <div
+                                className="absolute inset-0 w-full h-full rounded-3xl bg-white text-black p-10 flex flex-col items-center justify-center backface-hidden shadow-xl border border-black/5"
+                                style={{
+                                    backfaceVisibility: 'hidden',
+                                    WebkitBackfaceVisibility: 'hidden',
+                                    transform: 'rotateY(180deg)'
+                                }}
+                            >
+                                <div className="relative w-48 h-32 mb-8 bg-black/5 rounded-2xl p-4 backdrop-blur-sm">
+                                    <Image
+                                        src="/Kenz-logo-mobile.jpeg"
+                                        alt="Kenz Hiraa Logo"
+                                        fill
+                                        className="object-contain"
+                                    />
+                                </div>
+                                <h3 className="text-2xl font-serif mb-4 text-center !text-[#000000]">Kenz Hiraa General Trading LLC</h3>
+                                <p className="text-center text-[#000000] font-inter leading-relaxed text-sm">
+                                    A leading supplier of high-quality industrial food ingredients. We specialize in the commercial supply of mixed fruit jams, tutti frutti, and essential commodities like mayonnaise and milk powder to major bakeries and food industries across the region.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section >
+        </section>
     );
 }

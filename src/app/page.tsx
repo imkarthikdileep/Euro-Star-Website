@@ -11,10 +11,20 @@ import { AnimateOnScroll } from "@/components/animate-on-scroll";
 import { GallerySection } from "@/components/landing/gallery-section";
 import { SisterConcernsSection } from "@/components/landing/sister-concerns-section";
 import { PageScrollBlur } from "@/components/PageScrollBlur";
+import Preloader from "@/components/Preloader";
+import LiquidTransition from "@/components/LiquidTransition";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Desktop Preloader */}
+      <div className="hidden md:block">
+        <Preloader />
+      </div>
+
+      {/* Liquid Scroll Transition Overlay (Desktop) */}
+      <LiquidTransition />
+
       {/* Global Background */}
       <div className="fixed inset-0 z-[-1] bg-[#101010] pointer-events-none" />
 
