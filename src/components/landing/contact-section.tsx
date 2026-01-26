@@ -201,7 +201,7 @@ export function ContactSection() {
                                     <div className="flex flex-col gap-2">
                                         <a href="mailto:eurostar014@gmail.com" className="text-white text-xl font-light hover:text-gold transition-colors">eurostar014@gmail.com</a>
                                         <a href="mailto:Info@kenzuae.com" className="text-white text-xl font-light hover:text-gold transition-colors">Info@kenzuae.com</a>
-                                        <a href="mailto:info@eurostar-emc.com" className="text-white text-xl font-light hover:text-gold transition-colors">info@eurostar-emc.com</a>
+                                        <a href="mailto:info@eurostaremc.com" className="text-white text-xl font-light hover:text-gold transition-colors">info@eurostaremc.com</a>
                                     </div>
                                 </div>
                             </div>
