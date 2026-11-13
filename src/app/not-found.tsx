@@ -2,11 +2,8 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import { VT323 } from "next/font/google";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-
-const vt323 = VT323({ weight: "400", subsets: ["latin"] });
 
 // 10x12 Grid for chunkier numbers
 const number4 = [
@@ -149,7 +146,7 @@ export default function NotFound() {
     return (
         <div
             ref={containerRef}
-            className={`h-screen w-screen bg-[#222222] flex flex-col items-center justify-center relative overflow-hidden ${vt323.className}`}
+            className="h-screen w-screen bg-[#222222] flex flex-col items-center justify-center relative overflow-hidden font-mono"
         >
             {/* Header */}
             <div className="absolute top-8 left-8">
@@ -188,7 +185,7 @@ export default function NotFound() {
             </div>
 
             {/* Main Message */}
-            <h2 className="text-[#F9F8F4] font-playfair text-xl md:text-3xl font-light mb-12 tracking-wide text-center max-w-lg leading-relaxed">
+            <h2 className="text-[#F9F8F4] font-headline text-xl md:text-3xl font-light mb-12 tracking-wide text-center max-w-lg leading-relaxed">
                 "This is not the page you are looking for."
             </h2>
 
