@@ -1,156 +1,159 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
 export default function Preloader() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const wavePathRef = useRef<SVGPathElement>(null);
-    const counterRef = useRef<HTMLSpanElement>(null);
-    const [complete, setComplete] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+  const [complete, setComplete] = useState(false);
+  const [shouldRender, setShouldRender] = useState<boolean | null>(null);
 
-    useGSAP(() => {
-        // Lock body scroll
-        document.body.style.overflow = "hidden";
+  // Check sessionStorage on client mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const visited = sessionStorage.getItem("eurostar_visited");
+      if (visited === "true") {
+        setShouldRender(false);
+        setComplete(true);
+      } else {
+        setShouldRender(true);
+      }
+    }
+  }, []);
 
-        // Master Timeline
-        const tl = gsap.timeline({
-            onComplete: () => {
-                document.body.style.overflow = "";
-                setComplete(true);
-            },
-        });
+  useGSAP(
+    () => {
+      if (shouldRender !== true || !containerRef.current) return;
 
-        const counterObj = { value: 0 };
-        const DURATION = 5; // User requested 5s
+      document.body.style.overflow = "hidden";
 
-        // 1. Horizontal Ripple (The Wave) - Infinite Loop
-        // Path d is roughly 2000px wide. We move it -1000px and reset for seamless loop.
-        gsap.to(wavePathRef.current, {
-            x: -1000,
-            duration: 2,
-            ease: "linear",
-            repeat: -1,
-        });
+      const tl = gsap.timeline({
+        onComplete: () => {
+          document.body.style.overflow = "";
+          sessionStorage.setItem("eurostar_visited", "true");
+          setComplete(true);
+        },
+      });
 
-        // 2. Vertical Rise (The Fill)
-        // Sync Logic:
-        // ViewBox Height: 400. Text centered. Font Size ~220px.
-        // Approx Text Bounds: y=100 (top) to y=300 (bottom).
-        // Wave Path defined with Top at y=0.
-        // Start State (0%): Water Top at y=350 (Below Text).
-        // End State (100%): Water Top at y=50 (Above Text).
+      const counterObj = { value: 0 };
+      const DURATION = 1.0; // 1s count phase (max 1.4s total)
 
-        // Initial Position (Before Anim): y=350
-        gsap.set(wavePathRef.current, { y: 350 });
+      // Phase 1: HUD Counter (0.0s – 1.0s)
+      tl.to(
+        progressBarRef.current,
+        {
+          scaleX: 1,
+          duration: DURATION,
+          ease: "power1.inOut",
+        },
+        0
+      );
 
-        tl.to(wavePathRef.current, {
-            y: 50,
-            duration: DURATION,
-            ease: "power1.inOut",
-        }, 0);
-
-        // 3. Counter Animation
-        tl.to(counterObj, {
-            value: 100,
-            duration: DURATION,
-            ease: "power1.inOut",
-            onUpdate: () => {
-                if (counterRef.current) {
-                    counterRef.current.textContent = Math.round(counterObj.value).toString();
-                }
+      tl.to(
+        counterObj,
+        {
+          value: 100,
+          duration: DURATION,
+          ease: "power1.inOut",
+          onUpdate: () => {
+            if (counterRef.current) {
+              counterRef.current.textContent = Math.round(counterObj.value)
+                .toString()
+                .padStart(3, "0");
             }
-        }, 0);
+          },
+        },
+        0
+      );
 
-        // 4. Exit Phase
-        // Text Pulse
-        tl.to("#euro-star-svg", {
-            scale: 1.1,
-            filter: "brightness(1.5)",
-            duration: 0.2,
-            ease: "power2.out",
-            yoyo: true,
-            repeat: 1
-        });
+      // Phase 2: Center-Aperture / Curtain Unclip (1.0s – 1.4s)
+      tl.set(containerRef.current, { pointerEvents: "none" }, DURATION);
 
-        // Curtain Reveal
-        tl.to(containerRef.current, {
-            yPercent: -100,
-            duration: 1.2,
-            ease: "expo.inOut",
-        });
+      tl.to(
+        containerRef.current,
+        {
+          yPercent: -100,
+          duration: 0.4,
+          ease: "power4.inOut",
+        },
+        DURATION
+      );
 
-    }, { scope: containerRef });
+      return () => {
+        document.body.style.overflow = "";
+      };
+    },
+    { scope: containerRef, dependencies: [shouldRender] }
+  );
 
-    if (complete) return null;
+  // If already visited or animation complete, render nothing
+  if (shouldRender === false || complete) return null;
 
-    return (
-        <div
-            ref={containerRef}
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#222222] h-screen w-screen cursor-none"
-        >
-            <div className="relative w-full max-w-7xl px-4 flex flex-col items-center justify-center">
+  return (
+    <div
+      ref={containerRef}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#141414] will-change-transform"
+    >
+      {/* Corner Brackets */}
+      <div className="absolute top-6 left-6 w-6 h-6 border-t border-l border-[#C5A368]/40" />
+      <div className="absolute top-6 right-6 w-6 h-6 border-t border-r border-[#C5A368]/40" />
+      <div className="absolute bottom-6 left-6 w-6 h-6 border-b border-l border-[#C5A368]/40" />
+      <div className="absolute bottom-6 right-6 w-6 h-6 border-b border-r border-[#C5A368]/40" />
 
-                {/* SVG Container */}
-                <svg
-                    id="euro-star-svg"
-                    viewBox="0 0 1200 400"
-                    className="w-full h-auto overflow-visible font-playfair font-bold"
-                    preserveAspectRatio="xMidYMid meet"
-                >
-                    <defs>
-                        {/* 
-                          Wave Path: Wide shape. 
-                          Top edge allows for ripples.
-                          Defined with "Water Level" at y=0.
-                          Deep block below to y=500.
-                        */}
-                        <clipPath id="waveClip">
-                            <path
-                                ref={wavePathRef}
-                                className="wave-path"
-                                d="M0,500 L3000,500 L3000,0 Q2850,-50 2700,0 T2400,0 T2100,0 T1800,0 T1500,0 T1200,0 T900,0 T600,0 T300,0 T0,0 Z"
-                                fill="#FFFFFF"
-                            />
-                        </clipPath>
-                    </defs>
+      {/* Edge Telemetry Labels */}
+      <div className="absolute top-6 left-14 text-[10px] font-mono tracking-[0.2em] text-[#F9F9F7]/30 uppercase">
+        AJMAN, UAE — 25.4052° N
+      </div>
+      <div className="absolute top-6 right-14 text-[10px] font-mono tracking-[0.2em] text-[#F9F9F7]/30 uppercase">
+        EST. 2010 — 55.5136° E
+      </div>
+      <div className="absolute bottom-6 left-14 text-[10px] font-mono tracking-[0.2em] text-[#F9F9F7]/30 uppercase">
+        ISO 9001:2015
+      </div>
+      <div className="absolute bottom-6 right-14 text-[10px] font-mono tracking-[0.2em] text-white/50 uppercase">
+        EURO STAR ELECTROMECHANICAL
+      </div>
 
-                    {/* Layer 1: Base (Empty) */}
-                    <text
-                        x="50%"
-                        y="50%"
-                        dominantBaseline="middle"
-                        textAnchor="middle"
-                        className="text-[220px] tracking-tighter"
-                        fill="#948F85"
-                        fillOpacity="0.3"
-                    >
-                        EURO STAR
-                    </text>
-
-                    {/* Layer 2: Fill (New Color) - Masked by Wave */}
-                    <text
-                        x="50%"
-                        y="50%"
-                        dominantBaseline="middle"
-                        textAnchor="middle"
-                        className="text-[220px] tracking-tighter"
-                        fill="#948F85"
-                        clipPath="url(#waveClip)"
-                    >
-                        EURO STAR
-                    </text>
-                </svg>
-
-                {/* Counter */}
-                <div className="mt-8 flex items-baseline gap-2 font-sans font-medium">
-                    <span className="text-white/40 text-sm tracking-widest uppercase">loading...</span>
-                    <span ref={counterRef} className="text-[#948F85] text-xl tabular-nums">0</span>
-                    <span className="text-[#948F85] text-xl">%</span>
-                </div>
-
-            </div>
+      {/* Center Content */}
+      <div className="relative flex flex-col items-center gap-8">
+        {/* Brand Wordmark */}
+        <div className="flex flex-col items-center leading-none select-none">
+          <h2 className="font-galgo text-[clamp(2.5rem,7vw,5.5rem)] text-white/25 tracking-wider uppercase font-bold leading-[0.82] text-center">
+            EURO STAR
+          </h2>
+          <span className="font-galgo text-[clamp(1.2rem,3.5vw,2.5rem)] text-white/25 tracking-[0.16em] uppercase font-bold leading-[0.82] text-center -mt-2 sm:-mt-3">
+            ELECTROMECHANICAL
+          </span>
         </div>
-    );
+
+        {/* Progress Bar Container */}
+        <div className="relative w-[280px] sm:w-[360px]">
+          {/* Track */}
+          <div className="w-full h-[1px] bg-[#F9F9F7]/10" />
+          {/* Fill */}
+          <div
+            ref={progressBarRef}
+            className="absolute top-0 left-0 h-[1px] bg-[#C5A368] origin-left"
+            style={{ transform: "scaleX(0)" }}
+          />
+        </div>
+
+        {/* Counter */}
+        <div className="flex items-baseline gap-3">
+          <span
+            ref={counterRef}
+            className="text-[#C5A368] text-2xl font-mono tabular-nums tracking-wider"
+          >
+            000
+          </span>
+          <span className="text-[#F9F9F7]/30 text-xs font-mono tracking-[0.3em] uppercase">
+            %
+          </span>
+        </div>
+      </div>
+    </div>
+  );
 }
