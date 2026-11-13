@@ -3,26 +3,56 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
-import { useActionState, useEffect } from "react";
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { handleFormSubmit } from "@/app/actions/contact";
 
 export function ContactSection() {
     const { toast } = useToast();
-    const [state, formAction] = useActionState(handleFormSubmit, {
-        success: false,
-        message: "",
-    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    useEffect(() => {
-        if (state.message) {
-            toast({
-                title: state.success ? "Success" : "Error",
-                description: state.message,
-                variant: state.success ? "default" : "destructive",
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+
+        const name = (formData.get("name") as string) || "";
+        const email = (formData.get("email") as string) || "";
+        const phone = (formData.get("phone") as string) || "";
+        const message = (formData.get("message") as string) || "";
+
+        try {
+            const res = await fetch("/contact.php", {
+                method: "POST",
+                body: formData,
             });
+            if (res.ok) {
+                const data = await res.json().catch(() => ({ success: true }));
+                if (data.success) {
+                    toast({
+                        title: "Message Sent",
+                        description: "Your message has been sent successfully to Euro Star Electromechanical.",
+                    });
+                    form.reset();
+                    setIsSubmitting(false);
+                    return;
+                }
+            }
+        } catch {
+            // Fallback to mailto
         }
-    }, [state, toast]);
+
+        // Direct mailto fallback
+        const subject = encodeURIComponent(`Project Inquiry: ${name}`);
+        const body = encodeURIComponent(`Name: ${name}\nPhone: ${phone}\nEmail: ${email}\n\nMessage:\n${message}`);
+        window.location.href = `mailto:info@eurostaremc.com?subject=${subject}&body=${body}`;
+
+        toast({
+            title: "Inquiry Prepared",
+            description: "Opening your email client to complete dispatch to info@eurostaremc.com",
+        });
+        setIsSubmitting(false);
+    };
 
     const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=25.3936623,55.4629654";
 
@@ -36,7 +66,7 @@ export function ContactSection() {
                         <h3 className="text-4xl font-serif text-white mb-2">Work With Us.</h3>
                     </div>
 
-                    <form action={formAction} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
                             <input
                                 name="name"
@@ -80,9 +110,10 @@ export function ContactSection() {
 
                         <Button
                             type="submit"
-                            className="w-full sm:w-auto min-h-[52px] bg-transparent border border-white/20 text-white font-medium text-xs uppercase tracking-widest px-8 rounded-full mt-6 hover:bg-gold hover:text-charcoal hover:border-gold transition-all duration-300 flex items-center justify-center"
+                            disabled={isSubmitting}
+                            className="w-full sm:w-auto min-h-[52px] bg-transparent border border-white/20 text-white font-medium text-xs uppercase tracking-widest px-8 rounded-full mt-6 hover:bg-gold hover:text-charcoal hover:border-gold transition-all duration-300 flex items-center justify-center disabled:opacity-50"
                         >
-                            Send Message
+                            {isSubmitting ? "Sending..." : "Send Message"}
                         </Button>
                     </form>
                 </div>
@@ -102,7 +133,7 @@ export function ContactSection() {
                             <p className="text-white/60 text-lg font-light max-w-md">We&apos;re here to help. Contact us for a consultation or any inquiries.</p>
                         </div>
 
-                        <form action={formAction} className="space-y-10">
+                        <form onSubmit={handleSubmit} className="space-y-10">
                             <div className="grid grid-cols-2 gap-10">
                                 <div>
                                     <input
@@ -148,9 +179,10 @@ export function ContactSection() {
 
                             <Button
                                 type="submit"
-                                className="bg-transparent border border-white/20 text-white font-medium text-sm uppercase tracking-widest min-h-[52px] px-10 rounded-full mt-4 hover:bg-gold hover:text-charcoal hover:border-gold transition-all duration-300"
+                                disabled={isSubmitting}
+                                className="bg-transparent border border-white/20 text-white font-medium text-sm uppercase tracking-widest min-h-[52px] px-10 rounded-full mt-4 hover:bg-gold hover:text-charcoal hover:border-gold transition-all duration-300 disabled:opacity-50"
                             >
-                                Send Message
+                                {isSubmitting ? "Sending..." : "Send Message"}
                             </Button>
                         </form>
                     </motion.div>

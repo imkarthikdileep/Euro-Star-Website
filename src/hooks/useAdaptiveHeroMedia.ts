@@ -11,7 +11,7 @@ export interface MediaConfig {
 export function useAdaptiveHeroMedia(): MediaConfig {
   const [config, setConfig] = useState<MediaConfig>({
     tier: "desktop",
-    mp4: "/gallery/Eurostar_Hero_Section_Hd_compressed.mp4",
+    mp4: "/videos/eurostar-hero-desktop.mp4",
     poster: "/images/hero-poster-desktop.webp",
   });
 

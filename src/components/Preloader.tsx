@@ -11,16 +11,26 @@ export default function Preloader() {
   const [complete, setComplete] = useState(false);
   const [shouldRender, setShouldRender] = useState<boolean | null>(null);
 
-  // Check sessionStorage on client mount
+  // Check sessionStorage on client mount + hard failsafe timeout (never trap users at 0%)
   useEffect(() => {
     if (typeof window !== "undefined") {
       const visited = sessionStorage.getItem("eurostar_visited");
       if (visited === "true") {
         setShouldRender(false);
         setComplete(true);
+        return;
       } else {
         setShouldRender(true);
       }
+
+      // Hard failsafe: force-dismiss after 2.0s even if network or animation stalls
+      const hardTimeout = window.setTimeout(() => {
+        document.body.style.overflow = "";
+        sessionStorage.setItem("eurostar_visited", "true");
+        setComplete(true);
+      }, 2000);
+
+      return () => window.clearTimeout(hardTimeout);
     }
   }, []);
 
@@ -95,6 +105,17 @@ export default function Preloader() {
   return (
     <div
       ref={containerRef}
+      id="eurostar-preloader"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        backgroundColor: "#141414",
+        color: "#F9F9F7",
+        display: complete ? "none" : "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#141414] will-change-transform"
     >
       {/* Corner Brackets */}
