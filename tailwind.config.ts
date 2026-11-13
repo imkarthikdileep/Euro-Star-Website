@@ -10,10 +10,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        galgo: ['var(--font-galgo)', 'sans-serif'],
         headline: ['var(--font-stardom)', 'sans-serif'],
         amsterdam: ['var(--font-amsterdam)', 'cursive'],
         body: ['var(--font-switzer)', 'sans-serif'],
-        brand: ['var(--font-outfit)', 'sans-serif'],
+        brand: ['var(--font-galgo)', 'sans-serif'],
         futura: ['var(--font-jost)', 'sans-serif'],
         sans: ['var(--font-switzer)', 'sans-serif'], // Default sans to Switzer
         serif: ['var(--font-playfair-display)', 'serif'],
