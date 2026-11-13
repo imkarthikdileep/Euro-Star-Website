@@ -56,7 +56,7 @@
     "maplibre-gl": "^5.16.0",
     "mathjs": "^14.9.1",
     "motion": "^12.25.0",
-    "next": "15.5.9",
+    "next": "15.5.28",
     "next-themes": "^0.4.6",
     "nodemailer": "^7.0.12",
     "ogl": "^1.0.11",
@@ -78,7 +78,7 @@
     "@types/react-dom": "^19.2.1",
     "autoprefixer": "^10.4.23",
     "genkit-cli": "^1.20.0",
-    "postcss": "^8",
+    "postcss": "^8.5.23",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
