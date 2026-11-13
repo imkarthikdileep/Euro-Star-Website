@@ -141,6 +141,17 @@ export default function RootLayout({
         </Script>
         <JsonLd />
         <GoldNoiseSVG />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              setTimeout(function() {
+                var p = document.getElementById('eurostar-preloader');
+                if (p) p.style.display = 'none';
+                document.body.style.overflow = '';
+              }, 2500);
+            `,
+          }}
+        />
       </body>
     </html>
   );

@@ -45,6 +45,16 @@ export function CookieConsent() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: "100%", opacity: 0 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 80,
+            backgroundColor: "#181818",
+            borderTop: "1px solid rgba(249, 249, 247, 0.12)",
+            color: "#F9F9F7",
+          }}
           className="fixed bottom-0 left-0 right-0 z-[80] bg-[#181818] border-t border-[#F9F9F7]/12 py-3.5 px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl"
         >
           <p className="font-body text-xs text-[#F9F9F7]/80 text-center sm:text-left leading-relaxed">
