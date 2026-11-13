@@ -3,6 +3,22 @@
 @tailwind utilities;
 
 @font-face {
+  font-family: 'Galgo';
+  src: url('/fonts/GalgoCondensed-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Galgo';
+  src: url('/fonts/GalgoCondensed-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Stardom';
   src: url('/fonts/Stardom-Regular.woff2') format('woff2');
   font-weight: 400;
@@ -63,9 +79,14 @@
 }
 
 :root {
+  --font-galgo: 'Galgo', sans-serif;
   --font-stardom: 'Stardom', sans-serif;
   --font-switzer: 'Switzer', sans-serif;
   --font-amsterdam: 'Amsterdam', cursive;
+  --font-inter: 'Switzer', system-ui, sans-serif;
+  --font-jost: 'Switzer', sans-serif;
+  --font-playfair-display: Georgia, 'Times New Roman', serif;
+  --font-italianno: 'Amsterdam', cursive;
 
   --radius: 0.625rem;
   /* Base colors - Light mode with dark text */
@@ -562,4 +583,48 @@
 
 [data-sonner-toast] [data-close-button]:hover {
   opacity: 0.9 !important;
+}
+
+/* ─── Mobile & Tablet Performance, UX & Accessibility Guardrails ─── */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Eliminate 300ms tap delay and grey tap highlight boxes on iOS/Android */
+a,
+button,
+input,
+textarea,
+select {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Guarantee minimum accessible touch targets on mobile/tablet */
+@media (max-width: 1023px) {
+  header button,
+  header a,
+  nav button,
+  nav a,
+  footer a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Prevent iOS Safari auto-zoom on form fields */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Disable sticky hero pinning on touch screens to prevent Safari address-bar jump */
+  #home {
+    position: relative !important;
+    top: auto !important;
+  }
 }

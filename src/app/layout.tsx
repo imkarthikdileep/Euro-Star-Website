@@ -1,5 +1,5 @@
+import type { ReactNode } from "react";
 import localFont from "next/font/local";
-import { Inter, Outfit, Michroma, Jost, Playfair_Display, Italianno } from "next/font/google";
 import type { Metadata } from "next";
 import Script from "next/script";
 import './globals.css';
@@ -15,6 +15,23 @@ import SmoothScroll from "@/components/SmoothScroll";
 import { GoldNoiseSVG } from "@/components/GoldNoiseSVG";
 
 // Local Fonts
+const galgo = localFont({
+  src: [
+    {
+      path: '../../public/fonts/GalgoCondensed-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/GalgoCondensed-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-galgo',
+  display: 'swap',
+});
+
 const stardom = localFont({
   src: '../../public/fonts/Stardom-Regular.woff2',
   variable: '--font-stardom',
@@ -50,66 +67,51 @@ const geist = localFont({
   display: 'swap',
 });
 
-// Keep existing Google fonts that might be used elsewhere for now, or remove if fully replacing.
-// Keeping strictly necessary ones based on user request to switch to Stardom/Switzer.
-// User said: "change the fonts to stardom for all titile and compnay name and switzer for contents"
-// So standardizing on these two is the goal.
-
-const inter = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-inter" });
-// const outfit = Outfit({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-outfit" }); // Replaced by Stardom/Switzer concept
-// const michroma = Michroma({ subsets: ["latin"], weight: ["400"], variable: "--font-michroma" });
-const jost = Jost({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-jost" });
-const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-playfair-display", style: ['normal', 'italic'] });
-const italianno = Italianno({ subsets: ["latin"], weight: ["400"], variable: "--font-italianno" });
-
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.eurostaremc.com'),
-  title: 'Euro Star Electromechanical – Premier Fabrication & Manpower Solutions',
-  description: "Established in 2010, Euro Star Electromechanical is the UAE's premier partner for specialized technical manpower and fabrication works in oil field and marine sectors.",
+  title: 'Euro Star Electromechanical | Structural Steel Fabrication & MEP in Ajman, UAE',
+  description: 'Precision electromechanical contracting, structural steel fabrication, TIG/arc welding, and certified manpower solutions based in Ajman, UAE. Est. 2010.',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
     ],
-    // Keep existing fallback if desired, or remove if icon.svg covers it
-    // apple: '/apple-icon.png', 
+  },
+  alternates: {
+    canonical: 'https://eurostaremc.com/',
   },
   openGraph: {
     type: 'website',
-    url: 'https://www.eurostaremc.com/',
-    title: 'Euro Star Electromechanical – Premier Fabrication & Manpower Solutions',
-    description: "Established in 2010, Euro Star Electromechanical is the UAE's premier partner for specialized technical manpower and fabrication works in oil field and marine sectors.",
+    url: 'https://eurostaremc.com/',
+    title: 'Euro Star Electromechanical | Structural Steel Fabrication & MEP in Ajman, UAE',
+    description: 'Precision electromechanical contracting, structural steel fabrication, TIG/arc welding, and certified manpower solutions based in Ajman, UAE. Est. 2010.',
     siteName: 'Euro Star Electromechanical',
     images: [{
-      url: '/hero-screenshot.jpg', // Placeholder for the high-quality hero section screenshot
+      url: '/preview_logo.jpg',
       width: 1200,
       height: 630,
-      alt: 'Euro Star Electromechanical Hero Section',
+      alt: 'Euro Star Electromechanical — Industrial & Steel Fabrication UAE',
     }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Euro Star Electromechanical – Premier Fabrication & Manpower Solutions',
-    description: "Established in 2010, Euro Star Electromechanical is the UAE's premier partner for specialized technical manpower and fabrication works in oil field and marine sectors.",
-    images: ['/hero-screenshot.jpg'],
+    title: 'Euro Star Electromechanical | Structural Steel Fabrication & MEP in Ajman, UAE',
+    description: 'Precision electromechanical contracting, structural steel fabrication, TIG/arc welding, and certified manpower solutions based in Ajman, UAE. Est. 2010.',
+    images: ['/preview_logo.jpg'],
   },
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background font-sans antialiased text-foreground",
+        galgo.variable,
         stardom.variable,
         switzer.variable,
-        geist.variable,
-        inter.variable, // Keep as fallback/utility
-        jost.variable,
-        playfair.variable,
-        italianno.variable
+        geist.variable
       )}>
         <ThemeProvider
           attribute="class"
