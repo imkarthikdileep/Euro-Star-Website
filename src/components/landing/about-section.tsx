@@ -1,8 +1,6 @@
 "use client";
 
-import { SectionTitle } from "@/components/ui/section-title";
 import { useRef, useState } from "react";
-import ShinyText from "@/components/ShinyText";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,8 +10,8 @@ import { Card } from "@/components/ui/glass/card";
 gsap.registerPlugin(ScrollTrigger);
 
 export function AboutSection() {
-  const containerRef = useRef(null);
-  const contentRef = useRef(null);
+  const containerRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [isColored, setIsColored] = useState(false);
 
   useGSAP(() => {

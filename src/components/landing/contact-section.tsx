@@ -7,7 +7,6 @@ import { useActionState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { handleFormSubmit } from "@/app/actions/contact";
 
-
 export function ContactSection() {
     const { toast } = useToast();
     const [state, formAction] = useActionState(handleFormSubmit, {
@@ -28,11 +27,8 @@ export function ContactSection() {
     const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=25.3936623,55.4629654";
 
     return (
-        <section id="contact" className="py-24 relative z-40 overflow-hidden bg-[#1A3C34] md:rounded-t-[3.5rem]">
+        <section id="contact" data-header-theme="dark" className="py-20 md:py-24 relative z-40 overflow-hidden bg-[#1A3C34] md:rounded-t-[3.5rem]">
             <div className="container mx-auto px-4 md:px-6 relative z-10">
-                {/* Desktop Header */}
-
-
                 {/* Mobile Message Section (Seamless Flat Design) - Optimized for Tablet */}
                 <div className="lg:hidden py-4 px-2 relative z-20">
                     <div className="mb-10">
@@ -40,22 +36,26 @@ export function ContactSection() {
                         <h3 className="text-4xl font-serif text-white mb-2">Work With Us.</h3>
                     </div>
 
-                    <form action={formAction} className="space-y-8">
+                    <form action={formAction} className="space-y-6">
                         <div>
                             <input
                                 name="name"
                                 required
                                 type="text"
-                                placeholder="Name"
-                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light text-lg"
+                                inputMode="text"
+                                autoComplete="name"
+                                placeholder="Full Name"
+                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-3.5 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light text-base"
                             />
                         </div>
                         <div>
                             <input
                                 name="phone"
                                 type="tel"
-                                placeholder="Phone"
-                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light text-lg"
+                                inputMode="tel"
+                                autoComplete="tel"
+                                placeholder="Phone Number"
+                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-3.5 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light text-base"
                             />
                         </div>
                         <div>
@@ -63,22 +63,24 @@ export function ContactSection() {
                                 name="email"
                                 required
                                 type="email"
-                                placeholder="Email"
-                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light text-lg"
+                                inputMode="email"
+                                autoComplete="email"
+                                placeholder="Email Address"
+                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-3.5 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light text-base"
                             />
                         </div>
                         <div>
                             <textarea
                                 name="message"
                                 required
-                                placeholder="Message"
-                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light resize-none min-h-[100px] text-lg"
+                                placeholder="Your Message"
+                                className="w-full bg-transparent border-b border-white/20 rounded-none px-0 py-3.5 text-white placeholder-white/40 focus:outline-none focus:border-gold transition-all duration-300 font-light resize-none min-h-[110px] text-base"
                             ></textarea>
                         </div>
 
                         <Button
                             type="submit"
-                            className="w-full bg-transparent border border-white/20 text-white font-medium text-sm uppercase tracking-widest h-14 rounded-full mt-8 hover:bg-gold hover:text-charcoal hover:border-gold transition-all duration-300"
+                            className="w-full sm:w-auto min-h-[52px] bg-transparent border border-white/20 text-white font-medium text-xs uppercase tracking-widest px-8 rounded-full mt-6 hover:bg-gold hover:text-charcoal hover:border-gold transition-all duration-300 flex items-center justify-center"
                         >
                             Send Message
                         </Button>
@@ -87,8 +89,7 @@ export function ContactSection() {
 
                 {/* Desktop Grid Layout */}
                 <div className="hidden lg:grid gap-20 lg:grid-cols-2 items-start max-w-6xl mx-auto pt-10">
-
-                    {/* Left Column: Message Form (MOVED HERE) */}
+                    {/* Left Column: Message Form */}
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -108,8 +109,10 @@ export function ContactSection() {
                                         name="name"
                                         required
                                         type="text"
+                                        inputMode="text"
+                                        autoComplete="name"
                                         placeholder="Name"
-                                        className="w-full bg-[#FFFFFF]/5 border-none rounded-none px-4 py-4 text-white placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 font-light text-lg"
+                                        className="w-full bg-[#FFFFFF]/5 border-none rounded-none px-4 py-4 text-white placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 font-light text-base"
                                     />
                                 </div>
                                 <div>
@@ -117,8 +120,10 @@ export function ContactSection() {
                                         name="email"
                                         required
                                         type="email"
+                                        inputMode="email"
+                                        autoComplete="email"
                                         placeholder="Email"
-                                        className="w-full bg-[#FFFFFF]/5 border-none rounded-none px-4 py-4 text-white placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 font-light text-lg"
+                                        className="w-full bg-[#FFFFFF]/5 border-none rounded-none px-4 py-4 text-white placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 font-light text-base"
                                     />
                                 </div>
                             </div>
@@ -126,8 +131,10 @@ export function ContactSection() {
                                 <input
                                     name="phone"
                                     type="tel"
+                                    inputMode="tel"
+                                    autoComplete="tel"
                                     placeholder="Phone"
-                                    className="w-full bg-[#FFFFFF]/5 border-none rounded-none px-4 py-4 text-white placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 font-light text-lg"
+                                    className="w-full bg-[#FFFFFF]/5 border-none rounded-none px-4 py-4 text-white placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 font-light text-base"
                                 />
                             </div>
                             <div>
@@ -135,20 +142,20 @@ export function ContactSection() {
                                     name="message"
                                     required
                                     placeholder="Message"
-                                    className="w-full bg-[#FFFFFF]/5 border-none rounded-none px-4 py-4 text-white placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 font-light resize-none min-h-[120px] text-lg"
+                                    className="w-full bg-[#FFFFFF]/5 border-none rounded-none px-4 py-4 text-white placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-gold transition-all duration-300 font-light resize-none min-h-[120px] text-base"
                                 ></textarea>
                             </div>
 
                             <Button
                                 type="submit"
-                                className="bg-transparent border border-white/20 text-white font-medium text-sm uppercase tracking-widest h-14 px-10 rounded-full mt-4 hover:bg-gold hover:text-charcoal hover:border-gold transition-all duration-300"
+                                className="bg-transparent border border-white/20 text-white font-medium text-sm uppercase tracking-widest min-h-[52px] px-10 rounded-full mt-4 hover:bg-gold hover:text-charcoal hover:border-gold transition-all duration-300"
                             >
                                 Send Message
                             </Button>
                         </form>
                     </motion.div>
 
-                    {/* Right Column: Contact Info (MOVED HERE) */}
+                    {/* Right Column: Contact Info */}
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -167,7 +174,7 @@ export function ContactSection() {
                                 </div>
                                 <div>
                                     <p className="text-white/60 text-xs uppercase tracking-wider mb-2">ADDRESS</p>
-                                    <p className="text-white text-xl font-light leading-relaxed">Jurf Plaza, Room no 602,<br />Rashidiya 1, Ajman, UAE</p>
+                                    <p className="text-white text-xl font-light leading-relaxed">Jurf Plaza, Room 602,<br />Rashidiya 1, Ajman, UAE · Est. 2010</p>
                                     <a
                                         href={googleMapsUrl}
                                         target="_blank"
@@ -200,7 +207,7 @@ export function ContactSection() {
                                     <p className="text-white/60 text-xs uppercase tracking-wider mb-2">EMAIL</p>
                                     <div className="flex flex-col gap-2">
                                         <a href="mailto:eurostar014@gmail.com" className="text-white text-xl font-light hover:text-gold transition-colors">eurostar014@gmail.com</a>
-                                        <a href="mailto:Info@kenzuae.com" className="text-white text-xl font-light hover:text-gold transition-colors">Info@kenzuae.com</a>
+                                        <a href="mailto:info@kenzuae.com" className="text-white text-xl font-light hover:text-gold transition-colors">info@kenzuae.com</a>
                                         <a href="mailto:info@eurostaremc.com" className="text-white text-xl font-light hover:text-gold transition-colors">info@eurostaremc.com</a>
                                     </div>
                                 </div>

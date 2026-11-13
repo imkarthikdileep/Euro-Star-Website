@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import type { ReactNode, CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
 interface GradientTextProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   colors?: string[];
   animationSpeed?: number;
@@ -21,7 +21,7 @@ export default function GradientText({
   const gradientStyle = {
     backgroundImage: `linear-gradient(to right, ${colors.join(", ")})`,
     animationDuration: `${animationSpeed}s`,
-  } as React.CSSProperties;
+  } as CSSProperties;
 
   return (
     <div

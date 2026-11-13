@@ -7,35 +7,47 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+declare global {
+  interface Window {
+    __lenis?: Lenis;
+  }
+}
+
 export default function SmoothScroll() {
-    useEffect(() => {
-        const lenis = new Lenis({
-            duration: 1.6,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            orientation: "vertical",
-            gestureOrientation: "vertical",
-            smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 2,
-        });
+  useEffect(() => {
+    // Mobile & Tablet (< 1024px or touch): Disable Lenis completely to preserve 100% native OS momentum scroll
+    const isDesktop = window.matchMedia("(min-width: 1024px) and (pointer: fine)").matches;
+    if (!isDesktop) return;
 
-        // Synchronize Lenis with GSAP ScrollTrigger
-        lenis.on('scroll', ScrollTrigger.update);
-        ScrollTrigger.refresh(); // Refresh ScrollTrigger to ensure positions are correct
+    const lenis = new Lenis({
+      duration: 1.05,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      smoothWheel: true,
+      wheelMultiplier: 1,
+    });
 
-        // Add Lenis's requestAnimationFrame to GSAP's ticker
-        gsap.ticker.add((time) => {
-            lenis.raf(time * 1000); // GSAP gives time in seconds, Lenis needs ms
-        });
+    window.__lenis = lenis;
 
-        // Disable GSAP's native lag smoothing to avoid conflicts with Lenis
-        gsap.ticker.lagSmoothing(0);
+    // Synchronize Lenis with GSAP ScrollTrigger
+    lenis.on("scroll", ScrollTrigger.update);
+    ScrollTrigger.refresh();
 
-        return () => {
-            lenis.destroy();
-            gsap.ticker.remove(lenis.raf);
-        };
-    }, []);
+    // Dedicated ticker callback so it can be cleanly removed on unmount
+    const onTick = (time: number) => {
+      lenis.raf(time * 1000);
+    };
 
-    return null;
+    gsap.ticker.add(onTick);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      delete window.__lenis;
+      lenis.destroy();
+      gsap.ticker.remove(onTick);
+    };
+  }, []);
+
+  return null;
 }

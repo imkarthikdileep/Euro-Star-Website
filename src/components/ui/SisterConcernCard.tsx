@@ -165,10 +165,10 @@ export function SisterConcernCard(props: SisterConcernCardProps) {
         // Only apply list hover effect if not flipped, or keep it consistent?
         // Let's keep it consistent but maybe dampen it when flipped if verified.
 
-        shell.classList.add('transition-transform', 'duration-[180ms]', 'ease-out');
+        shell.classList.add('transition-transform', 'duration-200', 'ease-out');
         if (enterTimerRef.current) window.clearTimeout(enterTimerRef.current);
         enterTimerRef.current = window.setTimeout(() => {
-            shell.classList.remove('transition-transform', 'duration-[180ms]');
+            shell.classList.remove('transition-transform', 'duration-200');
         }, ANIMATION_CONFIG.ENTER_TRANSITION_MS);
 
         const rect = shell.getBoundingClientRect();

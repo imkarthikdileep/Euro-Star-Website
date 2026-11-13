@@ -106,9 +106,9 @@ export function GallerySection() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <div className="flex justify-end gap-2 mt-8 md:mt-12 pr-4">
-            <CarouselPrevious className="static translate-y-0 translate-x-0 h-12 w-12 border-black/10 bg-black/5 hover:bg-gold hover:text-black hover:border-gold transition-colors text-black" />
-            <CarouselNext className="static translate-y-0 translate-x-0 h-12 w-12 border-black/10 bg-black/5 hover:bg-gold hover:text-black hover:border-gold transition-colors text-black" />
+          <div className="flex justify-end gap-3 mt-8 md:mt-12 pr-4">
+            <CarouselPrevious className="static translate-y-0 translate-x-0 h-12 w-12 rounded-full border-2 border-black/80 bg-white !text-black shadow-md hover:bg-black hover:!text-white hover:border-black transition-all flex items-center justify-center disabled:opacity-30" />
+            <CarouselNext className="static translate-y-0 translate-x-0 h-12 w-12 rounded-full border-2 border-black/80 bg-white !text-black shadow-md hover:bg-black hover:!text-white hover:border-black transition-all flex items-center justify-center disabled:opacity-30" />
           </div>
         </Carousel>
       </div>
