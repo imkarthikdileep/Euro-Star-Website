@@ -1,10 +1,11 @@
 export default function JsonLd() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": ["LocalBusiness", "ProfessionalService"],
+    "@type": ["Organization", "LocalBusiness", "ProfessionalService"],
     name: "Euro Star Electromechanical",
     url: "https://eurostaremc.com",
-    logo: "https://eurostaremc.com/logo.png",
+    logo: "https://eurostaremc.com/icon-512x512.png",
+    image: "https://eurostaremc.com/icon-512x512.png",
     description:
       "Precision electromechanical contracting, structural steel fabrication, TIG/arc welding, and certified manpower solutions based in Ajman, UAE. Est. 2010.",
     foundingDate: "2010",
