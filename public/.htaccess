@@ -1,5 +1,8 @@
 # Euro Star Electromechanical (eurostaremc.com)
-# Hostinger Apache / LiteSpeed Production Configuration
+# Hostinger Production Configuration
+
+Options -Indexes
+Options +FollowSymLinks
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -9,23 +12,38 @@
   RewriteCond %{HTTPS} !=on
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  # 2. NEVER rewrite existing files, directories, images, videos, CSS, or JS bundles
+  # 2. Directly serve existing physical files and directories
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # 3. Route clean paths to index.html (SPA Fallback)
+  # 3. Return a clean 404 for missing static assets (PREVENTS 500 REDIRECT LOOPS)
+  RewriteCond %{REQUEST_URI} \.(css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff|woff2|ttf|json|mp4|webm)$ [NC]
+  RewriteRule ^ - [R=404,L]
+
+  # 4. Route all clean SPA page requests to index.html
   RewriteRule ^ index.html [L]
 </IfModule>
 
-# Proper MIME Types for Modern Web Assets & Fonts
+# Prevent browsers and CDN from caching index.html (Ensures fresh chunks on every release)
+<FilesMatch "index\.html$">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+  </IfModule>
+</FilesMatch>
+
+# Proper MIME Types for Modern Web Assets, Fonts & Video
 <IfModule mod_mime.c>
   AddType text/css .css
   AddType application/javascript .js .mjs
+  AddType application/json .json
   AddType image/svg+xml .svg
   AddType image/webp .webp
   AddType image/png .png
   AddType image/jpeg .jpeg .jpg
+  AddType image/x-icon .ico
   AddType video/mp4 .mp4
   AddType video/webm .webm
   AddType font/woff2 .woff2
@@ -40,11 +58,14 @@
     Header set Accept-Ranges bytes
   </FilesMatch>
   
-  # Prevent MIME type sniffing
+  <FilesMatch "\.(woff|woff2|ttf|otf|eot|svg)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+
   Header set X-Content-Type-Options "nosniff"
 </IfModule>
 
-# Browser Caching & Performance
+# Aggressive Caching for Fingerprinted Static Chunks (immutable 1 year)
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresDefault "access plus 1 month"
@@ -58,4 +79,3 @@
   ExpiresByType video/mp4 "access plus 1 year"
   ExpiresByType font/woff2 "access plus 1 year"
 </IfModule>
-
