@@ -3,17 +3,25 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Galgo';
-  src: url('/fonts/GalgoCondensed-Regular.woff2') format('woff2');
-  font-weight: 400;
+  font-family: 'Migha Display';
+  src: url('/fonts/Migha-BoldCondensed.otf') format('opentype');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Galgo';
-  src: url('/fonts/GalgoCondensed-Bold.woff2') format('woff2');
-  font-weight: 700;
+  font-family: 'Migha Wide';
+  src: url('/fonts/Migha-MediumExpanded.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Migha Text';
+  src: url('/fonts/Migha-MediumCondensed.otf') format('opentype');
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
@@ -50,43 +58,29 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'Amsterdam';
-  src: url('/fonts/amsterdam-handwriting.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-.signature-accent {
-  font-family: 'Amsterdam', cursive;
-  font-size: 4rem;
-  display: inline-block;
-  transform: rotate(-8deg);
-  position: relative;
-  z-index: 2;
-  background: linear-gradient(to right,
-      #bf953f,
-      #fcf6ba,
-      #b38728,
-      #fbf5b7,
-      #aa771c);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
-}
-
 :root {
-  --font-galgo: 'Galgo', sans-serif;
+  --bg: #0b0b0b;
+  --coral: #dc7a80;
+  --ink: #ececec;
+  --dim: rgba(255, 255, 255, 0.42);
+  --dimmer: rgba(255, 255, 255, 0.26);
+  --logo: rgba(255, 255, 255, 0.55);
+  --gold: #c5a368;
+
+  --font-migha-display: 'Migha Display', 'Arial Narrow', Impact, sans-serif;
+  --font-migha-wide: 'Migha Wide', Arial, sans-serif;
+  --font-migha-text: 'Migha Text', 'Arial Narrow', sans-serif;
+  --font-display: var(--font-migha-display);
+  --font-wide: var(--font-migha-wide);
+  --font-text: var(--font-migha-text);
+  --font-migha: var(--font-migha-display);
+  --font-galgo: var(--font-migha-display);
+  --font-count: var(--font-wide);
   --font-stardom: 'Stardom', sans-serif;
   --font-switzer: 'Switzer', sans-serif;
-  --font-amsterdam: 'Amsterdam', cursive;
   --font-inter: 'Switzer', system-ui, sans-serif;
   --font-jost: 'Switzer', sans-serif;
   --font-playfair-display: Georgia, 'Times New Roman', serif;
-  --font-italianno: 'Amsterdam', cursive;
 
   --radius: 0.625rem;
   /* Base colors - Light mode with dark text */
@@ -626,5 +620,226 @@ select {
   #home {
     position: relative !important;
     top: auto !important;
+  }
+}
+
+/* =========================================================================
+   GLITCH-CRT PRELOADER STYLES
+   ========================================================================= */
+.pl-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--bg, #0b0b0b);
+}
+
+.pl-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: grayscale(1) contrast(1.12) brightness(0.96);
+  clip-path: inset(33.5% 66.6% 33.5% 33.3%);
+  opacity: 0;
+  will-change: clip-path, opacity;
+  transform: translateZ(0);
+}
+
+.pl-noise {
+  position: absolute;
+  inset: -10%;
+  opacity: 0.07;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: pl-grain 0.5s steps(6) infinite;
+  will-change: transform;
+}
+
+@keyframes pl-grain {
+  0% { transform: translate(0, 0); }
+  17% { transform: translate(-4%, 3%); }
+  33% { transform: translate(3%, -5%); }
+  50% { transform: translate(-5%, -2%); }
+  67% { transform: translate(4%, 4%); }
+  83% { transform: translate(-2%, 5%); }
+  100% { transform: translate(0, 0); }
+}
+
+.pl-scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 3px);
+}
+
+.pl-chrome {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pl-logo {
+  position: absolute;
+  left: 50%;
+  top: 3.7vh;
+  width: clamp(24px, 2.5vw, 36px);
+  aspect-ratio: 26 / 30;
+  transform: translateX(-50%);
+  color: var(--logo, rgba(255, 255, 255, 0.55));
+  transform-origin: 50% 50%;
+}
+
+.pl-label {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font: 500 clamp(9px, 0.9vw, 12px) / 1 var(--font-wide, sans-serif);
+  letter-spacing: 0.24em;
+  color: var(--dim, rgba(255, 255, 255, 0.42));
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pl-label-l {
+  left: 1.9vw;
+}
+
+.pl-label-r {
+  right: 1.9vw;
+  margin-right: -0.24em;
+}
+
+.pl-icons {
+  position: absolute;
+  left: 50%;
+  bottom: 4.2vh;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.9vw;
+  color: var(--dimmer, rgba(255, 255, 255, 0.26));
+}
+
+.pl-icons svg {
+  width: clamp(11px, 1.2vw, 16px);
+  height: auto;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+}
+
+.pl-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 0 solid var(--dimmer, rgba(255, 255, 255, 0.26));
+  opacity: 0;
+}
+
+.pl-corner.tl {
+  left: 1vw;
+  top: 1.4vh;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.pl-corner.tr {
+  right: 1vw;
+  top: 1.4vh;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.pl-corner.bl {
+  left: 1vw;
+  bottom: 1.4vh;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.pl-corner.br {
+  right: 1vw;
+  bottom: 1.4vh;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+.pl-counter {
+  position: absolute;
+  left: 39.9vw;
+  top: 50%;
+  width: 18.7vw;
+  height: 6vh;
+  transform: translateY(-50%);
+  opacity: 0;
+  will-change: opacity;
+}
+
+@media (max-width: 768px) {
+  .pl-counter {
+    left: 20vw;
+    width: 60vw;
+  }
+}
+
+.pl-bar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 2.1vh;
+  margin-top: -1.05vh;
+  background: var(--coral, #dc7a80);
+  transform-origin: 0 50%;
+  transform: scaleX(0.28);
+  will-change: transform;
+}
+
+.pl-num,
+.pl-slice {
+  position: absolute;
+  left: 6.1vw;
+  top: 0;
+  width: 8vw;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 500 clamp(28px, 3.4vw, 52px) / 1 var(--font-count, var(--font-wide, sans-serif));
+  white-space: nowrap;
+  color: var(--coral, #dc7a80);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  text-shadow: -1.5px 0 var(--bg, #0b0b0b), 1.5px 0 var(--bg, #0b0b0b),
+               0 -1.5px var(--bg, #0b0b0b), 0 1.5px var(--bg, #0b0b0b),
+               -1.5px -1.5px var(--bg, #0b0b0b), 1.5px 1.5px var(--bg, #0b0b0b),
+               -1.5px 1.5px var(--bg, #0b0b0b), 1.5px -1.5px var(--bg, #0b0b0b);
+}
+
+@media (max-width: 768px) {
+  .pl-num,
+  .pl-slice {
+    left: 18vw;
+    width: 24vw;
+  }
+}
+
+.pl-slice {
+  opacity: 0;
+  will-change: transform, clip-path;
+}
+
+.pl-frag {
+  position: absolute;
+  height: 2px;
+  background: var(--coral, #dc7a80);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-noise {
+    animation: none;
   }
 }

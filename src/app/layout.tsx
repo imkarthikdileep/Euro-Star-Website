@@ -15,20 +15,24 @@ import SmoothScroll from "@/components/SmoothScroll";
 import { GoldNoiseSVG } from "@/components/GoldNoiseSVG";
 
 // Local Fonts
-const galgo = localFont({
-  src: [
-    {
-      path: '../../public/fonts/GalgoCondensed-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../../public/fonts/GalgoCondensed-Bold.woff2',
-      weight: '700',
-      style: 'normal',
-    },
-  ],
-  variable: '--font-galgo',
+const mighaDisplay = localFont({
+  src: '../../public/fonts/Migha-BoldCondensed.otf',
+  variable: '--font-migha-display',
+  weight: '700',
+  display: 'swap',
+});
+
+const mighaWide = localFont({
+  src: '../../public/fonts/Migha-MediumExpanded.otf',
+  variable: '--font-migha-wide',
+  weight: '500',
+  display: 'swap',
+});
+
+const mighaText = localFont({
+  src: '../../public/fonts/Migha-MediumCondensed.otf',
+  variable: '--font-migha-text',
+  weight: '500',
   display: 'swap',
 });
 
@@ -108,7 +112,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background font-sans antialiased text-foreground",
-        galgo.variable,
+        mighaDisplay.variable,
+        mighaWide.variable,
+        mighaText.variable,
         stardom.variable,
         switzer.variable,
         geist.variable
@@ -145,10 +151,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               setTimeout(function() {
-                var p = document.getElementById('eurostar-preloader');
+                var p = document.getElementById('pl') || document.getElementById('eurostar-preloader');
                 if (p) p.style.display = 'none';
                 document.body.style.overflow = '';
-              }, 2500);
+              }, 4500);
             `,
           }}
         />
