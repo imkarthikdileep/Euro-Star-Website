@@ -107,8 +107,20 @@ export function GallerySection() {
             ))}
           </CarouselContent>
           <div className="flex justify-end gap-3 mt-8 md:mt-12 pr-4">
-            <CarouselPrevious className="static translate-y-0 translate-x-0 h-12 w-12 rounded-full border-2 border-black/80 bg-white !text-black shadow-md hover:bg-black hover:!text-white hover:border-black transition-all flex items-center justify-center disabled:opacity-30" />
-            <CarouselNext className="static translate-y-0 translate-x-0 h-12 w-12 rounded-full border-2 border-black/80 bg-white !text-black shadow-md hover:bg-black hover:!text-white hover:border-black transition-all flex items-center justify-center disabled:opacity-30" />
+            <CarouselPrevious
+              variant="ghost"
+              aria-label="Previous image"
+              className="static translate-y-0 translate-x-0 h-12 w-12 rounded-[16px] border border-black/20 bg-black/[0.04] hover:bg-black/[0.1] hover:border-black/40 backdrop-blur-md shadow-sm transition-all duration-300 flex items-center justify-center !text-[#141414] [&_svg]:!stroke-[#141414] [&_svg]:!text-[#141414] disabled:opacity-25"
+            >
+              <ArrowLeft className="h-5 w-5 !text-[#141414] !stroke-[#141414] stroke-[2.2]" />
+            </CarouselPrevious>
+            <CarouselNext
+              variant="ghost"
+              aria-label="Next image"
+              className="static translate-y-0 translate-x-0 h-12 w-12 rounded-[16px] border border-black/20 bg-black/[0.04] hover:bg-black/[0.1] hover:border-black/40 backdrop-blur-md shadow-sm transition-all duration-300 flex items-center justify-center !text-[#141414] [&_svg]:!stroke-[#141414] [&_svg]:!text-[#141414] disabled:opacity-25"
+            >
+              <ArrowRight className="h-5 w-5 !text-[#141414] !stroke-[#141414] stroke-[2.2]" />
+            </CarouselNext>
           </div>
         </Carousel>
       </div>
