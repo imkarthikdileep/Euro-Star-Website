@@ -13,10 +13,28 @@ export function SisterConcernsSection() {
     };
 
     return (
-        <section id="sister-concerns" className="relative z-40 w-full">
-            {/* Desktop Layout (Preserved) */}
-            <div className="hidden lg:block w-full bg-[#F9F8F4] py-16 md:py-24">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto align-start px-8">
+        <section id="sister-concerns" className="relative z-40 w-full bg-[#F9F8F4] py-16 md:py-24">
+            <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+                {/* Section Header - Universally Visible */}
+                <div className="flex flex-col items-center mb-14 md:mb-20 text-center">
+                    <div className="mb-3 flex items-center gap-3">
+                        <span className="h-[1px] w-6 bg-[#C5A368]" />
+                        <span className="font-mono text-xs uppercase tracking-[0.24em] text-[#C5A368]">
+                            Group Synergies · Corporate Network
+                        </span>
+                        <span className="h-[1px] w-6 bg-[#C5A368]" />
+                    </div>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif md:font-headline tracking-tight">
+                        <span className="text-[#000000]">Allied</span> <span className="text-[#D4AF37] gold-noise">Concerns</span>
+                    </h2>
+                    <p className="mt-4 max-w-2xl text-base md:text-lg text-[#000000]/80 font-headline font-medium tracking-tight">
+                        Strategic partner entities extending our engineering excellence, specialized technical maintenance, and commercial trading capabilities.
+                    </p>
+                    <div className="w-12 h-[2px] bg-[#D4AF37] mx-auto mt-6" />
+                </div>
+
+                {/* Desktop Layout (Preserved 3D interactive physics cards) */}
+                <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto align-start px-8">
                     <SisterConcernCard
                         name="Kenz Hiraa General Trading LLC"
                         description="A premier trading house specializing in the import and trading ofgeneral consumer goods across the region."
@@ -51,16 +69,10 @@ export function SisterConcernsSection() {
                         accentColor="#0d9488" // Teal-600
                     />
                 </div>
-            </div>
 
-            {/* Mobile Layout (Luxury Industrial Flip Cards) - Optimized for Tablet */}
-            <div className="lg:hidden py-24 px-6 bg-[#F9F8F4]">
-                <div className="text-center mb-16">
-                    <h2 className="font-serif text-3xl tracking-tight"><span className="text-[#000000]">Allied</span> <span className="text-[#D4AF37]">Concerns</span></h2>
-                    <div className="w-px h-12 bg-[#D4AF37] mx-auto mt-6"></div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 perspective-1000">
+                {/* Mobile Layout (Luxury Industrial Flip Cards) - Optimized for Tablet */}
+                <div className="lg:hidden">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 perspective-1000">
                     {/* Card 1: Kenz Technical Services */}
                     <div
                         className="group relative h-[600px] cursor-pointer"
@@ -166,6 +178,7 @@ export function SisterConcernsSection() {
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </section>
     );
