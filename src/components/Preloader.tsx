@@ -94,6 +94,28 @@ const WIN = {
   full: "inset(0% 0% 0% 0%)",
 };
 
+const PULSES: [number, number][] = [
+  [0.32, 0.4],
+  [0.44, 0.6],
+  [0.57, 0.9],
+  [0.69, 1.0],
+  [0.75, 1.0],
+  [0.82, 0.7],
+  [0.88, 0.8],
+  [0.95, 0.6],
+  [1.04, 0.5],
+  [1.16, 0.15],
+  [1.29, 0.3],
+  [1.42, 0],
+  [1.54, 0.5],
+  [1.66, 0],
+];
+
+const TONE = {
+  mono: "grayscale(1) contrast(1.12) brightness(.96)",
+  colour: "grayscale(0) contrast(1) brightness(1)",
+};
+
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 const randi = (a: number, b: number) => Math.floor(rand(a, b + 1));
 const pick = (s: string) => s[Math.floor(Math.random() * s.length)];
@@ -559,9 +581,47 @@ export default function Preloader() {
     }
 
     let shown = 0;
+    let g = 0;
+    let seed = 1;
+    const setGlitch = (v: number) => {
+      g = v;
+      seed = (Math.random() * 4294967296) >>> 0;
+    };
+
+    function decode(
+      el: Element,
+      { duration = 0.7, delay = 0 }: { duration?: number; delay?: number } = {}
+    ) {
+      const orig = el.textContent || "";
+      if (!orig) return;
+      const set = CFG.scrambleSet;
+      const start = performance.now() + delay * 1000;
+      const frame = (now: number) => {
+        if (now < start) {
+          requestAnimationFrame(frame);
+          return;
+        }
+        const progress = Math.min(1, (now - start) / (duration * 1000));
+        if (progress >= 1) {
+          el.textContent = orig;
+          return;
+        }
+        el.textContent = scrambleStr(orig, set, 1 - progress);
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    }
+
+    const openWindow = () => {
+      photoLive = true;
+      if (cv) {
+        cv.style.filter = CFG.windowTone === "colour" ? TONE.colour : TONE.mono;
+      }
+      emitEv("preloader:window-open", { source: "video", degraded: tracker.degraded() });
+    };
 
     const startOutro = () => {
-      const tl = gsap.timeline();
+      const tl = gsap.timeline(); // time 0 == G
       tl.fromTo(
         counterState,
         { v: shown },
@@ -571,7 +631,44 @@ export default function Preloader() {
         .call(() => burst(3), [], 0)
         .call(() => burst(3), [], 0.06)
         .set(counterRef.current, { opacity: 0 }, 0.13)
-        .call(finish, [], 0.3);
+        .call(openWindow, [], 0.32)
+        .set(cv, { opacity: 1, clipPath: WIN.line }, 0.32)
+        .to(cv, { clipPath: WIN.narrow, duration: 0.05, ease: "none" }, 0.44)
+        .to(cv, { clipPath: WIN.w1, duration: 0.06, ease: "expo.out" }, 0.57)
+        .to(cv, { clipPath: WIN.w2, duration: 0.08, ease: "expo.out" }, 0.64)
+        .to(cv, { clipPath: WIN.big, duration: 0.12, ease: "power2.out" }, 1.42)
+        .to(cv, { clipPath: WIN.large, duration: 0.14, ease: "power3.out" }, 1.54)
+        .set(chromeRef.current, { opacity: 0.4 }, 1.54)
+        .set(chromeRef.current, { opacity: 0 }, 1.59)
+        .to(cv, { clipPath: WIN.full, duration: 0.28, ease: "expo.inOut" }, 1.66)
+        .set("#site", { opacity: 1 }, 1.66)
+        .to([".pl-noise", ".pl-scan"], { opacity: 0, duration: 0.23, ease: "none" }, 1.66)
+        .call(
+          () => {
+            document
+              .querySelectorAll("#site [data-decode]")
+              .forEach((el, i) => decode(el, { duration: 0.7, delay: i * 0.05 }));
+          },
+          [],
+          1.7
+        )
+        .fromTo(
+          ".nav",
+          { opacity: 0, y: -8 },
+          { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" },
+          1.72
+        )
+        .to(cv, { opacity: 0, duration: 0.3, ease: "none" }, 1.84)
+        .call(finish, [], 2.14);
+
+      PULSES.forEach(([o, v]) => tl.call(() => setGlitch(v), [], o));
+      if (CFG.windowTone === "mono-to-colour") {
+        tl.to(
+          cv,
+          { filter: TONE.colour, duration: 0.5, ease: "power2.inOut" },
+          1.42
+        );
+      }
     };
 
     const buildTimeline = () => {
