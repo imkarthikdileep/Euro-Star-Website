@@ -25,6 +25,15 @@ const CFG = {
   labelSet: "AEJMNSTU-0125",
   glitchFPS: 15,
   gateT: 2.07,
+  realProgress: true,
+  maxWaitMs: 8000,
+  gMin: 2.01,
+  videoNeedSec: 3,
+  windowTone: "mono-to-colour" as "mono-to-colour" | "colour" | "mono",
+  weights: { fonts: 8, page: 12, fold: 10, rest: 30, video: 40 },
+  debug:
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).has("pldebug"),
 };
 
 const STEP = 1 / CFG.glitchFPS;
@@ -441,7 +450,7 @@ export default function Preloader() {
       setComplete(true);
     };
 
-    const buildTimeline = () => {
+    const buildLegacyTimeline = () => {
       resize();
       lastNow = performance.now();
       raf = requestAnimationFrame(loop);
@@ -522,6 +531,11 @@ export default function Preloader() {
 
       // Phase 8: Reveal & Finish
       masterTl.call(finish, [], 3.95);
+    };
+
+    const buildTimeline = () => {
+      if (!CFG.realProgress) return buildLegacyTimeline();
+      return buildLegacyTimeline();
     };
 
     // Fonts ready check (timeout 1.5s max)
