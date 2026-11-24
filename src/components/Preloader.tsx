@@ -2,29 +2,21 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-
-interface FlashItem {
-  t: number;
-  img: number | "flat";
-  g: number;
-  lum?: number;
-}
+import { createLoadTracker } from "./preloader-progress";
 
 const CFG = {
   labels: { left: "EST-2010", right: "AJMAN-UAE" },
-  images: [
-    "/gallery/image1.png",
-    "/gallery/image2.png",
-    "/gallery/image3.png",
-    "/gallery/image4.png",
-    "/gallery/image5.png",
-    "/gallery/image6.png",
-    "/images/hero-poster-desktop.webp",
-  ],
   scrambleSet: "ABDEFGILMNOPRSTUVW",
   labelSet: "AEJMNSTU-0125",
   glitchFPS: 15,
-  gateT: 2.07,
+  maxWaitMs: 8000,
+  gMin: 2.01,
+  videoNeedSec: 3,
+  windowTone: "mono-to-colour" as "mono-to-colour" | "colour" | "mono",
+  weights: { fonts: 8, page: 12, fold: 10, rest: 30, video: 40 },
+  debug:
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).has("pldebug"),
 };
 
 const STEP = 1 / CFG.glitchFPS;
@@ -57,23 +49,6 @@ const GLITCHES: [number, number][] = [
   [2.07, 3],
 ];
 
-const FLASH: FlashItem[] = [
-  { t: 2.33, img: "flat", lum: 0.34, g: 0 },
-  { t: 2.45, img: 3, g: 0.2 },
-  { t: 2.58, img: "flat", lum: 0.22, g: 0 },
-  { t: 2.70, img: 0, g: 1.0 },
-  { t: 2.76, img: 1, g: 1.0 },
-  { t: 2.83, img: 1, g: 0.7 },
-  { t: 2.89, img: 2, g: 0.8 },
-  { t: 2.96, img: 3, g: 0.6 },
-  { t: 3.05, img: 4, g: 0.5 },
-  { t: 3.17, img: 4, g: 0.15 },
-  { t: 3.30, img: 5, g: 0.3 },
-  { t: 3.43, img: 5, g: 0 },
-  { t: 3.55, img: 6, g: 0.5 },
-  { t: 3.67, img: 6, g: 0 },
-];
-
 const WIN = {
   line: "inset(33.5% 66.6% 33.5% 33.3%)",
   narrow: "inset(33.5% 61.7% 33.5% 32.4%)",
@@ -82,6 +57,28 @@ const WIN = {
   big: "inset(32.7% 24.2% 32.7% 24.2%)",
   large: "inset(14.3% 8.4% 14.8% 8.4%)",
   full: "inset(0% 0% 0% 0%)",
+};
+
+const PULSES: [number, number][] = [
+  [0.32, 0.4],
+  [0.44, 0.6],
+  [0.57, 0.9],
+  [0.69, 1.0],
+  [0.75, 1.0],
+  [0.82, 0.7],
+  [0.88, 0.8],
+  [0.95, 0.6],
+  [1.04, 0.5],
+  [1.16, 0.15],
+  [1.29, 0.3],
+  [1.42, 0],
+  [1.54, 0.5],
+  [1.66, 0],
+];
+
+const TONE = {
+  mono: "grayscale(1) contrast(1.12) brightness(.96)",
+  colour: "grayscale(0) contrast(1) brightness(1)",
 };
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
@@ -106,6 +103,7 @@ export default function Preloader() {
   const sliceRefs = useRef<HTMLDivElement[]>([]);
   const fragRefs = useRef<HTMLElement[]>([]);
   const cornerRefs = useRef<HTMLElement[]>([]);
+  const debugRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
     // 1. Session check & Reduced Motion check
@@ -128,10 +126,48 @@ export default function Preloader() {
 
     document.body.style.overflow = "hidden";
 
-    // Failsafe timer (4.5s max duration)
+    const video = document.querySelector<HTMLVideoElement>("[data-hero-video]");
+    const tracker = createLoadTracker({
+      video,
+      weights: CFG.weights,
+      maxWaitMs: CFG.maxWaitMs,
+      videoNeedSec: CFG.videoNeedSec,
+    });
+
+    function holdVideo(v: HTMLVideoElement | null) {
+      if (!v) return () => {};
+      v.dataset.held = "1";
+      v.removeAttribute("autoplay");
+      v.autoplay = false;
+      v.muted = true;
+      v.defaultMuted = true;
+      v.playsInline = true;
+      v.preload = "auto";
+      const guard = () => {
+        if (v.dataset.held === "1") v.pause();
+      };
+      v.addEventListener("play", guard);
+      v.pause();
+      if (v.readyState === 0 && v.networkState === 0) v.load();
+      return () => v.removeEventListener("play", guard);
+    }
+
+    const releaseGuard = holdVideo(video);
+
+    function releaseVideo() {
+      if (!video) return;
+      video.dataset.held = "0";
+      try {
+        if (video.currentTime > 0.05) video.currentTime = 0;
+      } catch (e) {}
+      const p = video.play();
+      if (p && p.catch) p.catch(() => {});
+    }
+
+    // Failsafe timer (14s max duration)
     const failsafe = window.setTimeout(() => {
       quickReveal();
-    }, 4500);
+    }, 14000);
 
     const cv = canvasRef.current;
     if (!cv) return;
@@ -145,121 +181,58 @@ export default function Preloader() {
     let W = window.innerWidth;
     let H = window.innerHeight;
 
-    const fallbackCache = new Map<number, HTMLCanvasElement>();
-
-    const makeFlat = (lum: number = 0.3) => {
-      const c = document.createElement("canvas");
-      c.width = window.innerWidth;
-      c.height = window.innerHeight;
-      const cx = c.getContext("2d");
-      if (cx) {
-        const val = Math.round(lum * 255);
-        cx.fillStyle = `rgb(${val},${val},${val})`;
-        cx.fillRect(0, 0, c.width, c.height);
-      }
-      return c;
+    let heroBox = {
+      x: 0,
+      y: 0,
+      w: window.innerWidth,
+      h: window.innerHeight,
+      px: 0.5,
+      py: 0.5,
     };
-
-    const makeFallback = (idx: number) => {
-      const lums = [0.22, 0.35, 0.78, 0.55, 0.45, 0.5, 0.4];
-      const lum = lums[idx % lums.length];
-      const c = document.createElement("canvas");
-      const curW = window.innerWidth;
-      const curH = window.innerHeight;
-      c.width = curW;
-      c.height = curH;
-      const cx = c.getContext("2d");
-      if (!cx) return c;
-
-      // Linear gradient
-      const grad = cx.createLinearGradient(0, 0, curW, curH);
-      const v1 = Math.round(Math.max(0, lum - 0.12) * 255);
-      const v2 = Math.round(Math.min(1, lum + 0.12) * 255);
-      grad.addColorStop(0, `rgb(${v1},${v1},${v1})`);
-      grad.addColorStop(1, `rgb(${v2},${v2},${v2})`);
-      cx.fillStyle = grad;
-      cx.fillRect(0, 0, curW, curH);
-
-      // Bokeh lights
-      for (let j = 0; j < 40; j++) {
-        const r = rand(0.02, 0.12) * curW;
-        const x = rand(0, curW);
-        const y = rand(0, curH);
-        const rad = cx.createRadialGradient(x, y, 0, x, y, r);
-        const alpha = rand(0.05, 0.25);
-        rad.addColorStop(0, `rgba(255,255,255,${alpha})`);
-        rad.addColorStop(1, "rgba(255,255,255,0)");
-        cx.fillStyle = rad;
-        cx.beginPath();
-        cx.arc(x, y, r, 0, Math.PI * 2);
-        cx.fill();
-      }
-
-      // Diagonal band
-      cx.fillStyle = "rgba(0,0,0,0.12)";
-      cx.beginPath();
-      cx.moveTo(curW * 0.1, 0);
-      cx.lineTo(curW * 0.28, 0);
-      cx.lineTo(curW * 0.88, curH);
-      cx.lineTo(curW * 0.7, curH);
-      cx.closePath();
-      cx.fill();
-
-      return c;
-    };
-
-    const drawCover = (src: CanvasImageSource) => {
-      const sw = (src as HTMLImageElement).naturalWidth || (src as HTMLCanvasElement).width || W;
-      const sh = (src as HTMLImageElement).naturalHeight || (src as HTMLCanvasElement).height || H;
-      const s = Math.max(W / sw, H / sh);
+    function parsePos(str: string): [number, number] {
+      const kw: Record<string, number> = {
+        left: 0,
+        top: 0,
+        center: 0.5,
+        right: 1,
+        bottom: 1,
+      };
+      const p = str.trim().split(/\s+/);
+      const num = (v: string) =>
+        v in kw ? kw[v] : v.endsWith("%") ? parseFloat(v) / 100 : 0.5;
+      if (p.length === 1)
+        return p[0] === "top" || p[0] === "bottom"
+          ? [0.5, num(p[0])]
+          : [num(p[0]), 0.5];
+      if (p[0] === "top" || p[0] === "bottom") return [num(p[1]), num(p[0])];
+      return [num(p[0]), num(p[1])];
+    }
+    function measureHero() {
+      window.scrollTo(0, 0);
+      if (!video) return;
+      const r = video.getBoundingClientRect();
+      const cs = getComputedStyle(video);
+      const [px, py] = parsePos(cs.objectPosition || "50% 50%");
+      heroBox = { x: r.left, y: r.top, w: r.width, h: r.height, px, py };
+    }
+    function coverInto(src: CanvasImageSource, sw: number, sh: number) {
+      if (!ctx) return;
+      const { x, y, w, h, px, py } = heroBox;
+      const s = Math.max(w / sw, h / sh);
       const dw = sw * s;
       const dh = sh * s;
-      ctx.drawImage(src, (W - dw) / 2, (H - dh) / 2, dw, dh);
-    };
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, w, h);
+      ctx.clip();
+      ctx.drawImage(src, x + (w - dw) * px, y + (h - dh) * py, dw, dh);
+      ctx.restore();
+    }
 
-    const drawFrame = (src: CanvasImageSource, g: number) => {
-      drawCover(src);
-      if (g < 0.02) return;
-
-      // 1) Horizontal slice displacement
-      const n = Math.round(4 + g * 14);
-      for (let i = 0; i < n; i++) {
-        const h = randi(4, 10 + g * 46);
-        const y = randi(0, Math.max(1, H - h));
-        const dx = rand(-1, 1) * g * W * 0.08;
-        ctx.drawImage(cv, 0, y * dpr, cv.width, h * dpr, dx, y, W, h);
-      }
-
-      // 2) Datamosh downscale/upscale
-      if (tctx) {
-        const blocks = Math.round(g * 7);
-        for (let i = 0; i < blocks; i++) {
-          const bw = randi(W * 0.06, W * 0.22);
-          const bh = randi(H * 0.04, H * 0.16);
-          const x = randi(0, W - bw);
-          const y = randi(0, H - bh);
-          const px = randi(10, 26);
-          tmp.width = Math.max(1, (bw / px) | 0);
-          tmp.height = Math.max(1, (bh / px) | 0);
-          tctx.drawImage(cv, x * dpr, y * dpr, bw * dpr, bh * dpr, 0, 0, tmp.width, tmp.height);
-          ctx.imageSmoothingEnabled = false;
-          ctx.drawImage(tmp, 0, 0, tmp.width, tmp.height, x, y, bw, bh);
-          ctx.imageSmoothingEnabled = true;
-        }
-      }
-
-      // 3) Vertical smear streaks
-      if (g > 0.5) {
-        for (let i = 0; i < 3; i++) {
-          const x = randi(0, W - 130);
-          ctx.drawImage(cv, x * dpr, 0, 1, cv.height, x, 0, randi(30, 120), H);
-        }
-      }
-
-      // 4) Dark scan bar
-      ctx.fillStyle = "rgba(0,0,0,0.25)";
-      ctx.fillRect(0, randi(0, H - 24), W, randi(6, 22));
-    };
+    if (typeof history !== "undefined" && "scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    measureHero();
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -268,50 +241,10 @@ export default function Preloader() {
       cv.width = W * dpr;
       cv.height = H * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      fallbackCache.clear();
-      if (current) drawFrame(current.src, current.g);
+      measureHero();
     };
 
-    // Preload Images
-    const imgs: HTMLImageElement[] = [];
-    let assetsReady = false;
-    const loadPromises = CFG.images.map((url, i) => {
-      return new Promise<void>((res) => {
-        const im = new Image();
-        im.crossOrigin = "anonymous";
-        im.onload = () => {
-          im.decode()
-            .catch(() => {})
-            .finally(() => {
-              imgs[i] = im;
-              res();
-            });
-        };
-        im.onerror = () => res();
-        im.src = url;
-      });
-    });
-
-    const assetsPromise = Promise.all(loadPromises).then(() => {
-      assetsReady = true;
-    });
-
-    const srcFor = (f: FlashItem): CanvasImageSource => {
-      if (f.img === "flat") return makeFlat(f.lum ?? 0.3);
-      if (imgs[f.img]) return imgs[f.img];
-      if (!fallbackCache.has(f.img)) {
-        fallbackCache.set(f.img, makeFallback(f.img));
-      }
-      return fallbackCache.get(f.img)!;
-    };
-
-    let current: { src: CanvasImageSource; g: number } | null = null;
     let photoLive = false;
-
-    const setFrame = (f: FlashItem) => {
-      current = { src: srcFor(f), g: f.g };
-      drawFrame(current.src, current.g);
-    };
 
     // Ticker Jobs
     const jobs = new Set<(dt: number) => void>();
@@ -334,9 +267,10 @@ export default function Preloader() {
 
     // Photo decay tick job
     jobs.add(() => {
-      if (!photoLive || !current) return;
-      current.g *= 0.85;
-      drawFrame(current.src, current.g);
+      if (photoLive) {
+        g *= 0.85;
+        seed = (Math.random() * 4294967296) >>> 0;
+      }
     });
 
     // Counter State & Rendering
@@ -433,12 +367,233 @@ export default function Preloader() {
     const masterTl = gsap.timeline();
 
     const finish = () => {
-      finished = true;
       photoLive = false;
+      cancelAnimationFrame(rafId);
+      releaseGuard && releaseGuard();
+      if (video) {
+        video.dataset.held = "0";
+        const p = video.play();
+        if (p && p.catch) p.catch(() => {});
+      }
+      tracker.destroy();
+      finished = true;
       document.body.style.overflow = "";
+      document.body.classList.remove("is-loading");
       sessionStorage.setItem("eurostar_visited", "true");
       window.dispatchEvent(new CustomEvent("preloader:done"));
       setComplete(true);
+    };
+
+    const emitEv = (name: string, detail?: unknown) =>
+      window.dispatchEvent(new CustomEvent(name, { detail }));
+
+    function choreo(t: number) {
+      const K = COUNT_KEYS;
+      if (t <= K[0][0]) return 0;
+      for (let i = 0; i < K.length - 1; i++) {
+        const [ta, va] = K[i];
+        const [tb, vb] = K[i + 1];
+        if (t < tb) return Math.min(98, va + ((vb - va) * (t - ta)) / (tb - ta));
+      }
+      return 98;
+    }
+
+    let shown = 0;
+    let g = 0;
+    let seed = 1;
+    let rafId = 0;
+    let srcKind: "video" | "poster" | "flat" = "flat";
+    let posterImg: HTMLImageElement | null = null;
+    if (video && video.poster) {
+      posterImg = new Image();
+      posterImg.src = video.poster;
+    }
+    const setGlitch = (v: number) => {
+      g = v;
+      seed = (Math.random() * 4294967296) >>> 0;
+    };
+
+    function chooseSource(): "video" | "poster" | "flat" {
+      if (video && video.readyState >= 2 && video.videoWidth) return "video";
+      if (posterImg && posterImg.complete && posterImg.naturalWidth) return "poster";
+      return "flat";
+    }
+
+    function drawBase() {
+      if (!ctx) return;
+      ctx.fillStyle = "#0b0b0b";
+      ctx.fillRect(0, 0, W, H);
+      if (srcKind === "video" && video && video.readyState >= 2 && video.videoWidth) {
+        return coverInto(video, video.videoWidth, video.videoHeight);
+      }
+      if (srcKind === "poster" && posterImg) {
+        return coverInto(posterImg, posterImg.naturalWidth, posterImg.naturalHeight);
+      }
+      ctx.fillStyle = "#3a3a3a";
+      ctx.fillRect(heroBox.x, heroBox.y, heroBox.w, heroBox.h);
+    }
+
+    function mulberry32(a: number) {
+      return function () {
+        a |= 0;
+        a = (a + 0x6d2b79f5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function applyGlitch(gv: number, sd: number) {
+      if (gv < 0.02 || !ctx || !cv) return;
+      const R = mulberry32(sd);
+      const rnd = (a: number, b: number) => a + R() * (b - a);
+      const rint = (a: number, b: number) => Math.floor(rnd(a, b + 1));
+      const n = Math.round(4 + gv * 14);
+      for (let i = 0; i < n; i++) {
+        const h = rint(4, 10 + gv * 46);
+        const y = rint(0, Math.max(1, H - h));
+        const dx = rnd(-1, 1) * gv * W * 0.08;
+        ctx.drawImage(cv, 0, y * dpr, cv.width, h * dpr, dx, y, W, h);
+      }
+      const blocks = Math.round(gv * 7);
+      if (tctx) {
+        for (let i = 0; i < blocks; i++) {
+          const bw = rint(W * 0.06, W * 0.22);
+          const bh = rint(H * 0.04, H * 0.16);
+          const x = rint(0, W - bw);
+          const y = rint(0, H - bh);
+          const px = rint(10, 26);
+          tmp.width = Math.max(1, (bw / px) | 0);
+          tmp.height = Math.max(1, (bh / px) | 0);
+          tctx.drawImage(
+            cv,
+            x * dpr,
+            y * dpr,
+            bw * dpr,
+            bh * dpr,
+            0,
+            0,
+            tmp.width,
+            tmp.height
+          );
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(tmp, 0, 0, tmp.width, tmp.height, x, y, bw, bh);
+          ctx.imageSmoothingEnabled = true;
+        }
+      }
+      if (gv > 0.5) {
+        for (let i = 0; i < 3; i++) {
+          const x = rint(0, W - 130);
+          ctx.drawImage(cv, x * dpr, 0, 1, cv.height, x, 0, rint(30, 120), H);
+        }
+      }
+      ctx.fillStyle = "rgba(0,0,0,.25)";
+      ctx.fillRect(0, rint(0, H - 24), W, rint(6, 22));
+    }
+
+    function paint() {
+      if (!photoLive) {
+        rafId = 0;
+        return;
+      }
+      drawBase();
+      applyGlitch(g, seed);
+      rafId = requestAnimationFrame(paint);
+    }
+
+    function decode(
+      el: Element,
+      { duration = 0.7, delay = 0 }: { duration?: number; delay?: number } = {}
+    ) {
+      const orig = el.textContent || "";
+      if (!orig) return;
+      const set = CFG.scrambleSet;
+      const start = performance.now() + delay * 1000;
+      const frame = (now: number) => {
+        if (now < start) {
+          requestAnimationFrame(frame);
+          return;
+        }
+        const progress = Math.min(1, (now - start) / (duration * 1000));
+        if (progress >= 1) {
+          el.textContent = orig;
+          return;
+        }
+        el.textContent = scrambleStr(orig, set, 1 - progress);
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    }
+
+    const openWindow = () => {
+      srcKind = chooseSource();
+      if (cv) {
+        cv.style.filter = CFG.windowTone === "colour" ? TONE.colour : TONE.mono;
+      }
+      photoLive = true;
+      releaseVideo();
+      paint();
+      emitEv("preloader:window-open", {
+        source: srcKind,
+        degraded: tracker.degraded(),
+      });
+    };
+
+    let t0 = performance.now();
+    const now = () => (performance.now() - t0) / 1000;
+    let gTime: number | null = null;
+    let outroStarted = false;
+
+    const startOutro = () => {
+      gTime = now();
+      const tl = gsap.timeline(); // time 0 == G
+      tl.fromTo(
+        counterState,
+        { v: shown },
+        { v: 100, duration: 0.13, ease: "none", onUpdate: renderCounter },
+        0
+      )
+        .call(() => burst(3), [], 0)
+        .call(() => burst(3), [], 0.06)
+        .set(counterRef.current, { opacity: 0 }, 0.13)
+        .call(openWindow, [], 0.32)
+        .set(cv, { opacity: 1, clipPath: WIN.line }, 0.32)
+        .to(cv, { clipPath: WIN.narrow, duration: 0.05, ease: "none" }, 0.44)
+        .to(cv, { clipPath: WIN.w1, duration: 0.06, ease: "expo.out" }, 0.57)
+        .to(cv, { clipPath: WIN.w2, duration: 0.08, ease: "expo.out" }, 0.64)
+        .to(cv, { clipPath: WIN.big, duration: 0.12, ease: "power2.out" }, 1.42)
+        .to(cv, { clipPath: WIN.large, duration: 0.14, ease: "power3.out" }, 1.54)
+        .set(chromeRef.current, { opacity: 0.4 }, 1.54)
+        .set(chromeRef.current, { opacity: 0 }, 1.59)
+        .to(cv, { clipPath: WIN.full, duration: 0.28, ease: "expo.inOut" }, 1.66)
+        .set("#site", { opacity: 1 }, 1.66)
+        .to([".pl-noise", ".pl-scan"], { opacity: 0, duration: 0.23, ease: "none" }, 1.66)
+        .call(
+          () => {
+            document
+              .querySelectorAll("#site [data-decode]")
+              .forEach((el, i) => decode(el, { duration: 0.7, delay: i * 0.05 }));
+          },
+          [],
+          1.7
+        )
+        .fromTo(
+          ".nav",
+          { opacity: 0, y: -8 },
+          { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" },
+          1.72
+        )
+        .to(cv, { opacity: 0, duration: 0.3, ease: "none" }, 1.84)
+        .call(finish, [], 2.14);
+
+      PULSES.forEach(([o, v]) => tl.call(() => setGlitch(v), [], o));
+      if (CFG.windowTone === "mono-to-colour") {
+        tl.to(
+          cv,
+          { filter: TONE.colour, duration: 0.5, ease: "power2.inOut" },
+          1.42
+        );
+      }
     };
 
     const buildTimeline = () => {
@@ -449,79 +604,85 @@ export default function Preloader() {
       if (containerRef.current) {
         containerRef.current.classList.add("is-live");
       }
+      document.body.classList.add("is-loading");
+      t0 = performance.now();
 
-      // Phase 0-1: Hard cut + chrome flicker
+      if (CFG.debug && typeof window !== "undefined") {
+        (window as any).__plDebug = {
+          snapshot: () => {
+            const snap = tracker.snapshot();
+            return {
+              T: +now().toFixed(3),
+              shown,
+              real: snap.real,
+              fonts: snap.fonts,
+              page: snap.page,
+              fold: snap.fold,
+              rest: snap.rest,
+              video: snap.video,
+              vReady: snap.vReady,
+              vBuf: snap.vBuf,
+              degraded: snap.degraded,
+              outroStarted,
+              G: gTime !== null ? +gTime.toFixed(3) : null,
+            };
+          },
+        };
+
+        jobs.add(() => {
+          if (!debugRef.current) return;
+          const snap = (window as any).__plDebug?.snapshot();
+          if (snap) {
+            debugRef.current.textContent = JSON.stringify(snap, null, 2);
+          }
+        });
+      }
+
+      // Chrome flicker
       masterTl
         .set(chromeRef.current, { opacity: 1 }, 0.1)
         .set(chromeRef.current, { opacity: 0.35 }, 0.14)
         .set(chromeRef.current, { opacity: 1 }, 0.17);
 
-      // Phase 3: Counter
-      masterTl.set(counterRef.current, { opacity: 1 }, 0.8);
-      for (let i = 0; i < COUNT_KEYS.length - 1; i++) {
-        const [t0, v0] = COUNT_KEYS[i];
-        const [t1, v1] = COUNT_KEYS[i + 1];
-        masterTl.fromTo(
-          counterState,
-          { v: v0 },
-          {
-            v: v1,
-            duration: Math.max(0.016, t1 - t0),
-            ease: "none",
-            onUpdate: renderCounter,
-          },
-          t0
-        );
-      }
-      GLITCHES.forEach(([t, lvl]) => masterTl.call(() => burst(lvl), [], t));
+      const GL_INTRO = GLITCHES.filter(([t]) => t < CFG.gMin);
+      let lastChangeT = 0.8;
+      let nextStall = 0;
+      let gi = 0;
+      let counterOn = false;
 
-      // Gate at T = 2.07
-      masterTl.call(
-        () => {
-          if (assetsReady) return;
-          masterTl.pause();
-          const hold = () => burst(1);
-          let n = 0;
-          const gateJob = () => {
-            if (++n % 6 === 0) hold();
-          };
-          jobs.add(gateJob);
-          assetsPromise.then(() => {
-            jobs.delete(gateJob);
-            masterTl.resume();
-          });
-        },
-        [],
-        CFG.gateT
-      );
-
-      // Phase 4: Dead beat
-      masterTl.set(counterRef.current, { opacity: 0 }, 2.14);
-
-      // Phase 5-7: Window Reveal
-      masterTl
-        .call(() => {
-          photoLive = true;
-        }, [], 2.33)
-        .set(cv, { opacity: 1, clipPath: WIN.line }, 2.33)
-        .to(cv, { clipPath: WIN.narrow, duration: 0.05, ease: "none" }, 2.45)
-        .to(cv, { clipPath: WIN.w1, duration: 0.06, ease: "expo.out" }, 2.58)
-        .to(cv, { clipPath: WIN.w2, duration: 0.08, ease: "expo.out" }, 2.65)
-        .to(cv, { clipPath: WIN.big, duration: 0.12, ease: "power2.out" }, 3.43)
-        .to(cv, { clipPath: WIN.large, duration: 0.14, ease: "power3.out" }, 3.55)
-        .to(cv, { clipPath: WIN.full, duration: 0.28, ease: "expo.inOut" }, 3.67);
-
-      // Phase 6: Photo flashes
-      FLASH.forEach((f) => masterTl.call(() => setFrame(f), [], f.t));
-
-      // Phase 7: Chrome cuts out, grain fades
-      masterTl
-        .set(chromeRef.current, { opacity: 0.4 }, 3.55)
-        .set(chromeRef.current, { opacity: 0 }, 3.6)
-        .to([".pl-noise", ".pl-scan"], { opacity: 0, duration: 0.23, ease: "none" }, 3.67);
-
-      // Phase 8: Reveal & Finish
-      masterTl.call(finish, [], 3.95);
+      jobs.add(() => {
+        if (outroStarted) return;
+        const t = now();
+        if (!counterOn && t >= 0.8) {
+          if (counterRef.current) counterRef.current.style.opacity = "1";
+          counterOn = true;
+        }
+        while (gi < GL_INTRO.length && t >= GL_INTRO[gi][0]) {
+          burst(GL_INTRO[gi++][1]);
+        }
+        if (counterOn) {
+          const target = Math.min(
+            Math.floor(tracker.value() * 98),
+            Math.floor(choreo(t)),
+            98
+          );
+          const next = Math.min(target, shown + 12);
+          if (next > shown) {
+            shown = next;
+            lastChangeT = t;
+            counterState.v = shown;
+            renderCounter();
+            emitEv("preloader:progress", { real: tracker.value(), shown });
+          } else if (t - lastChangeT > 0.7 && t >= nextStall) {
+            burst(1);
+            nextStall = t + 0.5 + Math.random() * 0.4;
+          }
+        }
+        if (t >= CFG.gMin && (tracker.ready() || tracker.degraded())) {
+          outroStarted = true;
+          startOutro();
+        }
+      });
     };
 
     // Fonts ready check (timeout 1.5s max)
@@ -545,9 +706,17 @@ export default function Preloader() {
       window.clearTimeout(failsafe);
       window.removeEventListener("resize", onResize);
       finished = true;
+      photoLive = false;
       cancelAnimationFrame(raf);
+      cancelAnimationFrame(rafId);
+      releaseGuard && releaseGuard();
       masterTl.kill();
+      tracker.destroy();
       document.body.style.overflow = "";
+      document.body.classList.remove("is-loading");
+      if (typeof window !== "undefined" && (window as any).__plDebug) {
+        delete (window as any).__plDebug;
+      }
     };
   }, []);
 
@@ -676,6 +845,23 @@ export default function Preloader() {
           />
         ))}
       </div>
+
+      {CFG.debug && (
+        <pre
+          ref={debugRef}
+          style={{
+            position: "fixed",
+            bottom: "8px",
+            left: "8px",
+            zIndex: 10000,
+            font: "11px/1.4 monospace",
+            color: "#ffffff",
+            background: "rgba(0,0,0,.7)",
+            padding: "8px",
+            pointerEvents: "none",
+          }}
+        />
+      )}
     </div>
   );
 }

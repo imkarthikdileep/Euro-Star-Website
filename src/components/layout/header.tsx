@@ -366,7 +366,7 @@ export function Header() {
       {/* ─── Adaptive Zero-Box Header with Centered EST. Stamp & HUD Corner-Bracket Menu (z-index: 100) ─── */}
       <header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-[100] flex h-20 items-center justify-between px-5 md:px-12 lg:px-16 transition-colors duration-300 bg-transparent ${
+        className={`nav fixed top-0 left-0 right-0 z-[100] flex h-20 items-center justify-between px-5 md:px-12 lg:px-16 transition-colors duration-300 bg-transparent ${
           isLight ? "text-[#222222]" : "text-[#F9F9F7]"
         }`}
       >
