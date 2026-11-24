@@ -4,29 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { createLoadTracker } from "./preloader-progress";
 
-interface FlashItem {
-  t: number;
-  img: number | "flat";
-  g: number;
-  lum?: number;
-}
-
 const CFG = {
   labels: { left: "EST-2010", right: "AJMAN-UAE" },
-  images: [
-    "/gallery/image1.png",
-    "/gallery/image2.png",
-    "/gallery/image3.png",
-    "/gallery/image4.png",
-    "/gallery/image5.png",
-    "/gallery/image6.png",
-    "/images/hero-poster-desktop.webp",
-  ],
   scrambleSet: "ABDEFGILMNOPRSTUVW",
   labelSet: "AEJMNSTU-0125",
   glitchFPS: 15,
-  gateT: 2.07,
-  realProgress: true,
   maxWaitMs: 8000,
   gMin: 2.01,
   videoNeedSec: 3,
@@ -65,23 +47,6 @@ const GLITCHES: [number, number][] = [
   [1.95, 2],
   [2.01, 3],
   [2.07, 3],
-];
-
-const FLASH: FlashItem[] = [
-  { t: 2.33, img: "flat", lum: 0.34, g: 0 },
-  { t: 2.45, img: 3, g: 0.2 },
-  { t: 2.58, img: "flat", lum: 0.22, g: 0 },
-  { t: 2.70, img: 0, g: 1.0 },
-  { t: 2.76, img: 1, g: 1.0 },
-  { t: 2.83, img: 1, g: 0.7 },
-  { t: 2.89, img: 2, g: 0.8 },
-  { t: 2.96, img: 3, g: 0.6 },
-  { t: 3.05, img: 4, g: 0.5 },
-  { t: 3.17, img: 4, g: 0.15 },
-  { t: 3.30, img: 5, g: 0.3 },
-  { t: 3.43, img: 5, g: 0 },
-  { t: 3.55, img: 6, g: 0.5 },
-  { t: 3.67, img: 6, g: 0 },
 ];
 
 const WIN = {
@@ -216,122 +181,6 @@ export default function Preloader() {
     let W = window.innerWidth;
     let H = window.innerHeight;
 
-    const fallbackCache = new Map<number, HTMLCanvasElement>();
-
-    const makeFlat = (lum: number = 0.3) => {
-      const c = document.createElement("canvas");
-      c.width = window.innerWidth;
-      c.height = window.innerHeight;
-      const cx = c.getContext("2d");
-      if (cx) {
-        const val = Math.round(lum * 255);
-        cx.fillStyle = `rgb(${val},${val},${val})`;
-        cx.fillRect(0, 0, c.width, c.height);
-      }
-      return c;
-    };
-
-    const makeFallback = (idx: number) => {
-      const lums = [0.22, 0.35, 0.78, 0.55, 0.45, 0.5, 0.4];
-      const lum = lums[idx % lums.length];
-      const c = document.createElement("canvas");
-      const curW = window.innerWidth;
-      const curH = window.innerHeight;
-      c.width = curW;
-      c.height = curH;
-      const cx = c.getContext("2d");
-      if (!cx) return c;
-
-      // Linear gradient
-      const grad = cx.createLinearGradient(0, 0, curW, curH);
-      const v1 = Math.round(Math.max(0, lum - 0.12) * 255);
-      const v2 = Math.round(Math.min(1, lum + 0.12) * 255);
-      grad.addColorStop(0, `rgb(${v1},${v1},${v1})`);
-      grad.addColorStop(1, `rgb(${v2},${v2},${v2})`);
-      cx.fillStyle = grad;
-      cx.fillRect(0, 0, curW, curH);
-
-      // Bokeh lights
-      for (let j = 0; j < 40; j++) {
-        const r = rand(0.02, 0.12) * curW;
-        const x = rand(0, curW);
-        const y = rand(0, curH);
-        const rad = cx.createRadialGradient(x, y, 0, x, y, r);
-        const alpha = rand(0.05, 0.25);
-        rad.addColorStop(0, `rgba(255,255,255,${alpha})`);
-        rad.addColorStop(1, "rgba(255,255,255,0)");
-        cx.fillStyle = rad;
-        cx.beginPath();
-        cx.arc(x, y, r, 0, Math.PI * 2);
-        cx.fill();
-      }
-
-      // Diagonal band
-      cx.fillStyle = "rgba(0,0,0,0.12)";
-      cx.beginPath();
-      cx.moveTo(curW * 0.1, 0);
-      cx.lineTo(curW * 0.28, 0);
-      cx.lineTo(curW * 0.88, curH);
-      cx.lineTo(curW * 0.7, curH);
-      cx.closePath();
-      cx.fill();
-
-      return c;
-    };
-
-    const drawCover = (src: CanvasImageSource) => {
-      const sw = (src as HTMLImageElement).naturalWidth || (src as HTMLCanvasElement).width || W;
-      const sh = (src as HTMLImageElement).naturalHeight || (src as HTMLCanvasElement).height || H;
-      const s = Math.max(W / sw, H / sh);
-      const dw = sw * s;
-      const dh = sh * s;
-      ctx.drawImage(src, (W - dw) / 2, (H - dh) / 2, dw, dh);
-    };
-
-    const drawFrame = (src: CanvasImageSource, g: number) => {
-      drawCover(src);
-      if (g < 0.02) return;
-
-      // 1) Horizontal slice displacement
-      const n = Math.round(4 + g * 14);
-      for (let i = 0; i < n; i++) {
-        const h = randi(4, 10 + g * 46);
-        const y = randi(0, Math.max(1, H - h));
-        const dx = rand(-1, 1) * g * W * 0.08;
-        ctx.drawImage(cv, 0, y * dpr, cv.width, h * dpr, dx, y, W, h);
-      }
-
-      // 2) Datamosh downscale/upscale
-      if (tctx) {
-        const blocks = Math.round(g * 7);
-        for (let i = 0; i < blocks; i++) {
-          const bw = randi(W * 0.06, W * 0.22);
-          const bh = randi(H * 0.04, H * 0.16);
-          const x = randi(0, W - bw);
-          const y = randi(0, H - bh);
-          const px = randi(10, 26);
-          tmp.width = Math.max(1, (bw / px) | 0);
-          tmp.height = Math.max(1, (bh / px) | 0);
-          tctx.drawImage(cv, x * dpr, y * dpr, bw * dpr, bh * dpr, 0, 0, tmp.width, tmp.height);
-          ctx.imageSmoothingEnabled = false;
-          ctx.drawImage(tmp, 0, 0, tmp.width, tmp.height, x, y, bw, bh);
-          ctx.imageSmoothingEnabled = true;
-        }
-      }
-
-      // 3) Vertical smear streaks
-      if (g > 0.5) {
-        for (let i = 0; i < 3; i++) {
-          const x = randi(0, W - 130);
-          ctx.drawImage(cv, x * dpr, 0, 1, cv.height, x, 0, randi(30, 120), H);
-        }
-      }
-
-      // 4) Dark scan bar
-      ctx.fillStyle = "rgba(0,0,0,0.25)";
-      ctx.fillRect(0, randi(0, H - 24), W, randi(6, 22));
-    };
-
     let heroBox = {
       x: 0,
       y: 0,
@@ -392,51 +241,10 @@ export default function Preloader() {
       cv.width = W * dpr;
       cv.height = H * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      fallbackCache.clear();
-      if (!CFG.realProgress && current) drawFrame(current.src, current.g);
       measureHero();
     };
 
-    // Preload Images
-    const imgs: HTMLImageElement[] = [];
-    let assetsReady = false;
-    const loadPromises = CFG.images.map((url, i) => {
-      return new Promise<void>((res) => {
-        const im = new Image();
-        im.crossOrigin = "anonymous";
-        im.onload = () => {
-          im.decode()
-            .catch(() => {})
-            .finally(() => {
-              imgs[i] = im;
-              res();
-            });
-        };
-        im.onerror = () => res();
-        im.src = url;
-      });
-    });
-
-    const assetsPromise = Promise.all(loadPromises).then(() => {
-      assetsReady = true;
-    });
-
-    const srcFor = (f: FlashItem): CanvasImageSource => {
-      if (f.img === "flat") return makeFlat(f.lum ?? 0.3);
-      if (imgs[f.img]) return imgs[f.img];
-      if (!fallbackCache.has(f.img)) {
-        fallbackCache.set(f.img, makeFallback(f.img));
-      }
-      return fallbackCache.get(f.img)!;
-    };
-
-    let current: { src: CanvasImageSource; g: number } | null = null;
     let photoLive = false;
-
-    const setFrame = (f: FlashItem) => {
-      current = { src: srcFor(f), g: f.g };
-      drawFrame(current.src, current.g);
-    };
 
     // Ticker Jobs
     const jobs = new Set<(dt: number) => void>();
@@ -459,15 +267,9 @@ export default function Preloader() {
 
     // Photo decay tick job
     jobs.add(() => {
-      if (CFG.realProgress) {
-        if (photoLive) {
-          g *= 0.85;
-          seed = (Math.random() * 4294967296) >>> 0;
-        }
-      } else {
-        if (!photoLive || !current) return;
-        current.g *= 0.85;
-        drawFrame(current.src, current.g);
+      if (photoLive) {
+        g *= 0.85;
+        seed = (Math.random() * 4294967296) >>> 0;
       }
     });
 
@@ -580,89 +382,6 @@ export default function Preloader() {
       sessionStorage.setItem("eurostar_visited", "true");
       window.dispatchEvent(new CustomEvent("preloader:done"));
       setComplete(true);
-    };
-
-    const buildLegacyTimeline = () => {
-      resize();
-      lastNow = performance.now();
-      raf = requestAnimationFrame(loop);
-
-      if (containerRef.current) {
-        containerRef.current.classList.add("is-live");
-      }
-
-      // Phase 0-1: Hard cut + chrome flicker
-      masterTl
-        .set(chromeRef.current, { opacity: 1 }, 0.1)
-        .set(chromeRef.current, { opacity: 0.35 }, 0.14)
-        .set(chromeRef.current, { opacity: 1 }, 0.17);
-
-      // Phase 3: Counter
-      masterTl.set(counterRef.current, { opacity: 1 }, 0.8);
-      for (let i = 0; i < COUNT_KEYS.length - 1; i++) {
-        const [t0, v0] = COUNT_KEYS[i];
-        const [t1, v1] = COUNT_KEYS[i + 1];
-        masterTl.fromTo(
-          counterState,
-          { v: v0 },
-          {
-            v: v1,
-            duration: Math.max(0.016, t1 - t0),
-            ease: "none",
-            onUpdate: renderCounter,
-          },
-          t0
-        );
-      }
-      GLITCHES.forEach(([t, lvl]) => masterTl.call(() => burst(lvl), [], t));
-
-      // Gate at T = 2.07
-      masterTl.call(
-        () => {
-          if (assetsReady) return;
-          masterTl.pause();
-          const hold = () => burst(1);
-          let n = 0;
-          const gateJob = () => {
-            if (++n % 6 === 0) hold();
-          };
-          jobs.add(gateJob);
-          assetsPromise.then(() => {
-            jobs.delete(gateJob);
-            masterTl.resume();
-          });
-        },
-        [],
-        CFG.gateT
-      );
-
-      // Phase 4: Dead beat
-      masterTl.set(counterRef.current, { opacity: 0 }, 2.14);
-
-      // Phase 5-7: Window Reveal
-      masterTl
-        .call(() => {
-          photoLive = true;
-        }, [], 2.33)
-        .set(cv, { opacity: 1, clipPath: WIN.line }, 2.33)
-        .to(cv, { clipPath: WIN.narrow, duration: 0.05, ease: "none" }, 2.45)
-        .to(cv, { clipPath: WIN.w1, duration: 0.06, ease: "expo.out" }, 2.58)
-        .to(cv, { clipPath: WIN.w2, duration: 0.08, ease: "expo.out" }, 2.65)
-        .to(cv, { clipPath: WIN.big, duration: 0.12, ease: "power2.out" }, 3.43)
-        .to(cv, { clipPath: WIN.large, duration: 0.14, ease: "power3.out" }, 3.55)
-        .to(cv, { clipPath: WIN.full, duration: 0.28, ease: "expo.inOut" }, 3.67);
-
-      // Phase 6: Photo flashes
-      FLASH.forEach((f) => masterTl.call(() => setFrame(f), [], f.t));
-
-      // Phase 7: Chrome cuts out, grain fades
-      masterTl
-        .set(chromeRef.current, { opacity: 0.4 }, 3.55)
-        .set(chromeRef.current, { opacity: 0 }, 3.6)
-        .to([".pl-noise", ".pl-scan"], { opacity: 0, duration: 0.23, ease: "none" }, 3.67);
-
-      // Phase 8: Reveal & Finish
-      masterTl.call(finish, [], 3.95);
     };
 
     const emitEv = (name: string, detail?: unknown) =>
@@ -878,8 +597,6 @@ export default function Preloader() {
     };
 
     const buildTimeline = () => {
-      if (!CFG.realProgress) return buildLegacyTimeline();
-
       resize();
       lastNow = performance.now();
       raf = requestAnimationFrame(loop);
