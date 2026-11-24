@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { createLoadTracker } from "./preloader-progress";
 
 interface FlashItem {
   t: number;
@@ -137,10 +138,18 @@ export default function Preloader() {
 
     document.body.style.overflow = "hidden";
 
-    // Failsafe timer (4.5s max duration)
+    const videoEl = document.querySelector<HTMLVideoElement>("[data-hero-video]");
+    const tracker = createLoadTracker({
+      video: videoEl,
+      weights: CFG.weights,
+      maxWaitMs: CFG.maxWaitMs,
+      videoNeedSec: CFG.videoNeedSec,
+    });
+
+    // Failsafe timer (14s max duration)
     const failsafe = window.setTimeout(() => {
       quickReveal();
-    }, 4500);
+    }, 14000);
 
     const cv = canvasRef.current;
     if (!cv) return;
@@ -445,7 +454,9 @@ export default function Preloader() {
       finished = true;
       photoLive = false;
       document.body.style.overflow = "";
+      document.body.classList.remove("is-loading");
       sessionStorage.setItem("eurostar_visited", "true");
+      tracker.destroy();
       window.dispatchEvent(new CustomEvent("preloader:done"));
       setComplete(true);
     };
@@ -533,9 +544,97 @@ export default function Preloader() {
       masterTl.call(finish, [], 3.95);
     };
 
+    const emitEv = (name: string, detail?: unknown) =>
+      window.dispatchEvent(new CustomEvent(name, { detail }));
+
+    function choreo(t: number) {
+      const K = COUNT_KEYS;
+      if (t <= K[0][0]) return 0;
+      for (let i = 0; i < K.length - 1; i++) {
+        const [ta, va] = K[i];
+        const [tb, vb] = K[i + 1];
+        if (t < tb) return Math.min(98, va + ((vb - va) * (t - ta)) / (tb - ta));
+      }
+      return 98;
+    }
+
+    let shown = 0;
+
+    const startOutro = () => {
+      const tl = gsap.timeline();
+      tl.fromTo(
+        counterState,
+        { v: shown },
+        { v: 100, duration: 0.13, ease: "none", onUpdate: renderCounter },
+        0
+      )
+        .call(() => burst(3), [], 0)
+        .call(() => burst(3), [], 0.06)
+        .set(counterRef.current, { opacity: 0 }, 0.13)
+        .call(finish, [], 0.3);
+    };
+
     const buildTimeline = () => {
       if (!CFG.realProgress) return buildLegacyTimeline();
-      return buildLegacyTimeline();
+
+      resize();
+      lastNow = performance.now();
+      raf = requestAnimationFrame(loop);
+
+      if (containerRef.current) {
+        containerRef.current.classList.add("is-live");
+      }
+      document.body.classList.add("is-loading");
+
+      const t0 = performance.now();
+      const now = () => (performance.now() - t0) / 1000;
+
+      // Chrome flicker
+      masterTl
+        .set(chromeRef.current, { opacity: 1 }, 0.1)
+        .set(chromeRef.current, { opacity: 0.35 }, 0.14)
+        .set(chromeRef.current, { opacity: 1 }, 0.17);
+
+      const GL_INTRO = GLITCHES.filter(([t]) => t < CFG.gMin);
+      let lastChangeT = 0.8;
+      let nextStall = 0;
+      let gi = 0;
+      let counterOn = false;
+      let outroStarted = false;
+
+      jobs.add(() => {
+        if (outroStarted) return;
+        const t = now();
+        if (!counterOn && t >= 0.8) {
+          if (counterRef.current) counterRef.current.style.opacity = "1";
+          counterOn = true;
+        }
+        while (gi < GL_INTRO.length && t >= GL_INTRO[gi][0]) {
+          burst(GL_INTRO[gi++][1]);
+        }
+        if (counterOn) {
+          const target = Math.min(
+            Math.floor(tracker.value() * 98),
+            Math.floor(choreo(t)),
+            98
+          );
+          const next = Math.min(target, shown + 12);
+          if (next > shown) {
+            shown = next;
+            lastChangeT = t;
+            counterState.v = shown;
+            renderCounter();
+            emitEv("preloader:progress", { real: tracker.value(), shown });
+          } else if (t - lastChangeT > 0.7 && t >= nextStall) {
+            burst(1);
+            nextStall = t + 0.5 + Math.random() * 0.4;
+          }
+        }
+        if (t >= CFG.gMin && (tracker.ready() || tracker.degraded())) {
+          outroStarted = true;
+          startOutro();
+        }
+      });
     };
 
     // Fonts ready check (timeout 1.5s max)
@@ -561,7 +660,9 @@ export default function Preloader() {
       finished = true;
       cancelAnimationFrame(raf);
       masterTl.kill();
+      tracker.destroy();
       document.body.style.overflow = "";
+      document.body.classList.remove("is-loading");
     };
   }, []);
 
