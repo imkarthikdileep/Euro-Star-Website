@@ -94,6 +94,7 @@ export function HeroSection() {
         {mp4 ? (
           <video
             key={mp4}
+            data-hero-video
             src={mp4}
             poster={poster}
             autoPlay

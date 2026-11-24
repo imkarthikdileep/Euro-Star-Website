@@ -138,6 +138,7 @@ export default function Preloader() {
   const sliceRefs = useRef<HTMLDivElement[]>([]);
   const fragRefs = useRef<HTMLElement[]>([]);
   const cornerRefs = useRef<HTMLElement[]>([]);
+  const debugRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
     // 1. Session check & Reduced Motion check
@@ -819,7 +820,13 @@ export default function Preloader() {
       });
     };
 
+    let t0 = performance.now();
+    const now = () => (performance.now() - t0) / 1000;
+    let gTime: number | null = null;
+    let outroStarted = false;
+
     const startOutro = () => {
+      gTime = now();
       const tl = gsap.timeline(); // time 0 == G
       tl.fromTo(
         counterState,
@@ -881,9 +888,38 @@ export default function Preloader() {
         containerRef.current.classList.add("is-live");
       }
       document.body.classList.add("is-loading");
+      t0 = performance.now();
 
-      const t0 = performance.now();
-      const now = () => (performance.now() - t0) / 1000;
+      if (CFG.debug && typeof window !== "undefined") {
+        (window as any).__plDebug = {
+          snapshot: () => {
+            const snap = tracker.snapshot();
+            return {
+              T: +now().toFixed(3),
+              shown,
+              real: snap.real,
+              fonts: snap.fonts,
+              page: snap.page,
+              fold: snap.fold,
+              rest: snap.rest,
+              video: snap.video,
+              vReady: snap.vReady,
+              vBuf: snap.vBuf,
+              degraded: snap.degraded,
+              outroStarted,
+              G: gTime !== null ? +gTime.toFixed(3) : null,
+            };
+          },
+        };
+
+        jobs.add(() => {
+          if (!debugRef.current) return;
+          const snap = (window as any).__plDebug?.snapshot();
+          if (snap) {
+            debugRef.current.textContent = JSON.stringify(snap, null, 2);
+          }
+        });
+      }
 
       // Chrome flicker
       masterTl
@@ -896,7 +932,6 @@ export default function Preloader() {
       let nextStall = 0;
       let gi = 0;
       let counterOn = false;
-      let outroStarted = false;
 
       jobs.add(() => {
         if (outroStarted) return;
@@ -962,6 +997,9 @@ export default function Preloader() {
       tracker.destroy();
       document.body.style.overflow = "";
       document.body.classList.remove("is-loading");
+      if (typeof window !== "undefined" && (window as any).__plDebug) {
+        delete (window as any).__plDebug;
+      }
     };
   }, []);
 
@@ -1090,6 +1128,23 @@ export default function Preloader() {
           />
         ))}
       </div>
+
+      {CFG.debug && (
+        <pre
+          ref={debugRef}
+          style={{
+            position: "fixed",
+            bottom: "8px",
+            left: "8px",
+            zIndex: 10000,
+            font: "11px/1.4 monospace",
+            color: "#ffffff",
+            background: "rgba(0,0,0,.7)",
+            padding: "8px",
+            pointerEvents: "none",
+          }}
+        />
+      )}
     </div>
   );
 }
