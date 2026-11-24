@@ -13,7 +13,7 @@ import Preloader from "@/components/Preloader";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div id="site" className="flex flex-col min-h-screen">
       {/* Preloader */}
       <Preloader />
 
