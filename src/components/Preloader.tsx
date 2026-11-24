@@ -160,13 +160,43 @@ export default function Preloader() {
 
     document.body.style.overflow = "hidden";
 
-    const videoEl = document.querySelector<HTMLVideoElement>("[data-hero-video]");
+    const video = document.querySelector<HTMLVideoElement>("[data-hero-video]");
     const tracker = createLoadTracker({
-      video: videoEl,
+      video,
       weights: CFG.weights,
       maxWaitMs: CFG.maxWaitMs,
       videoNeedSec: CFG.videoNeedSec,
     });
+
+    function holdVideo(v: HTMLVideoElement | null) {
+      if (!v) return () => {};
+      v.dataset.held = "1";
+      v.removeAttribute("autoplay");
+      v.autoplay = false;
+      v.muted = true;
+      v.defaultMuted = true;
+      v.playsInline = true;
+      v.preload = "auto";
+      const guard = () => {
+        if (v.dataset.held === "1") v.pause();
+      };
+      v.addEventListener("play", guard);
+      v.pause();
+      if (v.readyState === 0 && v.networkState === 0) v.load();
+      return () => v.removeEventListener("play", guard);
+    }
+
+    const releaseGuard = holdVideo(video);
+
+    function releaseVideo() {
+      if (!video) return;
+      video.dataset.held = "0";
+      try {
+        if (video.currentTime > 0.05) video.currentTime = 0;
+      } catch (e) {}
+      const p = video.play();
+      if (p && p.catch) p.catch(() => {});
+    }
 
     // Failsafe timer (14s max duration)
     const failsafe = window.setTimeout(() => {
@@ -301,6 +331,59 @@ export default function Preloader() {
       ctx.fillRect(0, randi(0, H - 24), W, randi(6, 22));
     };
 
+    let heroBox = {
+      x: 0,
+      y: 0,
+      w: window.innerWidth,
+      h: window.innerHeight,
+      px: 0.5,
+      py: 0.5,
+    };
+    function parsePos(str: string): [number, number] {
+      const kw: Record<string, number> = {
+        left: 0,
+        top: 0,
+        center: 0.5,
+        right: 1,
+        bottom: 1,
+      };
+      const p = str.trim().split(/\s+/);
+      const num = (v: string) =>
+        v in kw ? kw[v] : v.endsWith("%") ? parseFloat(v) / 100 : 0.5;
+      if (p.length === 1)
+        return p[0] === "top" || p[0] === "bottom"
+          ? [0.5, num(p[0])]
+          : [num(p[0]), 0.5];
+      if (p[0] === "top" || p[0] === "bottom") return [num(p[1]), num(p[0])];
+      return [num(p[0]), num(p[1])];
+    }
+    function measureHero() {
+      window.scrollTo(0, 0);
+      if (!video) return;
+      const r = video.getBoundingClientRect();
+      const cs = getComputedStyle(video);
+      const [px, py] = parsePos(cs.objectPosition || "50% 50%");
+      heroBox = { x: r.left, y: r.top, w: r.width, h: r.height, px, py };
+    }
+    function coverInto(src: CanvasImageSource, sw: number, sh: number) {
+      if (!ctx) return;
+      const { x, y, w, h, px, py } = heroBox;
+      const s = Math.max(w / sw, h / sh);
+      const dw = sw * s;
+      const dh = sh * s;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, w, h);
+      ctx.clip();
+      ctx.drawImage(src, x + (w - dw) * px, y + (h - dh) * py, dw, dh);
+      ctx.restore();
+    }
+
+    if (typeof history !== "undefined" && "scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    measureHero();
+
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = window.innerWidth;
@@ -309,7 +392,8 @@ export default function Preloader() {
       cv.height = H * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       fallbackCache.clear();
-      if (current) drawFrame(current.src, current.g);
+      if (!CFG.realProgress && current) drawFrame(current.src, current.g);
+      measureHero();
     };
 
     // Preload Images
@@ -374,9 +458,16 @@ export default function Preloader() {
 
     // Photo decay tick job
     jobs.add(() => {
-      if (!photoLive || !current) return;
-      current.g *= 0.85;
-      drawFrame(current.src, current.g);
+      if (CFG.realProgress) {
+        if (photoLive) {
+          g *= 0.85;
+          seed = (Math.random() * 4294967296) >>> 0;
+        }
+      } else {
+        if (!photoLive || !current) return;
+        current.g *= 0.85;
+        drawFrame(current.src, current.g);
+      }
     });
 
     // Counter State & Rendering
@@ -473,12 +564,19 @@ export default function Preloader() {
     const masterTl = gsap.timeline();
 
     const finish = () => {
-      finished = true;
       photoLive = false;
+      cancelAnimationFrame(rafId);
+      releaseGuard && releaseGuard();
+      if (video) {
+        video.dataset.held = "0";
+        const p = video.play();
+        if (p && p.catch) p.catch(() => {});
+      }
+      tracker.destroy();
+      finished = true;
       document.body.style.overflow = "";
       document.body.classList.remove("is-loading");
       sessionStorage.setItem("eurostar_visited", "true");
-      tracker.destroy();
       window.dispatchEvent(new CustomEvent("preloader:done"));
       setComplete(true);
     };
@@ -583,10 +681,105 @@ export default function Preloader() {
     let shown = 0;
     let g = 0;
     let seed = 1;
+    let rafId = 0;
+    let srcKind: "video" | "poster" | "flat" = "flat";
+    let posterImg: HTMLImageElement | null = null;
+    if (video && video.poster) {
+      posterImg = new Image();
+      posterImg.src = video.poster;
+    }
     const setGlitch = (v: number) => {
       g = v;
       seed = (Math.random() * 4294967296) >>> 0;
     };
+
+    function chooseSource(): "video" | "poster" | "flat" {
+      if (video && video.readyState >= 2 && video.videoWidth) return "video";
+      if (posterImg && posterImg.complete && posterImg.naturalWidth) return "poster";
+      return "flat";
+    }
+
+    function drawBase() {
+      if (!ctx) return;
+      ctx.fillStyle = "#0b0b0b";
+      ctx.fillRect(0, 0, W, H);
+      if (srcKind === "video" && video && video.readyState >= 2 && video.videoWidth) {
+        return coverInto(video, video.videoWidth, video.videoHeight);
+      }
+      if (srcKind === "poster" && posterImg) {
+        return coverInto(posterImg, posterImg.naturalWidth, posterImg.naturalHeight);
+      }
+      ctx.fillStyle = "#3a3a3a";
+      ctx.fillRect(heroBox.x, heroBox.y, heroBox.w, heroBox.h);
+    }
+
+    function mulberry32(a: number) {
+      return function () {
+        a |= 0;
+        a = (a + 0x6d2b79f5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function applyGlitch(gv: number, sd: number) {
+      if (gv < 0.02 || !ctx || !cv) return;
+      const R = mulberry32(sd);
+      const rnd = (a: number, b: number) => a + R() * (b - a);
+      const rint = (a: number, b: number) => Math.floor(rnd(a, b + 1));
+      const n = Math.round(4 + gv * 14);
+      for (let i = 0; i < n; i++) {
+        const h = rint(4, 10 + gv * 46);
+        const y = rint(0, Math.max(1, H - h));
+        const dx = rnd(-1, 1) * gv * W * 0.08;
+        ctx.drawImage(cv, 0, y * dpr, cv.width, h * dpr, dx, y, W, h);
+      }
+      const blocks = Math.round(gv * 7);
+      if (tctx) {
+        for (let i = 0; i < blocks; i++) {
+          const bw = rint(W * 0.06, W * 0.22);
+          const bh = rint(H * 0.04, H * 0.16);
+          const x = rint(0, W - bw);
+          const y = rint(0, H - bh);
+          const px = rint(10, 26);
+          tmp.width = Math.max(1, (bw / px) | 0);
+          tmp.height = Math.max(1, (bh / px) | 0);
+          tctx.drawImage(
+            cv,
+            x * dpr,
+            y * dpr,
+            bw * dpr,
+            bh * dpr,
+            0,
+            0,
+            tmp.width,
+            tmp.height
+          );
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(tmp, 0, 0, tmp.width, tmp.height, x, y, bw, bh);
+          ctx.imageSmoothingEnabled = true;
+        }
+      }
+      if (gv > 0.5) {
+        for (let i = 0; i < 3; i++) {
+          const x = rint(0, W - 130);
+          ctx.drawImage(cv, x * dpr, 0, 1, cv.height, x, 0, rint(30, 120), H);
+        }
+      }
+      ctx.fillStyle = "rgba(0,0,0,.25)";
+      ctx.fillRect(0, rint(0, H - 24), W, rint(6, 22));
+    }
+
+    function paint() {
+      if (!photoLive) {
+        rafId = 0;
+        return;
+      }
+      drawBase();
+      applyGlitch(g, seed);
+      rafId = requestAnimationFrame(paint);
+    }
 
     function decode(
       el: Element,
@@ -613,11 +806,17 @@ export default function Preloader() {
     }
 
     const openWindow = () => {
-      photoLive = true;
+      srcKind = chooseSource();
       if (cv) {
         cv.style.filter = CFG.windowTone === "colour" ? TONE.colour : TONE.mono;
       }
-      emitEv("preloader:window-open", { source: "video", degraded: tracker.degraded() });
+      photoLive = true;
+      releaseVideo();
+      paint();
+      emitEv("preloader:window-open", {
+        source: srcKind,
+        degraded: tracker.degraded(),
+      });
     };
 
     const startOutro = () => {
@@ -755,7 +954,10 @@ export default function Preloader() {
       window.clearTimeout(failsafe);
       window.removeEventListener("resize", onResize);
       finished = true;
+      photoLive = false;
       cancelAnimationFrame(raf);
+      cancelAnimationFrame(rafId);
+      releaseGuard && releaseGuard();
       masterTl.kill();
       tracker.destroy();
       document.body.style.overflow = "";
